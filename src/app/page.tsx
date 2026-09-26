@@ -78,6 +78,11 @@ export default function Home() {
     hairStyle: "natural",
     hairLength: "medium",
     hairTexture: "wavy",
+    poseType: "standing",
+    headDirection: "forward",
+    shoulderPosition: "relaxed",
+    handPlacement: "at-side",
+    backPosture: "relaxed",
   });
 
   const englishPrompt = buildPromptEnglish(state);
@@ -483,6 +488,109 @@ export default function Home() {
                 <option value="straight">أملس (Straight)</option>
                 <option value="wavy">مموج (Wavy)</option>
                 <option value="curly">مجعد (Curly)</option>
+              </select>
+            </label>
+          </CollapsibleSection>
+
+          <CollapsibleSection title="الوضعية" badge="5 حقول">
+            <label className="grid gap-2" htmlFor="pose-type">
+              الوضعية
+              <select
+                id="pose-type"
+                value={state.poseType}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    poseType: event.target.value as SceneState["poseType"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="standing">وقوف (Standing)</option>
+                <option value="sitting-bed">جلوس على السرير (Sitting on bed)</option>
+                <option value="sitting-chair">جلوس على كرسي (Sitting on chair)</option>
+                <option value="lying-bed">استلقاء على السرير (Lying on bed)</option>
+                <option value="standing-window">وقوف قرب النافذة (Standing by window)</option>
+              </select>
+            </label>
+
+            <label className="grid gap-2" htmlFor="head-direction">
+              اتجاه الرأس
+              <select
+                id="head-direction"
+                value={state.headDirection}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    headDirection: event.target.value as SceneState["headDirection"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="forward">للأمام (Forward)</option>
+                <option value="slightly-left">يساراً قليلاً (Slightly left)</option>
+                <option value="slightly-right">يميناً قليلاً (Slightly right)</option>
+                <option value="down">للأسفل (Down)</option>
+                <option value="up-soft">لأعلى برفق (Gently up)</option>
+              </select>
+            </label>
+
+            <label className="grid gap-2" htmlFor="shoulder-position">
+              وضعية الكتفين
+              <select
+                id="shoulder-position"
+                value={state.shoulderPosition}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    shoulderPosition: event.target.value as SceneState["shoulderPosition"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="relaxed">مسترخيان (Relaxed)</option>
+                <option value="one-raised">كتف مرتفع قليلاً (One raised)</option>
+                <option value="both-back">للخلف (Both back)</option>
+              </select>
+            </label>
+
+            <label className="grid gap-2" htmlFor="hand-placement">
+              اليد الحرة
+              <select
+                id="hand-placement"
+                value={state.handPlacement}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    handPlacement: event.target.value as SceneState["handPlacement"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="at-side">بجانب الجسم (At side)</option>
+                <option value="holding-phone">تساند الهاتف (Holding phone)</option>
+                <option value="touching-hair">تلمس الشعر (Touching hair)</option>
+                <option value="on-lap">على الحضن (On lap)</option>
+                <option value="in-pocket">في الجيب (In pocket)</option>
+              </select>
+            </label>
+
+            <label className="grid gap-2" htmlFor="back-posture">
+              وضعية الظهر
+              <select
+                id="back-posture"
+                value={state.backPosture}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    backPosture: event.target.value as SceneState["backPosture"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="straight">مستقيم (Straight)</option>
+                <option value="relaxed">مسترخٍ (Relaxed)</option>
+                <option value="slightly-leaning">مائل قليلاً (Slightly leaning)</option>
               </select>
             </label>
           </CollapsibleSection>
