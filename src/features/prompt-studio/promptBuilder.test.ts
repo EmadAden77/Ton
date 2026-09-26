@@ -480,7 +480,7 @@ describe("pose descriptions", () => {
         ...baseState,
         handPlacement: "touching-hair",
       }),
-    ).toContain("free hand touching the hair");
+    ).toContain("free hand is touching the hair");
   });
 
   it("includes the selected pose type in Arabic", () => {
