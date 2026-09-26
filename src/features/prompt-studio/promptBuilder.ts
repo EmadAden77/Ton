@@ -159,7 +159,11 @@ export function buildPromptArabic(state: SceneState): string {
   const lightingSourceDescription =
     !state.roomHasBed && state.lightingSource === "bedside-lamp"
       ? "مصباح جانبي"
-      : lightingSources[state.lightingSource];
+      : state.roomWindow === "none" && state.lightingSource === "window-day"
+        ? "ضوء النهار"
+        : state.roomWindow === "none" && state.lightingSource === "window-sunset"
+          ? "ضوء الغروب"
+          : lightingSources[state.lightingSource];
 
   return `لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}، ${roomCleanlinessLabels[state.roomCleanliness]}، ${roomWindowLabels[state.roomWindow]}${bedDescription}. الملابس: القطعة العلوية ${clothingTopLabels[state.clothingTop]}، والقطعة السفلية ${clothingBottomLabels[state.clothingBottom]}، ومادة القماش ${clothingMaterialLabels[state.clothingMaterial]}، وفئة اللون ${clothingColorLabels[state.clothingColor]}. مصدر الإضاءة ${lightingSourceDescription} وشدتها ${lightingIntensities[state.lightingIntensity]}، واتجاه الضوء ${lightingDirections[state.lightingDirection]}، وحرارة اللون ${colorTemperatures[state.colorTemperature]}.`;
 }
@@ -282,7 +286,11 @@ export function buildPromptEnglish(state: SceneState): string {
   const lightingSource =
     !state.roomHasBed && state.lightingSource === "bedside-lamp"
       ? "side lamp light"
-      : englishLightingSources[state.lightingSource];
+      : state.roomWindow === "none" && state.lightingSource === "window-day"
+        ? "daylight"
+        : state.roomWindow === "none" && state.lightingSource === "window-sunset"
+          ? "sunset light"
+          : englishLightingSources[state.lightingSource];
 
   return `A ${englishShotTypes[state.shotType]} taken ${englishCameraDistances[state.cameraDistance]} from ${englishCameraAngles[state.cameraAngle]} in a ${englishRoomTypes[state.roomType]} bedroom that is ${englishRoomCleanliness[state.roomCleanliness]}, with ${windowDescription}${bedDescription}; the subject wears a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]}${bottomDescription} in ${englishClothingColors[state.clothingColor]} tones; lighting is ${englishLightingIntensities[state.lightingIntensity]} ${lightingSource}, ${englishLightingDirections[state.lightingDirection]}, with a ${englishColorTemperatures[state.colorTemperature]} color temperature.`;
 }
