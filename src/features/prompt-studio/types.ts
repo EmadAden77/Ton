@@ -248,4 +248,19 @@ export interface SceneState {
     | "partially-visible"
     // اليد خارج الإطار.
     | "off-frame";
+  scenario:
+    // إعداد يدوي بلا سيناريو.
+    | "none"
+    // عمل على لابتوب عند المكتب.
+    | "working-laptop"
+    // جلوس على السرير مع لابتوب.
+    | "bed-laptop"
+    // سيلفي أمام المرآة.
+    | "mirror-selfie"
+    // استعداد للخروج.
+    | "getting-ready"
+    // استلقاء مع الهاتف.
+    | "lying-with-phone"
+    // وقوف قرب النافذة.
+    | "standing-window";
 }
