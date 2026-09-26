@@ -720,9 +720,23 @@ describe("modest adjusting-clothing scene", () => {
       scenario: "adjusting-clothing" as const,
     };
     expect(buildPromptEnglish(scene)).toContain("Fully dressed");
+    expect(buildPromptEnglish(scene)).toContain("checks their outfit");
     expect(buildPromptArabic(scene)).toContain("بملابس كاملة محتشمة");
     expect(
       buildPromptEnglish({ ...baseState, scenario: "none" }),
     ).not.toContain("Fully dressed");
+  });
+});
+
+describe("choosing clothes scene", () => {
+  it("describes choosing clothes from a closet in both languages", () => {
+    const scene = {
+      ...baseState,
+      scenario: "choosing-clothes" as const,
+      freeHandPosition: "holding-cloth" as const,
+    };
+    expect(buildPromptEnglish(scene)).toContain("chooses clothes from the bedroom closet");
+    expect(buildPromptArabic(scene)).toContain("يختار قطعة ملابس من خزانة الغرفة");
+    expect(buildPromptEnglish(baseState)).not.toContain("bedroom closet");
   });
 });
