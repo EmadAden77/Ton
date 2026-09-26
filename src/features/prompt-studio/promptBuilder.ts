@@ -228,19 +228,6 @@ const shoulderPositionLabels: Record<SceneState["shoulderPosition"], string> = {
   "both-back": "للخلف",
 };
 
-const handPlacementLabels: Record<SceneState["handPlacement"], string> = {
-  // اليد الحرة بجانب الجسم.
-  "at-side": "بجانب الجسم",
-  // اليد الحرة تساند الهاتف.
-  "holding-phone": "تساند الهاتف",
-  // اليد الحرة تلامس الشعر.
-  "touching-hair": "تلامس الشعر",
-  // اليد الحرة على الحضن.
-  "on-lap": "على الحضن",
-  // اليد الحرة في الجيب.
-  "in-pocket": "في الجيب",
-};
-
 const backPostureLabels: Record<SceneState["backPosture"], string> = {
   // ظهر مستقيم.
   straight: "مستقيم",
@@ -302,14 +289,6 @@ const mouthStateLabels: Record<SceneState["mouthState"], string> = {
   "smile-open-light": "في ابتسامة مفتوحة خفيفة",
 };
 
-// الحقل الجديد يحدد الموضع؛ تستعمل القيمة القديمة حين تبقى القيمة الجديدة الافتراضية.
-function effectiveFreeHandPosition(
-  state: SceneState,
-): SceneState["freeHandPosition"] | SceneState["handPlacement"] {
-  if (state.freeHandPosition !== "at-side") return state.freeHandPosition;
-  return state.handPlacement;
-}
-
 const freeHandPositionLabels: Record<SceneState["freeHandPosition"], string> = {
   "at-side": "بجانب الجسم",
   "on-hair": "على الشعر",
@@ -364,21 +343,12 @@ export function buildPromptArabic(state: SceneState): string {
       : state.roomWindow === "none" && state.poseType === "standing-window"
         ? poseTypeLabels.standing
         : poseTypeLabels[state.poseType];
-  const isStanding =
-    state.poseType === "standing" || state.poseType === "standing-window";
-  const handPosition = effectiveFreeHandPosition(state);
   const handDescription =
-    handPosition === "on-bed" && !state.roomHasBed
+    state.freeHandPosition === "on-bed" && !state.roomHasBed
       ? freeHandPositionLabels["at-side"]
-      : isStanding && handPosition === "on-lap"
-        ? "أمام الجسم"
-        : state.poseType === "lying-bed" && handPosition === "in-pocket"
-          ? "بجانب الجسم"
-          : handPosition in freeHandPositionLabels
-            ? freeHandPositionLabels[
-                handPosition as SceneState["freeHandPosition"]
-              ]
-            : handPlacementLabels[handPosition as SceneState["handPlacement"]];
+      : state.poseType === "lying-bed" && state.freeHandPosition === "in-pocket"
+        ? freeHandPositionLabels["at-side"]
+        : freeHandPositionLabels[state.freeHandPosition];
   const handSummary =
     state.handVisibility === "off-frame"
       ? "اليد الحرة خارج الإطار"
@@ -548,14 +518,6 @@ const englishShoulderPositions: Record<SceneState["shoulderPosition"], string> =
     "both-back": "drawn back",
   };
 
-const englishHandPlacements: Record<SceneState["handPlacement"], string> = {
-  "at-side": "at the side",
-  "holding-phone": "supporting the phone",
-  "touching-hair": "touching the hair",
-  "on-lap": "on the lap",
-  "in-pocket": "in a pocket",
-};
-
 const englishBackPostures: Record<SceneState["backPosture"], string> = {
   straight: "straight",
   relaxed: "relaxed",
@@ -650,23 +612,12 @@ export function buildPromptEnglish(state: SceneState): string {
       : state.roomWindow === "none" && state.poseType === "standing-window"
         ? englishPoseTypes.standing
         : englishPoseTypes[state.poseType];
-  const isStanding =
-    state.poseType === "standing" || state.poseType === "standing-window";
-  const handPosition = effectiveFreeHandPosition(state);
   const handDescription =
-    handPosition === "on-bed" && !state.roomHasBed
+    state.freeHandPosition === "on-bed" && !state.roomHasBed
       ? englishFreeHandPositions["at-side"]
-      : isStanding && handPosition === "on-lap"
-        ? "in front of the body"
-        : state.poseType === "lying-bed" && handPosition === "in-pocket"
-          ? "at the side"
-          : handPosition in englishFreeHandPositions
-            ? englishFreeHandPositions[
-                handPosition as SceneState["freeHandPosition"]
-              ]
-            : englishHandPlacements[
-                handPosition as SceneState["handPlacement"]
-              ];
+      : state.poseType === "lying-bed" && state.freeHandPosition === "in-pocket"
+        ? englishFreeHandPositions["at-side"]
+        : englishFreeHandPositions[state.freeHandPosition];
   const handSummary =
     state.handVisibility === "off-frame"
       ? "the free hand is off-frame"
