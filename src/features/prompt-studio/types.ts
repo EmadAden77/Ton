@@ -11,6 +11,15 @@ export interface SceneState {
     | "daylight-open";
   cameraDistance: "close" | "arm-length" | "extended";
   cameraAngle: "eye-level" | "slightly-above" | "slightly-below";
+  phonePosition:
+    // أمام الوجه (سيلفي أمامي).
+    | "front-of-face"
+    // على مستوى الصدر (سيلفي أمام المرآة).
+    | "chest-level"
+    // فوق الصدر (استلقاء).
+    | "above-chest"
+    // جانبي بلطف.
+    | "side-soft";
   clothingTop:
     "t-shirt" | "shirt" | "hoodie" | "pajama-top" | "sweater" | "tank-top";
   clothingBottom:
@@ -21,7 +30,7 @@ export interface SceneState {
   identityPriority: "strict" | "balanced" | "flexible";
   identityNotes: string;
   hairStyle:
-    "natural" | "combed" | "messy-light" | "side-part" | "slicked-back";
+    "natural" | "combed" | "messy-light" | "combed-back" | "side-part";
   hairLength: "short" | "medium" | "long";
   hairTexture: "straight" | "wavy" | "curly";
   poseType:
@@ -54,6 +63,7 @@ export interface SceneState {
     | "touching-chin"
     | "in-pocket"
     | "on-bed"
+    | "on-chest"
     | "on-keyboard"
     | "holding-cloth"
     | "holding-phone";
