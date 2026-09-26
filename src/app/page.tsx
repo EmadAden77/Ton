@@ -33,6 +33,7 @@ interface SmartSelectProps {
 const constrainedFields: (keyof SceneState)[] = [
   "cameraDistance",
   "freeHandPosition",
+  "phonePosition",
   "eyeDirection",
   "faceExpression",
 ];
@@ -101,8 +102,8 @@ const hairStyleOptions: SelectOption[] = [
   { value: "natural", label: "طبيعي (Natural)" },
   { value: "combed", label: "ممشط (Combed)" },
   { value: "messy-light", label: "فوضوي خفيف (Light messy)" },
+  { value: "combed-back", label: "ممشط للخلف (Combed back)" },
   { value: "side-part", label: "مفرق جانبي (Side part)" },
-  { value: "slicked-back", label: "ممشط للخلف (Slicked back)" },
 ];
 const hairLengthOptions: SelectOption[] = [
   { value: "short", label: "قصير (Short)" },
@@ -171,8 +172,15 @@ const freeHandPositionOptions: SelectOption[] = [
   { value: "touching-chin", label: "تلمس الذقن (Touching chin)" },
   { value: "in-pocket", label: "في الجيب (In pocket)" },
   { value: "on-bed", label: "على السرير (On bed)" },
+  { value: "on-chest", label: "على الصدر (On chest)" },
   { value: "on-keyboard", label: "على لوحة المفاتيح (On keyboard)" },
   { value: "holding-cloth", label: "تحمل قطعة قماش (Holding cloth)" },
+];
+const phonePositionOptions: SelectOption[] = [
+  { value: "front-of-face", label: "أمام الوجه (Front of face)" },
+  { value: "chest-level", label: "على مستوى الصدر (Chest level)" },
+  { value: "above-chest", label: "فوق الصدر (Above chest)" },
+  { value: "side-soft", label: "جانبي بلطف (Slightly to the side)" },
 ];
 const handFingersStateOptions: SelectOption[] = [
   { value: "relaxed", label: "مسترخية (Relaxed)" },
@@ -304,6 +312,7 @@ export default function Home() {
     lightingMode: "as-in-photo",
     cameraDistance: "arm-length",
     cameraAngle: "eye-level",
+    phonePosition: "front-of-face",
     clothingTop: "t-shirt",
     clothingBottom: "shorts",
     clothingMaterial: "cotton",
@@ -668,7 +677,7 @@ export default function Home() {
             />
           </CollapsibleSection>
 
-          <CollapsibleSection title="اليد الحرة" badge="3 حقول">
+          <CollapsibleSection title="اليد الحرة" badge="4 حقول">
             <SmartSelect
               id="free-hand-position"
               field="freeHandPosition"
@@ -679,6 +688,19 @@ export default function Home() {
                 updateField(
                   "freeHandPosition",
                   value as SceneState["freeHandPosition"],
+                )
+              }
+            />
+            <SmartSelect
+              id="phone-position"
+              field="phonePosition"
+              state={resolvedState}
+              label="موضع الهاتف"
+              options={phonePositionOptions}
+              onChange={(value) =>
+                updateField(
+                  "phonePosition",
+                  value as SceneState["phonePosition"],
                 )
               }
             />
