@@ -15,6 +15,9 @@ export default function Home() {
     cameraAngle: "eye-level",
     lightingDirection: "front",
     colorTemperature: "neutral",
+    roomCleanliness: "natural",
+    roomWindow: "medium",
+    roomHasBed: true,
   });
 
   return (
@@ -25,7 +28,7 @@ export default function Home() {
       <section className="mx-auto max-w-2xl rounded-2xl border border-white/10 bg-white/[0.04] p-6 sm:p-10">
         <h1 className="text-4xl font-bold">Ton</h1>
         <p className="mt-4 text-slate-300">
-          اختر إعدادات اللقطة والكاميرا والإضاءة لمعاينة وصف المشهد.
+          اختر إعدادات اللقطة والكاميرا والغرفة والإضاءة لمعاينة وصف المشهد.
         </p>
 
         <div className="mt-8 grid gap-5 sm:grid-cols-2">
@@ -55,8 +58,7 @@ export default function Home() {
               onChange={(event) =>
                 setState((current) => ({
                   ...current,
-                  cameraDistance: event.target
-                    .value as SceneState["cameraDistance"],
+                  cameraDistance: event.target.value as SceneState["cameraDistance"],
                 }))
               }
               className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
@@ -81,12 +83,48 @@ export default function Home() {
               className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
             >
               <option value="eye-level">بمستوى العين (Eye level)</option>
-              <option value="slightly-above">
-                أعلى قليلاً (Slightly above)
-              </option>
-              <option value="slightly-below">
-                أسفل قليلاً (Slightly below)
-              </option>
+              <option value="slightly-above">أعلى قليلاً (Slightly above)</option>
+              <option value="slightly-below">أسفل قليلاً (Slightly below)</option>
+            </select>
+          </label>
+
+          <label className="grid gap-2" htmlFor="room-cleanliness">
+            ترتيب الغرفة
+            <select
+              id="room-cleanliness"
+              value={state.roomCleanliness}
+              onChange={(event) =>
+                setState((current) => ({
+                  ...current,
+                  roomCleanliness: event.target.value as SceneState["roomCleanliness"],
+                }))
+              }
+              className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+            >
+              <option value="very-tidy">مرتبة جداً (Very tidy)</option>
+              <option value="natural">طبيعي (Natural)</option>
+              <option value="light-mess">فوضى خفيفة (Light mess)</option>
+              <option value="moderate-mess">فوضى متوسطة (Moderate mess)</option>
+            </select>
+          </label>
+
+          <label className="grid gap-2" htmlFor="room-window">
+            حجم النافذة
+            <select
+              id="room-window"
+              value={state.roomWindow}
+              onChange={(event) =>
+                setState((current) => ({
+                  ...current,
+                  roomWindow: event.target.value as SceneState["roomWindow"],
+                }))
+              }
+              className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+            >
+              <option value="none">بلا نافذة (None)</option>
+              <option value="small">صغيرة (Small)</option>
+              <option value="medium">متوسطة (Medium)</option>
+              <option value="large">كبيرة (Large)</option>
             </select>
           </label>
 
@@ -98,8 +136,7 @@ export default function Home() {
               onChange={(event) =>
                 setState((current) => ({
                   ...current,
-                  lightingSource: event.target
-                    .value as SceneState["lightingSource"],
+                  lightingSource: event.target.value as SceneState["lightingSource"],
                 }))
               }
               className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
@@ -119,8 +156,7 @@ export default function Home() {
               onChange={(event) =>
                 setState((current) => ({
                   ...current,
-                  lightingIntensity: event.target
-                    .value as SceneState["lightingIntensity"],
+                  lightingIntensity: event.target.value as SceneState["lightingIntensity"],
                 }))
               }
               className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
@@ -140,8 +176,7 @@ export default function Home() {
               onChange={(event) =>
                 setState((current) => ({
                   ...current,
-                  lightingDirection: event.target
-                    .value as SceneState["lightingDirection"],
+                  lightingDirection: event.target.value as SceneState["lightingDirection"],
                 }))
               }
               className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
@@ -161,8 +196,7 @@ export default function Home() {
               onChange={(event) =>
                 setState((current) => ({
                   ...current,
-                  colorTemperature: event.target
-                    .value as SceneState["colorTemperature"],
+                  colorTemperature: event.target.value as SceneState["colorTemperature"],
                 }))
               }
               className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
@@ -171,6 +205,22 @@ export default function Home() {
               <option value="neutral">محايدة (Neutral)</option>
               <option value="cool">باردة (Cool)</option>
             </select>
+          </label>
+
+          <label className="flex items-center gap-3 rounded-lg border border-white/20 bg-slate-900 p-3" htmlFor="room-has-bed">
+            <input
+              id="room-has-bed"
+              type="checkbox"
+              checked={state.roomHasBed}
+              onChange={(event) =>
+                setState((current) => ({
+                  ...current,
+                  roomHasBed: event.target.checked,
+                }))
+              }
+              className="h-4 w-4 accent-amber-300"
+            />
+            يوجد سرير (Bed)
           </label>
         </div>
 
