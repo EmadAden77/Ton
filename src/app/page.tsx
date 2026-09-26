@@ -460,11 +460,19 @@ export default function Home() {
                 tabIndex={activeTab === id ? 0 : -1}
                 onClick={() => setActiveTab(id)}
                 onKeyDown={(event) => {
-                  const offset = event.key === "ArrowRight" ? -1 : event.key === "ArrowLeft" ? 1 : 0;
+                  const offset =
+                    event.key === "ArrowRight"
+                      ? -1
+                      : event.key === "ArrowLeft"
+                        ? 1
+                        : 0;
                   if (!offset) return;
                   event.preventDefault();
                   const index = previewTabs.findIndex((tab) => tab.id === id);
-                  const next = previewTabs[(index + offset + previewTabs.length) % previewTabs.length].id;
+                  const next =
+                    previewTabs[
+                      (index + offset + previewTabs.length) % previewTabs.length
+                    ].id;
                   setActiveTab(next);
                   document.getElementById(`tab-${next}`)?.focus();
                 }}
