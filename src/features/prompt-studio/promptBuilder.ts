@@ -275,12 +275,14 @@ export function buildPromptArabic(state: SceneState): string {
   }
 
   const poseDescription =
-    !state.roomHasBed && (state.poseType === "sitting-bed" || state.poseType === "lying-bed")
+    !state.roomHasBed &&
+    (state.poseType === "sitting-bed" || state.poseType === "lying-bed")
       ? "في وضعية مريحة داخل الغرفة"
       : state.roomWindow === "none" && state.poseType === "standing-window"
         ? poseTypeLabels.standing
         : poseTypeLabels[state.poseType];
-  const isStanding = state.poseType === "standing" || state.poseType === "standing-window";
+  const isStanding =
+    state.poseType === "standing" || state.poseType === "standing-window";
   const handDescription =
     isStanding && state.handPlacement === "on-lap"
       ? "أمام الجسم"
@@ -445,11 +447,12 @@ const englishHeadDirections: Record<SceneState["headDirection"], string> = {
   "up-soft": "angled gently upward",
 };
 
-const englishShoulderPositions: Record<SceneState["shoulderPosition"], string> = {
-  relaxed: "relaxed",
-  "one-raised": "with one shoulder slightly raised",
-  "both-back": "drawn back",
-};
+const englishShoulderPositions: Record<SceneState["shoulderPosition"], string> =
+  {
+    relaxed: "relaxed",
+    "one-raised": "with one shoulder slightly raised",
+    "both-back": "drawn back",
+  };
 
 const englishHandPlacements: Record<SceneState["handPlacement"], string> = {
   "at-side": "at the side",
@@ -497,12 +500,14 @@ export function buildPromptEnglish(state: SceneState): string {
   }
 
   const poseDescription =
-    !state.roomHasBed && (state.poseType === "sitting-bed" || state.poseType === "lying-bed")
+    !state.roomHasBed &&
+    (state.poseType === "sitting-bed" || state.poseType === "lying-bed")
       ? "in a relaxed pose in the room"
       : state.roomWindow === "none" && state.poseType === "standing-window"
         ? englishPoseTypes.standing
         : englishPoseTypes[state.poseType];
-  const isStanding = state.poseType === "standing" || state.poseType === "standing-window";
+  const isStanding =
+    state.poseType === "standing" || state.poseType === "standing-window";
   const handDescription =
     isStanding && state.handPlacement === "on-lap"
       ? "in front of the body"

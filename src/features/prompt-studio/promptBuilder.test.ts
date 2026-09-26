@@ -451,31 +451,39 @@ describe("hair descriptions", () => {
 
 describe("pose descriptions", () => {
   it("includes the selected pose type in English", () => {
-    expect(buildPromptEnglish({
-      ...baseState,
-      poseType: "sitting-chair",
-    })).toContain("sitting on a chair");
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        poseType: "sitting-chair",
+      }),
+    ).toContain("sitting on a chair");
   });
 
   it("includes head direction in English", () => {
-    expect(buildPromptEnglish({
-      ...baseState,
-      headDirection: "slightly-left",
-    })).toContain("head turned slightly left");
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        headDirection: "slightly-left",
+      }),
+    ).toContain("head turned slightly left");
   });
 
   it("includes free hand placement in English", () => {
-    expect(buildPromptEnglish({
-      ...baseState,
-      handPlacement: "touching-hair",
-    })).toContain("free hand touching the hair");
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        handPlacement: "touching-hair",
+      }),
+    ).toContain("free hand touching the hair");
   });
 
   it("includes the selected pose type in Arabic", () => {
-    expect(buildPromptArabic({
-      ...baseState,
-      poseType: "lying-bed",
-    })).toContain("الشخص مستلقٍ على السرير");
+    expect(
+      buildPromptArabic({
+        ...baseState,
+        poseType: "lying-bed",
+      }),
+    ).toContain("الشخص مستلقٍ على السرير");
   });
 
   it("keeps sitting on the bed and a hand on the lap coherent", () => {
