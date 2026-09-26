@@ -735,8 +735,12 @@ describe("choosing clothes scene", () => {
       scenario: "choosing-clothes" as const,
       freeHandPosition: "holding-cloth" as const,
     };
-    expect(buildPromptEnglish(scene)).toContain("chooses clothes from the bedroom closet");
-    expect(buildPromptArabic(scene)).toContain("يختار قطعة ملابس من خزانة الغرفة");
+    expect(buildPromptEnglish(scene)).toContain(
+      "chooses clothes from the bedroom closet",
+    );
+    expect(buildPromptArabic(scene)).toContain(
+      "يختار قطعة ملابس من خزانة الغرفة",
+    );
     expect(buildPromptEnglish(baseState)).not.toContain("bedroom closet");
   });
 });
