@@ -1,6 +1,12 @@
 export interface SceneState {
   shotType: "front-selfie" | "mirror-selfie";
-  lightingSource: "window-day" | "window-sunset" | "ceiling" | "bedside-lamp";
+  lightingSource:
+    | "window-day"
+    | "window-sunset"
+    | "ceiling"
+    | "bedside-lamp"
+    // إضاءة شاشة لابتوب.
+    | "laptop-screen";
   lightingIntensity: "dim" | "soft" | "medium" | "bright";
   roomType: "simple" | "modern" | "small" | "medium";
   cameraDistance:

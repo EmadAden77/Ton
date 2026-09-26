@@ -121,6 +121,8 @@ const lightingSources: Record<SceneState["lightingSource"], string> = {
   ceiling: "إنارة السقف",
   // مصباح بجانب السرير.
   "bedside-lamp": "مصباح بجانب السرير",
+  // ضوء شاشة لابتوب.
+  "laptop-screen": "ضوء شاشة لابتوب",
 };
 
 const lightingIntensities: Record<SceneState["lightingIntensity"], string> = {
@@ -441,6 +443,7 @@ const englishLightingSources: Record<SceneState["lightingSource"], string> = {
   "window-sunset": "sunset light from the window",
   ceiling: "ceiling light",
   "bedside-lamp": "bedside lamp light",
+  "laptop-screen": "laptop screen light",
 };
 
 const englishLightingIntensities: Record<
