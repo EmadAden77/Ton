@@ -8,6 +8,7 @@ const baseState: SceneState = {
   lightingMode: "as-in-photo",
   cameraDistance: "arm-length",
   cameraAngle: "eye-level",
+  phonePosition: "front-of-face",
   clothingTop: "t-shirt",
   clothingBottom: "shorts",
   clothingMaterial: "cotton",
@@ -77,12 +78,48 @@ describe("free hand constraints", () => {
     expect(option("freeHandPosition", state, "on-bed")?.disabled).toBe(true);
   });
 
-  it("disables bed and keyboard hand positions while standing", () => {
+  it("disables bed and chest hand positions while standing", () => {
     expect(option("freeHandPosition", baseState, "on-bed")?.disabled).toBe(
       true,
     );
-    expect(option("freeHandPosition", baseState, "on-keyboard")?.disabled).toBe(
+    expect(option("freeHandPosition", baseState, "on-chest")?.disabled).toBe(
       true,
+    );
+  });
+});
+
+describe("phone and lying constraints", () => {
+  it("disables in-pocket and on-hair while lying on the bed", () => {
+    const state = { ...baseState, poseType: "lying-bed" as const };
+    expect(option("freeHandPosition", state, "in-pocket")?.disabled).toBe(true);
+    expect(option("freeHandPosition", state, "on-hair")?.disabled).toBe(true);
+    expect(option("freeHandPosition", state, "on-chest")?.disabled).toBe(false);
+  });
+
+  it("locks phone position above the chest while lying on the bed", () => {
+    const state = { ...baseState, poseType: "lying-bed" as const };
+    expect(getFieldConstraints("phonePosition", state)?.lockedTo).toBe(
+      "above-chest",
+    );
+    expect(getConflicts(state)).toContain(
+      "الهاتف أمام الوجه في وضعية الاستلقاء غير منطقي",
+    );
+  });
+
+  it("locks front selfie phone position in front of the face", () => {
+    expect(getFieldConstraints("phonePosition", baseState)?.lockedTo).toBe(
+      "front-of-face",
+    );
+  });
+
+  it("locks mirror selfie phone position at chest level", () => {
+    const state = {
+      ...baseState,
+      shotType: "mirror-selfie" as const,
+      phonePosition: "chest-level" as const,
+    };
+    expect(getFieldConstraints("phonePosition", state)?.lockedTo).toBe(
+      "chest-level",
     );
   });
 });
@@ -115,6 +152,8 @@ describe("conflicts", () => {
         ...baseState,
         shotType: "mirror-selfie",
         cameraDistance: "close",
+        phonePosition: "chest-level",
+        eyeDirection: "mirror",
       }),
     ).toContain("سيلفي المرآة يتطلب مسافة طول الذراع");
   });
@@ -122,5 +161,6 @@ describe("conflicts", () => {
   it("returns null for fields without rules", () => {
     expect(getFieldConstraints("lightingMode", baseState)).toBeNull();
     expect(getFieldConstraints("clothingTop", baseState)).toBeNull();
+    expect(getFieldConstraints("hairStyle", baseState)).toBeNull();
   });
 });

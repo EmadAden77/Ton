@@ -42,8 +42,7 @@ const phoneHoldingArmLabels: Record<SceneState["shotType"], string> = {
 };
 
 const phoneHoldingArmLabelsAr: Record<SceneState["shotType"], string> = {
-  "front-selfie":
-    "الذراع الممسكة بالهاتف ممتدة للأمام مع انحناء بسيط في الكوع",
+  "front-selfie": "الذراع الممسكة بالهاتف ممتدة للأمام مع انحناء بسيط في الكوع",
   "mirror-selfie":
     "الذراع الممسكة بالهاتف منحنية عند الكوع، الهاتف على مستوى الصدر",
 };

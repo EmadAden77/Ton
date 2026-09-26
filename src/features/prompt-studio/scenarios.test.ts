@@ -8,6 +8,7 @@ const baseState: SceneState = {
   lightingMode: "as-in-photo",
   cameraDistance: "arm-length",
   cameraAngle: "eye-level",
+  phonePosition: "front-of-face",
   clothingTop: "t-shirt",
   clothingBottom: "shorts",
   clothingMaterial: "cotton",

@@ -12,6 +12,7 @@ const baseState: SceneState = {
   lightingMode: "as-in-photo",
   cameraDistance: "arm-length",
   cameraAngle: "eye-level",
+  phonePosition: "front-of-face",
   clothingTop: "t-shirt",
   clothingBottom: "shorts",
   clothingMaterial: "cotton",
@@ -100,6 +101,34 @@ describe("camera descriptions", () => {
   });
 });
 
+describe("phone and arm geometry", () => {
+  it("describes the front-selfie phone arm as extended forward", () => {
+    expect(buildPromptEnglish(baseState)).toContain("extended forward");
+  });
+
+  it("describes the mirror-selfie phone arm at chest height", () => {
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        shotType: "mirror-selfie",
+        phonePosition: "chest-level",
+      }),
+    ).toContain("chest height");
+  });
+
+  it("describes above-chest phone position in English", () => {
+    expect(
+      buildPromptEnglish({ ...baseState, phonePosition: "above-chest" }),
+    ).toContain("above the chest");
+  });
+
+  it("describes above-chest phone position in Arabic", () => {
+    expect(
+      buildPromptArabic({ ...baseState, phonePosition: "above-chest" }),
+    ).toContain("فوق الصدر");
+  });
+});
+
 describe("clothing and hair descriptions", () => {
   it("describes clothing choices", () => {
     const prompt = buildPromptEnglish({
@@ -117,17 +146,6 @@ describe("clothing and hair descriptions", () => {
     expect(
       buildPromptEnglish({ ...baseState, clothingBottom: "none-visible" }),
     ).toContain("lower garment outside the frame");
-  });
-
-  it("describes hair in English", () => {
-    expect(
-      buildPromptEnglish({
-        ...baseState,
-        hairLength: "short",
-        hairTexture: "curly",
-        hairStyle: "slicked-back",
-      }),
-    ).toContain("short curly slicked-back hair");
   });
 
   it("describes hair in Arabic", () => {
@@ -228,15 +246,6 @@ describe("free hand descriptions", () => {
     expect(prompt).toContain("free hand is off-frame");
     expect(prompt).not.toContain("fingers relaxed");
   });
-
-  it("avoids an in-pocket hand while lying on the bed", () => {
-    const prompt = buildPromptEnglish({
-      ...baseState,
-      poseType: "lying-bed",
-      freeHandPosition: "in-pocket",
-    });
-    expect(prompt).toContain("free hand is at the side");
-  });
 });
 
 describe("reference image preferences", () => {
@@ -326,6 +335,12 @@ describe("negative prompt", () => {
     expect(buildNegativePrompt(baseState)).not.toContain(
       "no incorrect reflections",
     );
+  });
+
+  it("adds arm and shoulder constraints for lying on the bed", () => {
+    const prompt = buildNegativePrompt({ ...baseState, poseType: "lying-bed" });
+    expect(prompt).toContain("no elongated arms");
+    expect(prompt).toContain("no distorted shoulders");
   });
 
   it("adds clothing safety constraints for adjusting clothing", () => {

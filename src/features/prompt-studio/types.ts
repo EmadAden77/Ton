@@ -29,8 +29,7 @@ export interface SceneState {
   referenceProvided: boolean;
   identityPriority: "strict" | "balanced" | "flexible";
   identityNotes: string;
-  hairStyle:
-    "natural" | "combed" | "messy-light" | "combed-back" | "side-part";
+  hairStyle: "natural" | "combed" | "messy-light" | "combed-back" | "side-part";
   hairLength: "short" | "medium" | "long";
   hairTexture: "straight" | "wavy" | "curly";
   poseType:
