@@ -72,6 +72,9 @@ export default function Home() {
     clothingBottom: "shorts",
     clothingMaterial: "cotton",
     clothingColor: "neutral",
+    referenceProvided: false,
+    identityPriority: "balanced",
+    identityNotes: "",
   });
 
   const englishPrompt = buildPromptEnglish(state);
@@ -104,6 +107,69 @@ export default function Home() {
         </header>
 
         <div className="mt-6 grid gap-4">
+          <CollapsibleSection title="الصورة المرجعية" badge="3 حقول">
+            <label
+              className="flex items-center gap-3 rounded-lg border border-white/20 bg-slate-900 p-3 sm:col-span-2"
+              htmlFor="reference-provided"
+            >
+              <input
+                id="reference-provided"
+                type="checkbox"
+                checked={state.referenceProvided}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    referenceProvided: event.target.checked,
+                  }))
+                }
+                className="h-4 w-4 accent-amber-300"
+              />
+              لدي صورة مرجعية
+            </label>
+
+            <label className="grid gap-2 sm:col-span-2" htmlFor="identity-priority">
+              أولوية الحفاظ على الهوية
+              <select
+                id="identity-priority"
+                value={state.identityPriority}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    identityPriority: event.target.value as SceneState["identityPriority"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="strict">قصوى (Strict)</option>
+                <option value="balanced">متوازنة (Balanced)</option>
+                <option value="flexible">مرنة (Flexible)</option>
+              </select>
+            </label>
+
+            <label className="grid gap-2 sm:col-span-2" htmlFor="identity-notes">
+              ملاحظات عن الملامح (اختياري)
+              <textarea
+                id="identity-notes"
+                value={state.identityNotes}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    identityNotes: event.target.value,
+                  }))
+                }
+                placeholder="مثال: شعر قصير، حاجب رقيق، عيون واسعة"
+                rows={3}
+                maxLength={200}
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              />
+            </label>
+
+            <p className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-200 sm:col-span-2">
+              لا ترفع صور أشخاص آخرين بدون موافقتهم. لا تستخدم النظام لانتحال الهوية أو التضليل.
+              في هذه المرحلة، لا يتم رفع أي صورة فعلياً — فقط تُحفظ اختياراتك محلياً في المتصفح.
+            </p>
+          </CollapsibleSection>
+
           <CollapsibleSection
             title="الكاميرا والتصوير"
             badge="3 حقول"
