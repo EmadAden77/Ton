@@ -897,7 +897,9 @@ export default function Home() {
                 <option value="at-side">بجانب الجسم (At side)</option>
                 <option value="on-hair">على الشعر (On hair)</option>
                 <option value="holding-cup">تحمل كوباً (Holding cup)</option>
-                <option value="holding-phone">تحمل الهاتف (Holding phone)</option>
+                <option value="holding-phone">
+                  تحمل الهاتف (Holding phone)
+                </option>
                 <option value="touching-chin">
                   تلمس الذقن (Touching chin)
                 </option>
