@@ -29,6 +29,11 @@ const baseState: SceneState = {
   hairStyle: "natural",
   hairLength: "medium",
   hairTexture: "wavy",
+  poseType: "standing",
+  headDirection: "forward",
+  shoulderPosition: "relaxed",
+  handPlacement: "at-side",
+  backPosture: "relaxed",
 };
 
 describe("buildPromptArabic", () => {
@@ -441,5 +446,67 @@ describe("hair descriptions", () => {
     const prompt = buildPromptEnglish(baseState);
     expect(prompt.indexOf("hair;")).toBeGreaterThan(prompt.indexOf("tones"));
     expect(prompt.indexOf("hair;")).toBeLessThan(prompt.indexOf("lighting is"));
+  });
+});
+
+describe("pose descriptions", () => {
+  it("includes the selected pose type in English", () => {
+    expect(buildPromptEnglish({
+      ...baseState,
+      poseType: "sitting-chair",
+    })).toContain("sitting on a chair");
+  });
+
+  it("includes head direction in English", () => {
+    expect(buildPromptEnglish({
+      ...baseState,
+      headDirection: "slightly-left",
+    })).toContain("head turned slightly left");
+  });
+
+  it("includes free hand placement in English", () => {
+    expect(buildPromptEnglish({
+      ...baseState,
+      handPlacement: "touching-hair",
+    })).toContain("free hand touching the hair");
+  });
+
+  it("includes the selected pose type in Arabic", () => {
+    expect(buildPromptArabic({
+      ...baseState,
+      poseType: "lying-bed",
+    })).toContain("الشخص مستلقٍ على السرير");
+  });
+
+  it("keeps sitting on the bed and a hand on the lap coherent", () => {
+    const scene = {
+      ...baseState,
+      poseType: "sitting-bed" as const,
+      handPlacement: "on-lap" as const,
+    };
+    expect(buildPromptEnglish(scene)).toContain("sitting on the bed");
+    expect(buildPromptEnglish(scene)).toContain("free hand on the lap");
+    expect(buildPromptArabic(scene)).toContain("جالس على السرير");
+    expect(buildPromptArabic(scene)).toContain("يده الحرة على الحضن");
+  });
+
+  it("avoids a bed pose when the room has no bed", () => {
+    const prompt = buildPromptEnglish({
+      ...baseState,
+      roomHasBed: false,
+      poseType: "lying-bed",
+    });
+    expect(prompt).not.toContain("lying on the bed");
+    expect(prompt).toContain("in a relaxed pose in the room");
+  });
+
+  it("avoids window position when the room has no window", () => {
+    const prompt = buildPromptEnglish({
+      ...baseState,
+      roomWindow: "none",
+      poseType: "standing-window",
+    });
+    expect(prompt).toContain("the subject is standing");
+    expect(prompt).not.toContain("standing near the window");
   });
 });
