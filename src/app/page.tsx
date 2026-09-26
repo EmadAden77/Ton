@@ -52,7 +52,10 @@ function CollapsibleSection({
   );
 }
 
+type MainTab = "camera" | "room" | "person" | "advanced";
+
 export default function Home() {
+  const [mainTab, setMainTab] = useState<MainTab>("camera");
   const [activeTab, setActiveTab] = useState<"english" | "arabic" | "negative">(
     "english",
   );
@@ -100,6 +103,12 @@ export default function Home() {
       : activeTab === "arabic"
         ? arabicPrompt
         : negativePrompt;
+  const mainTabs: { id: MainTab; label: string }[] = [
+    { id: "camera", label: "📷 الكاميرا" },
+    { id: "room", label: "🛏️ الغرفة" },
+    { id: "person", label: "👤 الشخص" },
+    { id: "advanced", label: "⚙️ متقدم" },
+  ];
   const previewTabs = [
     { id: "english", label: "English" },
     { id: "arabic", label: "العربية" },
@@ -120,78 +129,51 @@ export default function Home() {
           </p>
         </header>
 
-        <div className="mt-6 grid gap-4">
-          <CollapsibleSection title="الصورة المرجعية" badge="3 حقول">
-            <label
-              className="flex items-center gap-3 rounded-lg border border-white/20 bg-slate-900 p-3 sm:col-span-2"
-              htmlFor="reference-provided"
-            >
-              <input
-                id="reference-provided"
-                type="checkbox"
-                checked={state.referenceProvided}
-                onChange={(event) =>
-                  setState((current) => ({
-                    ...current,
-                    referenceProvided: event.target.checked,
-                  }))
+        <nav aria-label="أقسام إعدادات المشهد" className="mt-6">
+          <div role="tablist" aria-label="إعدادات المشهد" className="grid grid-cols-4 gap-1 rounded-xl bg-slate-900 p-1">
+            {mainTabs.map(({ id, label }) => (
+              <button
+                key={id}
+                id={`main-tab-${id}`}
+                type="button"
+                role="tab"
+                aria-selected={mainTab === id}
+                aria-controls={`main-panel-${id}`}
+                tabIndex={mainTab === id ? 0 : -1}
+                onClick={() => setMainTab(id)}
+                onKeyDown={(event) => {
+                  const offset = event.key === "ArrowRight" ? -1 : event.key === "ArrowLeft" ? 1 : 0;
+                  const index = mainTabs.findIndex((tab) => tab.id === id);
+                  const next =
+                    event.key === "Home" ? mainTabs[0].id :
+                    event.key === "End" ? mainTabs[mainTabs.length - 1].id :
+                    offset ? mainTabs[(index + offset + mainTabs.length) % mainTabs.length].id :
+                    null;
+                  if (next) {
+                    event.preventDefault();
+                    setMainTab(next);
+                    document.getElementById(`main-tab-${next}`)?.focus();
+                  }
+                }}
+                className={
+                  mainTab === id
+                    ? "min-w-0 whitespace-nowrap rounded-lg bg-blue-600 px-1 py-3 text-center text-[11px] font-semibold text-white sm:text-sm"
+                    : "min-w-0 whitespace-nowrap rounded-lg bg-slate-800 px-1 py-3 text-center text-[11px] text-slate-300 hover:bg-slate-700 sm:text-sm"
                 }
-                className="h-4 w-4 accent-amber-300"
-              />
-              لدي صورة مرجعية
-            </label>
-
-            <label
-              className="grid gap-2 sm:col-span-2"
-              htmlFor="identity-priority"
-            >
-              أولوية الحفاظ على الهوية
-              <select
-                id="identity-priority"
-                value={state.identityPriority}
-                onChange={(event) =>
-                  setState((current) => ({
-                    ...current,
-                    identityPriority: event.target
-                      .value as SceneState["identityPriority"],
-                  }))
-                }
-                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
               >
-                <option value="strict">قصوى (Strict)</option>
-                <option value="balanced">متوازنة (Balanced)</option>
-                <option value="flexible">مرنة (Flexible)</option>
-              </select>
-            </label>
+                {label}
+              </button>
+            ))}
+          </div>
+        </nav>
 
-            <label
-              className="grid gap-2 sm:col-span-2"
-              htmlFor="identity-notes"
-            >
-              ملاحظات عن الملامح (اختياري)
-              <textarea
-                id="identity-notes"
-                value={state.identityNotes}
-                onChange={(event) =>
-                  setState((current) => ({
-                    ...current,
-                    identityNotes: event.target.value,
-                  }))
-                }
-                placeholder="مثال: شعر قصير، حاجب رقيق، عيون واسعة"
-                rows={3}
-                maxLength={200}
-                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
-              />
-            </label>
-
-            <p className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-200 sm:col-span-2">
-              لا ترفع صور أشخاص آخرين بدون موافقتهم. لا تستخدم النظام لانتحال
-              الهوية أو التضليل. في هذه المرحلة، لا يتم رفع أي صورة فعلياً — فقط
-              تُحفظ اختياراتك محلياً في المتصفح.
-            </p>
-          </CollapsibleSection>
-
+        <div
+          id="main-panel-camera"
+          role="tabpanel"
+          aria-labelledby="main-tab-camera"
+          tabIndex={0}
+          className={mainTab === "camera" ? "mt-4 grid gap-4" : "hidden"}
+        >
           <CollapsibleSection
             title="الكاميرا والتصوير"
             badge="3 حقول"
@@ -261,7 +243,15 @@ export default function Home() {
               </select>
             </label>
           </CollapsibleSection>
+        </div>
 
+        <div
+          id="main-panel-room"
+          role="tabpanel"
+          aria-labelledby="main-tab-room"
+          tabIndex={0}
+          className={mainTab === "room" ? "mt-4 grid gap-4" : "hidden"}
+        >
           <CollapsibleSection title="الغرفة والخلفية" badge="4 حقول">
             <label className="grid gap-2" htmlFor="room-type">
               نوع الغرفة
@@ -343,6 +333,172 @@ export default function Home() {
               />
               يوجد سرير (Bed)
             </label>
+          </CollapsibleSection>
+
+          <CollapsibleSection title="الإضاءة الواقعية" badge="4 حقول">
+            <label className="grid gap-2" htmlFor="lighting-source">
+              مصدر الإضاءة
+              <select
+                id="lighting-source"
+                value={state.lightingSource}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    lightingSource: event.target
+                      .value as SceneState["lightingSource"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="window-day">نافذة نهار (Day window)</option>
+                <option value="window-sunset">
+                  نافذة غروب (Sunset window)
+                </option>
+                <option value="ceiling">سقف (Ceiling)</option>
+                <option value="bedside-lamp">مصباح سرير (Bedside lamp)</option>
+              </select>
+            </label>
+
+            <label className="grid gap-2" htmlFor="lighting-intensity">
+              شدة الإضاءة
+              <select
+                id="lighting-intensity"
+                value={state.lightingIntensity}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    lightingIntensity: event.target
+                      .value as SceneState["lightingIntensity"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="dim">خافتة (Dim)</option>
+                <option value="soft">ناعمة (Soft)</option>
+                <option value="medium">متوسطة (Medium)</option>
+                <option value="bright">ساطعة (Bright)</option>
+              </select>
+            </label>
+
+            <label className="grid gap-2" htmlFor="lighting-direction">
+              اتجاه الضوء
+              <select
+                id="lighting-direction"
+                value={state.lightingDirection}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    lightingDirection: event.target
+                      .value as SceneState["lightingDirection"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="front">أمامي (Front)</option>
+                <option value="side">جانبي (Side)</option>
+                <option value="top">علوي (Top)</option>
+                <option value="back-soft">خلفي ناعم (Soft back)</option>
+              </select>
+            </label>
+
+            <label className="grid gap-2" htmlFor="color-temperature">
+              حرارة اللون
+              <select
+                id="color-temperature"
+                value={state.colorTemperature}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    colorTemperature: event.target
+                      .value as SceneState["colorTemperature"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="warm">دافئة (Warm)</option>
+                <option value="neutral">محايدة (Neutral)</option>
+                <option value="cool">باردة (Cool)</option>
+              </select>
+            </label>
+          </CollapsibleSection>
+        </div>
+
+        <div
+          id="main-panel-person"
+          role="tabpanel"
+          aria-labelledby="main-tab-person"
+          tabIndex={0}
+          className={mainTab === "person" ? "mt-4 grid gap-4" : "hidden"}
+        >
+          <CollapsibleSection title="الصورة المرجعية" badge="3 حقول">
+            <label
+              className="flex items-center gap-3 rounded-lg border border-white/20 bg-slate-900 p-3 sm:col-span-2"
+              htmlFor="reference-provided"
+            >
+              <input
+                id="reference-provided"
+                type="checkbox"
+                checked={state.referenceProvided}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    referenceProvided: event.target.checked,
+                  }))
+                }
+                className="h-4 w-4 accent-amber-300"
+              />
+              لدي صورة مرجعية
+            </label>
+
+            <label
+              className="grid gap-2 sm:col-span-2"
+              htmlFor="identity-priority"
+            >
+              أولوية الحفاظ على الهوية
+              <select
+                id="identity-priority"
+                value={state.identityPriority}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    identityPriority: event.target
+                      .value as SceneState["identityPriority"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="strict">قصوى (Strict)</option>
+                <option value="balanced">متوازنة (Balanced)</option>
+                <option value="flexible">مرنة (Flexible)</option>
+              </select>
+            </label>
+
+            <label
+              className="grid gap-2 sm:col-span-2"
+              htmlFor="identity-notes"
+            >
+              ملاحظات عن الملامح (اختياري)
+              <textarea
+                id="identity-notes"
+                value={state.identityNotes}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    identityNotes: event.target.value,
+                  }))
+                }
+                placeholder="مثال: شعر قصير، حاجب رقيق، عيون واسعة"
+                rows={3}
+                maxLength={200}
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              />
+            </label>
+
+            <p className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-200 sm:col-span-2">
+              لا ترفع صور أشخاص آخرين بدون موافقتهم. لا تستخدم النظام لانتحال
+              الهوية أو التضليل. في هذه المرحلة، لا يتم رفع أي صورة فعلياً — فقط
+              تُحفظ اختياراتك محلياً في المتصفح.
+            </p>
           </CollapsibleSection>
 
           <CollapsibleSection title="الملابس" badge="4 حقول">
@@ -753,94 +909,15 @@ export default function Home() {
               </select>
             </label>
           </CollapsibleSection>
+        </div>
 
-          <CollapsibleSection title="الإضاءة الواقعية" badge="4 حقول">
-            <label className="grid gap-2" htmlFor="lighting-source">
-              مصدر الإضاءة
-              <select
-                id="lighting-source"
-                value={state.lightingSource}
-                onChange={(event) =>
-                  setState((current) => ({
-                    ...current,
-                    lightingSource: event.target
-                      .value as SceneState["lightingSource"],
-                  }))
-                }
-                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
-              >
-                <option value="window-day">نافذة نهار (Day window)</option>
-                <option value="window-sunset">
-                  نافذة غروب (Sunset window)
-                </option>
-                <option value="ceiling">سقف (Ceiling)</option>
-                <option value="bedside-lamp">مصباح سرير (Bedside lamp)</option>
-              </select>
-            </label>
-
-            <label className="grid gap-2" htmlFor="lighting-intensity">
-              شدة الإضاءة
-              <select
-                id="lighting-intensity"
-                value={state.lightingIntensity}
-                onChange={(event) =>
-                  setState((current) => ({
-                    ...current,
-                    lightingIntensity: event.target
-                      .value as SceneState["lightingIntensity"],
-                  }))
-                }
-                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
-              >
-                <option value="dim">خافتة (Dim)</option>
-                <option value="soft">ناعمة (Soft)</option>
-                <option value="medium">متوسطة (Medium)</option>
-                <option value="bright">ساطعة (Bright)</option>
-              </select>
-            </label>
-
-            <label className="grid gap-2" htmlFor="lighting-direction">
-              اتجاه الضوء
-              <select
-                id="lighting-direction"
-                value={state.lightingDirection}
-                onChange={(event) =>
-                  setState((current) => ({
-                    ...current,
-                    lightingDirection: event.target
-                      .value as SceneState["lightingDirection"],
-                  }))
-                }
-                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
-              >
-                <option value="front">أمامي (Front)</option>
-                <option value="side">جانبي (Side)</option>
-                <option value="top">علوي (Top)</option>
-                <option value="back-soft">خلفي ناعم (Soft back)</option>
-              </select>
-            </label>
-
-            <label className="grid gap-2" htmlFor="color-temperature">
-              حرارة اللون
-              <select
-                id="color-temperature"
-                value={state.colorTemperature}
-                onChange={(event) =>
-                  setState((current) => ({
-                    ...current,
-                    colorTemperature: event.target
-                      .value as SceneState["colorTemperature"],
-                  }))
-                }
-                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
-              >
-                <option value="warm">دافئة (Warm)</option>
-                <option value="neutral">محايدة (Neutral)</option>
-                <option value="cool">باردة (Cool)</option>
-              </select>
-            </label>
-          </CollapsibleSection>
-
+        <div
+          id="main-panel-advanced"
+          role="tabpanel"
+          aria-labelledby="main-tab-advanced"
+          tabIndex={0}
+          className={mainTab === "advanced" ? "mt-4 grid gap-4" : "hidden"}
+        >
           <CollapsibleSection title="خيارات متقدمة" badge="0 حقول">
             {null}
           </CollapsibleSection>
@@ -848,7 +925,7 @@ export default function Home() {
 
         <section
           aria-label="المعاينة"
-          className="mt-6 rounded-xl border border-white/10 bg-slate-900 p-5"
+          className="mt-6 rounded-xl border border-white/10 bg-slate-900 p-5 sm:sticky sm:bottom-0 sm:z-20 sm:shadow-2xl"
         >
           <div
             role="tablist"
