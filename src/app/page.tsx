@@ -14,8 +14,8 @@ export default function Home() {
           </h1>
 
           <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300 sm:text-xl">
-            مسودة الأساس التقني لتطبيق عربي يبني Prompts لسيلفي واقعي مع احترام الهوية،
-            الفيزياء، التشريح، الإضاءة وسلوك كاميرا الهاتف.
+            مسودة الأساس التقني لتطبيق عربي يبني Prompts لسيلفي واقعي مع احترام
+            الهوية، الفيزياء، التشريح، الإضاءة وسلوك كاميرا الهاتف.
           </p>
 
           <div className="mt-10 grid gap-4 sm:grid-cols-3">
@@ -34,8 +34,8 @@ export default function Home() {
           </div>
 
           <div className="mt-10 rounded-2xl border border-amber-300/15 bg-amber-300/[0.06] p-5 text-sm leading-7 text-amber-100/90">
-            هذه نسخة Draft غير مختبرة بعد. لا تعتبر Phase 1A مكتملة حتى ينجح npm install ثم lint و
-            typecheck وtest والتشغيل المحلي.
+            هذه نسخة Draft غير مختبرة بعد. لا تعتبر Phase 1A مكتملة حتى ينجح npm
+            install ثم lint و typecheck وtest والتشغيل المحلي.
           </div>
         </div>
       </section>

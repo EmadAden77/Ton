@@ -8,7 +8,9 @@ export const metadata: Metadata = {
   description: "واجهة عربية لبناء أوصاف سيلفي واقعية ومتسقة فيزيائياً.",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="ar" dir="rtl">
       <body>{children}</body>
