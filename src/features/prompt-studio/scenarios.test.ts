@@ -63,17 +63,29 @@ describe("ready-made scenarios", () => {
 
   it("provides a bed for the bed laptop scenario", () => {
     const preset = SCENARIOS.find((item) => item.id === "bed-laptop");
-    expect(preset?.apply({ ...baseState, roomHasBed: false }).roomHasBed).toBe(true);
+    expect(preset?.apply({ ...baseState, roomHasBed: false }).roomHasBed).toBe(
+      true,
+    );
   });
 
   it("uses the available free hand field for keyboard and hair gestures", () => {
-    expect(SCENARIOS.find((item) => item.id === "working-laptop")?.apply(baseState).freeHandPosition).toBe("on-keyboard");
-    expect(SCENARIOS.find((item) => item.id === "getting-ready")?.apply(baseState).freeHandPosition).toBe("on-hair");
+    expect(
+      SCENARIOS.find((item) => item.id === "working-laptop")?.apply(baseState)
+        .freeHandPosition,
+    ).toBe("on-keyboard");
+    expect(
+      SCENARIOS.find((item) => item.id === "getting-ready")?.apply(baseState)
+        .freeHandPosition,
+    ).toBe("on-hair");
   });
 
   it("ensures the window scenario has a window without changing unrelated clothing", () => {
     const preset = SCENARIOS.find((item) => item.id === "standing-window");
-    const result = preset?.apply({ ...baseState, roomWindow: "none", clothingTop: "hoodie" });
+    const result = preset?.apply({
+      ...baseState,
+      roomWindow: "none",
+      clothingTop: "hoodie",
+    });
     expect(result?.roomWindow).toBe("medium");
     expect(result?.clothingTop).toBe("hoodie");
   });

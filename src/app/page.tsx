@@ -146,7 +146,9 @@ export default function Home() {
               id="scenario"
               value={state.scenario}
               onChange={(event) =>
-                handleScenarioChange(event.target.value as SceneState["scenario"])
+                handleScenarioChange(
+                  event.target.value as SceneState["scenario"],
+                )
               }
               className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
             >
