@@ -261,8 +261,10 @@ function effectiveMouthState(state: SceneState): SceneState["mouthState"] {
   if (state.faceExpression === "closed-smile") {
     return "smile-closed";
   }
-  if (state.faceExpression === "light-laugh" &&
-    (state.mouthState === "closed" || state.mouthState === "smile-closed")) {
+  if (
+    state.faceExpression === "light-laugh" &&
+    (state.mouthState === "closed" || state.mouthState === "smile-closed")
+  ) {
     return "slightly-open";
   }
   return state.mouthState;
