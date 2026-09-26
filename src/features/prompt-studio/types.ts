@@ -33,4 +33,24 @@ export interface SceneState {
     | "neutral"
     // لون بارد.
     | "cool";
+  roomCleanliness:
+    // مرتبة جداً.
+    | "very-tidy"
+    // ترتيب طبيعي.
+    | "natural"
+    // فوضى خفيفة.
+    | "light-mess"
+    // فوضى متوسطة.
+    | "moderate-mess";
+  roomWindow:
+    // بلا نافذة.
+    | "none"
+    // نافذة صغيرة.
+    | "small"
+    // نافذة متوسطة.
+    | "medium"
+    // نافذة كبيرة.
+    | "large";
+  // وجود سرير في الغرفة: نعم أو لا.
+  roomHasBed: boolean;
 }
