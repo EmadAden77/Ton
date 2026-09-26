@@ -81,8 +81,12 @@ export default function Home() {
               className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
             >
               <option value="eye-level">بمستوى العين (Eye level)</option>
-              <option value="slightly-above">أعلى قليلاً (Slightly above)</option>
-              <option value="slightly-below">أسفل قليلاً (Slightly below)</option>
+              <option value="slightly-above">
+                أعلى قليلاً (Slightly above)
+              </option>
+              <option value="slightly-below">
+                أسفل قليلاً (Slightly below)
+              </option>
             </select>
           </label>
 
