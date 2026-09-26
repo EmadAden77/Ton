@@ -98,7 +98,9 @@ export default function Home() {
               <h2 className="font-semibold">Prompt (English)</h2>
               <button
                 type="button"
-                onClick={() => void navigator.clipboard.writeText(englishPrompt)}
+                onClick={() =>
+                  void navigator.clipboard.writeText(englishPrompt)
+                }
                 className="rounded-lg border border-white/20 px-3 py-1 text-sm hover:bg-white/10"
               >
                 نسخ
@@ -120,9 +122,7 @@ export default function Home() {
                 نسخ
               </button>
             </div>
-            <p className="mt-3 leading-7 text-slate-200">
-              {arabicPrompt}
-            </p>
+            <p className="mt-3 leading-7 text-slate-200">{arabicPrompt}</p>
           </div>
 
           <div className="rounded-lg border border-white/10 bg-slate-950/80 p-4">
@@ -130,7 +130,9 @@ export default function Home() {
               <h2 className="font-semibold">Negative Prompt</h2>
               <button
                 type="button"
-                onClick={() => void navigator.clipboard.writeText(negativePrompt)}
+                onClick={() =>
+                  void navigator.clipboard.writeText(negativePrompt)
+                }
                 className="rounded-lg border border-white/20 px-3 py-1 text-sm hover:bg-white/10"
               >
                 نسخ
