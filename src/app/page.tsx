@@ -130,7 +130,11 @@ export default function Home() {
         </header>
 
         <nav aria-label="أقسام إعدادات المشهد" className="mt-6">
-          <div role="tablist" aria-label="إعدادات المشهد" className="grid grid-cols-4 gap-1 rounded-xl bg-slate-900 p-1">
+          <div
+            role="tablist"
+            aria-label="إعدادات المشهد"
+            className="grid grid-cols-4 gap-1 rounded-xl bg-slate-900 p-1"
+          >
             {mainTabs.map(({ id, label }) => (
               <button
                 key={id}
@@ -142,13 +146,24 @@ export default function Home() {
                 tabIndex={mainTab === id ? 0 : -1}
                 onClick={() => setMainTab(id)}
                 onKeyDown={(event) => {
-                  const offset = event.key === "ArrowRight" ? -1 : event.key === "ArrowLeft" ? 1 : 0;
+                  const offset =
+                    event.key === "ArrowRight"
+                      ? -1
+                      : event.key === "ArrowLeft"
+                        ? 1
+                        : 0;
                   const index = mainTabs.findIndex((tab) => tab.id === id);
                   const next =
-                    event.key === "Home" ? mainTabs[0].id :
-                    event.key === "End" ? mainTabs[mainTabs.length - 1].id :
-                    offset ? mainTabs[(index + offset + mainTabs.length) % mainTabs.length].id :
-                    null;
+                    event.key === "Home"
+                      ? mainTabs[0].id
+                      : event.key === "End"
+                        ? mainTabs[mainTabs.length - 1].id
+                        : offset
+                          ? mainTabs[
+                              (index + offset + mainTabs.length) %
+                                mainTabs.length
+                            ].id
+                          : null;
                   if (next) {
                     event.preventDefault();
                     setMainTab(next);
