@@ -34,6 +34,9 @@ const baseState: SceneState = {
   shoulderPosition: "relaxed",
   handPlacement: "at-side",
   backPosture: "relaxed",
+  faceExpression: "neutral",
+  eyeDirection: "camera",
+  mouthState: "closed",
 };
 
 describe("buildPromptArabic", () => {
@@ -516,5 +519,84 @@ describe("pose descriptions", () => {
     });
     expect(prompt).toContain("the subject is standing");
     expect(prompt).not.toContain("standing near the window");
+  });
+});
+
+describe("facial expression descriptions", () => {
+  it("describes the selected expression in English", () => {
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        faceExpression: "soft-smile",
+      }),
+    ).toContain("facial expression is a soft smile");
+  });
+
+  it("describes eye direction in English", () => {
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        eyeDirection: "down-soft",
+      }),
+    ).toContain("eyes directed softly down");
+  });
+
+  it("describes mouth state in English", () => {
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        mouthState: "slightly-open",
+      }),
+    ).toContain("mouth slightly open");
+  });
+
+  it("describes the selected expression in Arabic", () => {
+    expect(
+      buildPromptArabic({
+        ...baseState,
+        faceExpression: "calm-focus",
+      }),
+    ).toContain("تعبير الوجه تركيز هادئ");
+  });
+
+  it("avoids an open smile when the expression is sleepy", () => {
+    const state = {
+      ...baseState,
+      faceExpression: "sleepy" as const,
+      mouthState: "smile-open-light" as const,
+    };
+    expect(buildPromptEnglish(state)).toContain(
+      "facial expression is slightly sleepy",
+    );
+    expect(buildPromptEnglish(state)).toContain("mouth closed");
+    expect(buildPromptEnglish(state)).not.toContain("open smile");
+    expect(buildPromptArabic(state)).toContain("الفم مغلق");
+  });
+
+  it("avoids a closed smile during a light laugh", () => {
+    const state = {
+      ...baseState,
+      faceExpression: "light-laugh" as const,
+      mouthState: "smile-closed" as const,
+    };
+    expect(buildPromptEnglish(state)).toContain("mouth slightly open");
+    expect(buildPromptEnglish(state)).not.toContain("mouth in a closed smile");
+    expect(buildPromptArabic(state)).toContain("الفم مفتوح قليلاً");
+  });
+
+  it("keeps a closed smile and side glance internally consistent", () => {
+    const smile = buildPromptEnglish({
+      ...baseState,
+      faceExpression: "closed-smile",
+      mouthState: "slightly-open",
+    });
+    const glance = buildPromptEnglish({
+      ...baseState,
+      faceExpression: "side-glance",
+      eyeDirection: "camera",
+    });
+    expect(smile).toContain("mouth in a closed smile");
+    expect(smile).not.toContain("mouth slightly open");
+    expect(glance).toContain("eyes directed softly away");
   });
 });

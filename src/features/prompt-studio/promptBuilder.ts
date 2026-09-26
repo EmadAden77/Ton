@@ -250,6 +250,58 @@ const backPostureLabels: Record<SceneState["backPosture"], string> = {
   "slightly-leaning": "مائل قليلاً",
 };
 
+// يُبقي وصف الفم متسقاً مع التعبير عند اختيار تركيبة متعارضة.
+function effectiveMouthState(state: SceneState): SceneState["mouthState"] {
+  if (
+    state.faceExpression === "sleepy" &&
+    state.mouthState === "smile-open-light"
+  ) {
+    return "closed";
+  }
+  if (state.faceExpression === "closed-smile") {
+    return "smile-closed";
+  }
+  if (
+    state.faceExpression === "light-laugh" &&
+    (state.mouthState === "closed" || state.mouthState === "smile-closed")
+  ) {
+    return "slightly-open";
+  }
+  return state.mouthState;
+}
+
+function effectiveEyeDirection(state: SceneState): SceneState["eyeDirection"] {
+  return state.faceExpression === "side-glance" &&
+    state.eyeDirection === "camera"
+    ? "away-soft"
+    : state.eyeDirection;
+}
+
+const faceExpressionLabels: Record<SceneState["faceExpression"], string> = {
+  neutral: "محايد طبيعي",
+  "soft-smile": "ابتسامة خفيفة",
+  "closed-smile": "ابتسامة مغلقة",
+  "calm-focus": "تركيز هادئ",
+  "side-glance": "نظرة جانبية",
+  thinking: "تفكير",
+  sleepy: "نعاس خفيف",
+  "light-laugh": "ضحكة خفيفة",
+};
+
+const eyeDirectionLabels: Record<SceneState["eyeDirection"], string> = {
+  camera: "نحو الكاميرا",
+  mirror: "نحو المرآة",
+  "away-soft": "بعيداً بلطف",
+  "down-soft": "للأسفل بلطف",
+};
+
+const mouthStateLabels: Record<SceneState["mouthState"], string> = {
+  closed: "مغلق",
+  "slightly-open": "مفتوح قليلاً",
+  "smile-closed": "في ابتسامة مغلقة",
+  "smile-open-light": "في ابتسامة مفتوحة خفيفة",
+};
+
 export function buildPromptArabic(state: SceneState): string {
   const identityDescription = state.referenceProvided
     ? `${arabicIdentityPriorities[state.identityPriority]}. `
@@ -290,7 +342,7 @@ export function buildPromptArabic(state: SceneState): string {
         ? "بجانب الجسم"
         : handPlacementLabels[state.handPlacement];
 
-  return `${identityDescription}لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}، ${roomCleanlinessLabels[state.roomCleanliness]}، ${roomWindowLabels[state.roomWindow]}${bedDescription}. الملابس: القطعة العلوية ${clothingTopLabels[state.clothingTop]}، والقطعة السفلية ${clothingBottomLabels[state.clothingBottom]}، ومادة القماش ${clothingMaterialLabels[state.clothingMaterial]}، وفئة اللون ${clothingColorLabels[state.clothingColor]}. مع شعر ${hairLengthLabels[state.hairLength]} ${hairTextureLabels[state.hairTexture]} ${hairStyleLabels[state.hairStyle]}. الشخص ${poseDescription}، رأسه ${headDirectionLabels[state.headDirection]}، وكتفاه ${shoulderPositionLabels[state.shoulderPosition]}، ويده الحرة ${handDescription}، وظهره ${backPostureLabels[state.backPosture]}. مصدر الإضاءة ${lightingSourceDescription} وشدتها ${lightingIntensities[state.lightingIntensity]}، واتجاه الضوء ${lightingDirections[state.lightingDirection]}، وحرارة اللون ${colorTemperatures[state.colorTemperature]}.${identityNotesDescription}`;
+  return `${identityDescription}لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}، ${roomCleanlinessLabels[state.roomCleanliness]}، ${roomWindowLabels[state.roomWindow]}${bedDescription}. الملابس: القطعة العلوية ${clothingTopLabels[state.clothingTop]}، والقطعة السفلية ${clothingBottomLabels[state.clothingBottom]}، ومادة القماش ${clothingMaterialLabels[state.clothingMaterial]}، وفئة اللون ${clothingColorLabels[state.clothingColor]}. مع شعر ${hairLengthLabels[state.hairLength]} ${hairTextureLabels[state.hairTexture]} ${hairStyleLabels[state.hairStyle]}. الشخص ${poseDescription}، رأسه ${headDirectionLabels[state.headDirection]}، وكتفاه ${shoulderPositionLabels[state.shoulderPosition]}، ويده الحرة ${handDescription}، وظهره ${backPostureLabels[state.backPosture]}. تعبير الوجه ${faceExpressionLabels[state.faceExpression]}، والنظر ${eyeDirectionLabels[effectiveEyeDirection(state)]}، والفم ${mouthStateLabels[effectiveMouthState(state)]}. مصدر الإضاءة ${lightingSourceDescription} وشدتها ${lightingIntensities[state.lightingIntensity]}، واتجاه الضوء ${lightingDirections[state.lightingDirection]}، وحرارة اللون ${colorTemperatures[state.colorTemperature]}.${identityNotesDescription}`;
 }
 
 const englishShotTypes: Record<SceneState["shotType"], string> = {
@@ -468,6 +520,31 @@ const englishBackPostures: Record<SceneState["backPosture"], string> = {
   "slightly-leaning": "slightly leaning",
 };
 
+const englishFaceExpressions: Record<SceneState["faceExpression"], string> = {
+  neutral: "neutral",
+  "soft-smile": "a soft smile",
+  "closed-smile": "a closed-mouth smile",
+  "calm-focus": "calm focus",
+  "side-glance": "a side glance",
+  thinking: "thoughtful",
+  sleepy: "slightly sleepy",
+  "light-laugh": "a light laugh",
+};
+
+const englishEyeDirections: Record<SceneState["eyeDirection"], string> = {
+  camera: "at the camera",
+  mirror: "at the mirror",
+  "away-soft": "softly away",
+  "down-soft": "softly down",
+};
+
+const englishMouthStates: Record<SceneState["mouthState"], string> = {
+  closed: "closed",
+  "slightly-open": "slightly open",
+  "smile-closed": "in a closed smile",
+  "smile-open-light": "in a light open smile",
+};
+
 export function buildPromptEnglish(state: SceneState): string {
   const identityDescription = state.referenceProvided
     ? `${englishIdentityPriorities[state.identityPriority]}. `
@@ -515,7 +592,7 @@ export function buildPromptEnglish(state: SceneState): string {
         ? "at the side"
         : englishHandPlacements[state.handPlacement];
 
-  return `${identityDescription}A ${englishShotTypes[state.shotType]} taken ${englishCameraDistances[state.cameraDistance]} from ${englishCameraAngles[state.cameraAngle]} in a ${englishRoomTypes[state.roomType]} bedroom that is ${englishRoomCleanliness[state.roomCleanliness]}, with ${windowDescription}${bedDescription}; the subject wears a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]}${bottomDescription} in ${englishClothingColors[state.clothingColor]} tones, with ${englishHairLengths[state.hairLength]} ${englishHairTextures[state.hairTexture]} ${englishHairStyles[state.hairStyle]} hair; the subject is ${poseDescription}, head ${englishHeadDirections[state.headDirection]}, shoulders ${englishShoulderPositions[state.shoulderPosition]}, free hand ${handDescription}, back posture ${englishBackPostures[state.backPosture]}; lighting is ${englishLightingIntensities[state.lightingIntensity]} ${lightingSource}, ${englishLightingDirections[state.lightingDirection]}, with a ${englishColorTemperatures[state.colorTemperature]} color temperature.${identityNotesDescription}`;
+  return `${identityDescription}A ${englishShotTypes[state.shotType]} taken ${englishCameraDistances[state.cameraDistance]} from ${englishCameraAngles[state.cameraAngle]} in a ${englishRoomTypes[state.roomType]} bedroom that is ${englishRoomCleanliness[state.roomCleanliness]}, with ${windowDescription}${bedDescription}; the subject wears a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]}${bottomDescription} in ${englishClothingColors[state.clothingColor]} tones, with ${englishHairLengths[state.hairLength]} ${englishHairTextures[state.hairTexture]} ${englishHairStyles[state.hairStyle]} hair; the subject is ${poseDescription}, head ${englishHeadDirections[state.headDirection]}, shoulders ${englishShoulderPositions[state.shoulderPosition]}, free hand ${handDescription}, back posture ${englishBackPostures[state.backPosture]}; facial expression is ${englishFaceExpressions[state.faceExpression]}, eyes directed ${englishEyeDirections[effectiveEyeDirection(state)]}, mouth ${englishMouthStates[effectiveMouthState(state)]}; lighting is ${englishLightingIntensities[state.lightingIntensity]} ${lightingSource}, ${englishLightingDirections[state.lightingDirection]}, with a ${englishColorTemperatures[state.colorTemperature]} color temperature.${identityNotesDescription}`;
 }
 
 export function buildNegativePrompt(state: SceneState): string {

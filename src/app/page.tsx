@@ -83,6 +83,9 @@ export default function Home() {
     shoulderPosition: "relaxed",
     handPlacement: "at-side",
     backPosture: "relaxed",
+    faceExpression: "neutral",
+    eyeDirection: "camera",
+    mouthState: "closed",
   });
 
   const englishPrompt = buildPromptEnglish(state);
@@ -614,6 +617,82 @@ export default function Home() {
                 <option value="relaxed">مسترخٍ (Relaxed)</option>
                 <option value="slightly-leaning">
                   مائل قليلاً (Slightly leaning)
+                </option>
+              </select>
+            </label>
+          </CollapsibleSection>
+
+          <CollapsibleSection title="تعابير الوجه" badge="3 حقول">
+            <label className="grid gap-2" htmlFor="face-expression">
+              تعبير الوجه
+              <select
+                id="face-expression"
+                value={state.faceExpression}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    faceExpression: event.target
+                      .value as SceneState["faceExpression"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="neutral">محايد طبيعي (Neutral)</option>
+                <option value="soft-smile">ابتسامة خفيفة (Soft smile)</option>
+                <option value="closed-smile">
+                  ابتسامة مغلقة (Closed smile)
+                </option>
+                <option value="calm-focus">تركيز هادئ (Calm focus)</option>
+                <option value="side-glance">نظرة جانبية (Side glance)</option>
+                <option value="thinking">تفكير (Thinking)</option>
+                <option value="sleepy">نعاس خفيف (Sleepy)</option>
+                <option value="light-laugh">ضحكة خفيفة (Light laugh)</option>
+              </select>
+            </label>
+
+            <label className="grid gap-2" htmlFor="eye-direction">
+              اتجاه النظر
+              <select
+                id="eye-direction"
+                value={state.eyeDirection}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    eyeDirection: event.target
+                      .value as SceneState["eyeDirection"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="camera">نحو الكاميرا (Camera)</option>
+                <option value="mirror">نحو المرآة (Mirror)</option>
+                <option value="away-soft">بعيداً بلطف (Away)</option>
+                <option value="down-soft">للأسفل بلطف (Down)</option>
+              </select>
+            </label>
+
+            <label className="grid gap-2" htmlFor="mouth-state">
+              حالة الفم
+              <select
+                id="mouth-state"
+                value={state.mouthState}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    mouthState: event.target.value as SceneState["mouthState"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="closed">مغلق (Closed)</option>
+                <option value="slightly-open">
+                  مفتوح قليلاً (Slightly open)
+                </option>
+                <option value="smile-closed">
+                  ابتسامة مغلقة (Smile closed)
+                </option>
+                <option value="smile-open-light">
+                  ابتسامة مفتوحة خفيفة (Light open smile)
                 </option>
               </select>
             </label>

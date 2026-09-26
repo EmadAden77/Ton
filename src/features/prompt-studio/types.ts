@@ -182,4 +182,39 @@ export interface SceneState {
     | "relaxed"
     // ظهر مائل قليلاً.
     | "slightly-leaning";
+  faceExpression:
+    // تعبير محايد.
+    | "neutral"
+    // ابتسامة خفيفة.
+    | "soft-smile"
+    // ابتسامة بفم مغلق.
+    | "closed-smile"
+    // تركيز هادئ.
+    | "calm-focus"
+    // نظرة جانبية.
+    | "side-glance"
+    // تعبير تفكير.
+    | "thinking"
+    // نعاس خفيف.
+    | "sleepy"
+    // ضحكة خفيفة.
+    | "light-laugh";
+  eyeDirection:
+    // النظر إلى الكاميرا.
+    | "camera"
+    // النظر إلى المرآة.
+    | "mirror"
+    // النظر بعيداً بلطف.
+    | "away-soft"
+    // النظر إلى الأسفل بلطف.
+    | "down-soft";
+  mouthState:
+    // فم مغلق.
+    | "closed"
+    // فم مفتوح قليلاً.
+    | "slightly-open"
+    // ابتسامة بفم مغلق.
+    | "smile-closed"
+    // ابتسامة مفتوحة خفيفة.
+    | "smile-open-light";
 }
