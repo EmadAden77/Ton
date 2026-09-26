@@ -58,7 +58,8 @@ export default function Home() {
               onChange={(event) =>
                 setState((current) => ({
                   ...current,
-                  cameraDistance: event.target.value as SceneState["cameraDistance"],
+                  cameraDistance: event.target
+                    .value as SceneState["cameraDistance"],
                 }))
               }
               className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
@@ -83,8 +84,12 @@ export default function Home() {
               className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
             >
               <option value="eye-level">بمستوى العين (Eye level)</option>
-              <option value="slightly-above">أعلى قليلاً (Slightly above)</option>
-              <option value="slightly-below">أسفل قليلاً (Slightly below)</option>
+              <option value="slightly-above">
+                أعلى قليلاً (Slightly above)
+              </option>
+              <option value="slightly-below">
+                أسفل قليلاً (Slightly below)
+              </option>
             </select>
           </label>
 
@@ -96,7 +101,8 @@ export default function Home() {
               onChange={(event) =>
                 setState((current) => ({
                   ...current,
-                  roomCleanliness: event.target.value as SceneState["roomCleanliness"],
+                  roomCleanliness: event.target
+                    .value as SceneState["roomCleanliness"],
                 }))
               }
               className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
@@ -136,7 +142,8 @@ export default function Home() {
               onChange={(event) =>
                 setState((current) => ({
                   ...current,
-                  lightingSource: event.target.value as SceneState["lightingSource"],
+                  lightingSource: event.target
+                    .value as SceneState["lightingSource"],
                 }))
               }
               className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
@@ -156,7 +163,8 @@ export default function Home() {
               onChange={(event) =>
                 setState((current) => ({
                   ...current,
-                  lightingIntensity: event.target.value as SceneState["lightingIntensity"],
+                  lightingIntensity: event.target
+                    .value as SceneState["lightingIntensity"],
                 }))
               }
               className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
@@ -176,7 +184,8 @@ export default function Home() {
               onChange={(event) =>
                 setState((current) => ({
                   ...current,
-                  lightingDirection: event.target.value as SceneState["lightingDirection"],
+                  lightingDirection: event.target
+                    .value as SceneState["lightingDirection"],
                 }))
               }
               className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
@@ -196,7 +205,8 @@ export default function Home() {
               onChange={(event) =>
                 setState((current) => ({
                   ...current,
-                  colorTemperature: event.target.value as SceneState["colorTemperature"],
+                  colorTemperature: event.target
+                    .value as SceneState["colorTemperature"],
                 }))
               }
               className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
@@ -207,7 +217,10 @@ export default function Home() {
             </select>
           </label>
 
-          <label className="flex items-center gap-3 rounded-lg border border-white/20 bg-slate-900 p-3" htmlFor="room-has-bed">
+          <label
+            className="flex items-center gap-3 rounded-lg border border-white/20 bg-slate-900 p-3"
+            htmlFor="room-has-bed"
+          >
             <input
               id="room-has-bed"
               type="checkbox"
