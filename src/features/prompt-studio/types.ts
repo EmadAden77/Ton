@@ -264,5 +264,9 @@ export interface SceneState {
     // استلقاء مع الهاتف.
     | "lying-with-phone"
     // وقوف قرب النافذة.
-    | "standing-window";
+    | "standing-window"
+    // اختيار الملابس من الخزانة.
+    | "choosing-clothes"
+    // ترتيب الملابس قبل الخروج.
+    | "adjusting-clothing";
 }
