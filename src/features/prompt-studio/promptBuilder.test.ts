@@ -573,6 +573,17 @@ describe("facial expression descriptions", () => {
     expect(buildPromptArabic(state)).toContain("الفم مغلق");
   });
 
+  it("avoids a closed smile during a light laugh", () => {
+    const state = {
+      ...baseState,
+      faceExpression: "light-laugh" as const,
+      mouthState: "smile-closed" as const,
+    };
+    expect(buildPromptEnglish(state)).toContain("mouth slightly open");
+    expect(buildPromptEnglish(state)).not.toContain("mouth in a closed smile");
+    expect(buildPromptArabic(state)).toContain("الفم مفتوح قليلاً");
+  });
+
   it("keeps a closed smile and side glance internally consistent", () => {
     const smile = buildPromptEnglish({
       ...baseState,
