@@ -507,10 +507,18 @@ export default function Home() {
                 className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
               >
                 <option value="standing">وقوف (Standing)</option>
-                <option value="sitting-bed">جلوس على السرير (Sitting on bed)</option>
-                <option value="sitting-chair">جلوس على كرسي (Sitting on chair)</option>
-                <option value="lying-bed">استلقاء على السرير (Lying on bed)</option>
-                <option value="standing-window">وقوف قرب النافذة (Standing by window)</option>
+                <option value="sitting-bed">
+                  جلوس على السرير (Sitting on bed)
+                </option>
+                <option value="sitting-chair">
+                  جلوس على كرسي (Sitting on chair)
+                </option>
+                <option value="lying-bed">
+                  استلقاء على السرير (Lying on bed)
+                </option>
+                <option value="standing-window">
+                  وقوف قرب النافذة (Standing by window)
+                </option>
               </select>
             </label>
 
@@ -522,14 +530,19 @@ export default function Home() {
                 onChange={(event) =>
                   setState((current) => ({
                     ...current,
-                    headDirection: event.target.value as SceneState["headDirection"],
+                    headDirection: event.target
+                      .value as SceneState["headDirection"],
                   }))
                 }
                 className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
               >
                 <option value="forward">للأمام (Forward)</option>
-                <option value="slightly-left">يساراً قليلاً (Slightly left)</option>
-                <option value="slightly-right">يميناً قليلاً (Slightly right)</option>
+                <option value="slightly-left">
+                  يساراً قليلاً (Slightly left)
+                </option>
+                <option value="slightly-right">
+                  يميناً قليلاً (Slightly right)
+                </option>
                 <option value="down">للأسفل (Down)</option>
                 <option value="up-soft">لأعلى برفق (Gently up)</option>
               </select>
@@ -543,13 +556,16 @@ export default function Home() {
                 onChange={(event) =>
                   setState((current) => ({
                     ...current,
-                    shoulderPosition: event.target.value as SceneState["shoulderPosition"],
+                    shoulderPosition: event.target
+                      .value as SceneState["shoulderPosition"],
                   }))
                 }
                 className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
               >
                 <option value="relaxed">مسترخيان (Relaxed)</option>
-                <option value="one-raised">كتف مرتفع قليلاً (One raised)</option>
+                <option value="one-raised">
+                  كتف مرتفع قليلاً (One raised)
+                </option>
                 <option value="both-back">للخلف (Both back)</option>
               </select>
             </label>
@@ -562,14 +578,19 @@ export default function Home() {
                 onChange={(event) =>
                   setState((current) => ({
                     ...current,
-                    handPlacement: event.target.value as SceneState["handPlacement"],
+                    handPlacement: event.target
+                      .value as SceneState["handPlacement"],
                   }))
                 }
                 className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
               >
                 <option value="at-side">بجانب الجسم (At side)</option>
-                <option value="holding-phone">تساند الهاتف (Holding phone)</option>
-                <option value="touching-hair">تلمس الشعر (Touching hair)</option>
+                <option value="holding-phone">
+                  تساند الهاتف (Holding phone)
+                </option>
+                <option value="touching-hair">
+                  تلمس الشعر (Touching hair)
+                </option>
                 <option value="on-lap">على الحضن (On lap)</option>
                 <option value="in-pocket">في الجيب (In pocket)</option>
               </select>
@@ -583,14 +604,17 @@ export default function Home() {
                 onChange={(event) =>
                   setState((current) => ({
                     ...current,
-                    backPosture: event.target.value as SceneState["backPosture"],
+                    backPosture: event.target
+                      .value as SceneState["backPosture"],
                   }))
                 }
                 className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
               >
                 <option value="straight">مستقيم (Straight)</option>
                 <option value="relaxed">مسترخٍ (Relaxed)</option>
-                <option value="slightly-leaning">مائل قليلاً (Slightly leaning)</option>
+                <option value="slightly-leaning">
+                  مائل قليلاً (Slightly leaning)
+                </option>
               </select>
             </label>
           </CollapsibleSection>
