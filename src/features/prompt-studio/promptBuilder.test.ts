@@ -692,3 +692,33 @@ describe("phone in free hand", () => {
     expect(prompt).toContain("تحمل الهاتف");
   });
 });
+
+describe("modest adjusting-clothing scene", () => {
+  it("includes the requested clothing safety constraints only for this scenario", () => {
+    const prompt = buildNegativePrompt({
+      ...baseState,
+      scenario: "adjusting-clothing",
+    });
+    expect(prompt).toContain("no nudity");
+    expect(prompt).toContain("no partially undressed subject");
+    expect(prompt).toContain("no suggestive pose");
+    expect(prompt).toContain("no exposed skin beyond face and hands");
+  });
+
+  it("does not add clothing safety constraints to working-laptop", () => {
+    expect(buildNegativePrompt({
+      ...baseState,
+      scenario: "working-laptop",
+    })).not.toContain("no nudity");
+  });
+
+  it("describes a fully dressed subject in both positive prompts", () => {
+    const scene = {
+      ...baseState,
+      scenario: "adjusting-clothing" as const,
+    };
+    expect(buildPromptEnglish(scene)).toContain("Fully dressed");
+    expect(buildPromptArabic(scene)).toContain("بملابس كاملة محتشمة");
+    expect(buildPromptEnglish({ ...baseState, scenario: "none" })).not.toContain("Fully dressed");
+  });
+});
