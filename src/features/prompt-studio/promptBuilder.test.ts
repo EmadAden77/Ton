@@ -37,19 +37,60 @@ const baseState: SceneState = {
   scenario: "none",
 };
 
-describe("fixed room and lighting modes", () => {
-  it("uses the fixed room description in English", () => {
+describe("person-first prompt structure", () => {
+  it("starts the English prompt with the identity directive", () => {
+    expect(buildPromptEnglish(baseState)).toMatch(
+      /^Preserve the subject's identity/,
+    );
+  });
+
+  it("always includes identity priority even without a reference upload", () => {
+    expect(buildPromptEnglish(baseState)).toContain("with balanced priority");
+  });
+
+  it("uses the short realistic bedroom description in English", () => {
     expect(buildPromptEnglish(baseState)).toContain(
-      "dark tufted headboard bed",
+      "in a realistic modern bedroom with dim ceiling spotlights and a warm bedside lamp",
     );
   });
 
-  it("uses the fixed room description in Arabic", () => {
-    expect(buildPromptArabic(baseState)).toContain(
-      "سرير بظهر منجّد غامق على الجانب الأيسر",
+  it("places the room after the subject description", () => {
+    const prompt = buildPromptEnglish(baseState);
+    expect(prompt.indexOf("the subject is standing")).toBeGreaterThanOrEqual(0);
+    expect(prompt.indexOf("in a realistic modern bedroom")).toBeGreaterThan(
+      prompt.indexOf("the subject is standing"),
     );
   });
 
+  it("starts the Arabic prompt with the identity directive", () => {
+    expect(buildPromptArabic(baseState)).toMatch(/^حافظ على هوية الشخص/);
+  });
+
+  it("places the Arabic room after the subject description", () => {
+    const prompt = buildPromptArabic(baseState);
+    expect(prompt.indexOf("الشخص واقف")).toBeGreaterThanOrEqual(0);
+    expect(prompt.indexOf("في غرفة نوم حديثة واقعية")).toBeGreaterThan(
+      prompt.indexOf("الشخص واقف"),
+    );
+  });
+
+  it("adds trimmed identity notes directly after the identity directive", () => {
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        identityNotes: "  short hair, thin eyebrows  ",
+      }),
+    ).toContain("Additional identity notes: short hair, thin eyebrows");
+  });
+
+  it("supports strict identity priority in English", () => {
+    expect(
+      buildPromptEnglish({ ...baseState, identityPriority: "strict" }),
+    ).toContain("with strict priority");
+  });
+});
+
+describe("lighting modes", () => {
   it("describes phone-screen lighting in English", () => {
     expect(
       buildPromptEnglish({ ...baseState, lightingMode: "phone-screen" }),
@@ -81,23 +122,23 @@ describe("fixed room and lighting modes", () => {
 
 describe("camera descriptions", () => {
   it("describes both selfie shot types", () => {
-    expect(buildPromptEnglish(baseState)).toContain("front-camera selfie");
+    expect(buildPromptEnglish(baseState)).toContain("Front-camera selfie");
     expect(
       buildPromptEnglish({ ...baseState, shotType: "mirror-selfie" }),
-    ).toContain("mirror selfie");
+    ).toContain("Mirror selfie");
   });
 
   it("describes camera distance", () => {
-    expect(buildPromptEnglish(baseState)).toContain("at arm's length");
+    expect(buildPromptEnglish(baseState)).toContain("At arm's length");
     expect(
       buildPromptEnglish({ ...baseState, cameraDistance: "close" }),
-    ).toContain("close to the face");
+    ).toContain("Close to the face");
   });
 
   it("describes camera angle", () => {
     expect(
       buildPromptEnglish({ ...baseState, cameraAngle: "slightly-above" }),
-    ).toContain("slightly above eye level");
+    ).toContain("camera at slightly above eye level");
   });
 });
 
@@ -138,14 +179,26 @@ describe("clothing and hair descriptions", () => {
       clothingMaterial: "cotton",
       clothingColor: "dark",
     });
-    expect(prompt).toContain("cotton hoodie and jeans");
-    expect(prompt).toContain("dark tones");
+    expect(prompt).toContain(
+      "Wearing: a cotton hoodie in dark tones, and jeans",
+    );
   });
 
   it("handles lower garment outside the frame", () => {
     expect(
       buildPromptEnglish({ ...baseState, clothingBottom: "none-visible" }),
     ).toContain("lower garment outside the frame");
+  });
+
+  it("describes combed-back hair clearly in English", () => {
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        hairLength: "medium",
+        hairTexture: "wavy",
+        hairStyle: "combed-back",
+      }),
+    ).toContain("medium-length wavy hair, combed back neatly");
   });
 
   it("describes hair in Arabic", () => {
@@ -156,7 +209,7 @@ describe("clothing and hair descriptions", () => {
         hairTexture: "straight",
         hairStyle: "side-part",
       }),
-    ).toContain("شعر طويل أملس مفرق جانبياً");
+    ).toContain("الشعر: طويل أملس مفرق جانبياً");
   });
 });
 
@@ -174,7 +227,7 @@ describe("pose and face descriptions", () => {
       backPosture: "straight",
     });
     expect(prompt).toContain("head turned slightly left");
-    expect(prompt).toContain("back posture straight");
+    expect(prompt).toContain("back straight");
   });
 
   it("describes facial expression and eye direction", () => {
@@ -183,8 +236,8 @@ describe("pose and face descriptions", () => {
       faceExpression: "calm-focus",
       eyeDirection: "down-soft",
     });
-    expect(prompt).toContain("facial expression is calm focus");
-    expect(prompt).toContain("eyes directed softly down");
+    expect(prompt).toContain("Facial expression: calm focus");
+    expect(prompt).toContain("eyes softly down");
   });
 
   it("keeps sleepy expression and mouth coherent", () => {
@@ -214,7 +267,7 @@ describe("pose and face descriptions", () => {
         faceExpression: "side-glance",
         eyeDirection: "camera",
       }),
-    ).toContain("eyes directed softly away");
+    ).toContain("eyes softly away");
   });
 });
 
@@ -225,7 +278,7 @@ describe("free hand descriptions", () => {
       freeHandPosition: "holding-cup",
       handFingersState: "slightly-curled",
     });
-    expect(prompt).toContain("holding a cup");
+    expect(prompt).toContain("free hand is holding a cup");
     expect(prompt).toContain("fingers slightly curled");
   });
 
@@ -245,42 +298,6 @@ describe("free hand descriptions", () => {
     });
     expect(prompt).toContain("free hand is off-frame");
     expect(prompt).not.toContain("fingers relaxed");
-  });
-});
-
-describe("reference image preferences", () => {
-  it("adds strict identity priority when a reference is present", () => {
-    expect(
-      buildPromptEnglish({
-        ...baseState,
-        referenceProvided: true,
-        identityPriority: "strict",
-      }),
-    ).toContain("reference image with strict priority");
-  });
-
-  it("omits identity instruction without a reference", () => {
-    expect(buildPromptEnglish(baseState)).not.toContain("reference image");
-  });
-
-  it("adds trimmed identity notes", () => {
-    expect(
-      buildPromptEnglish({
-        ...baseState,
-        identityNotes: "  short hair, thin eyebrows  ",
-      }),
-    ).toContain("Additional identity notes: short hair, thin eyebrows");
-  });
-
-  it("supports Arabic identity instructions", () => {
-    expect(
-      buildPromptArabic({
-        ...baseState,
-        referenceProvided: true,
-        identityPriority: "strict",
-        identityNotes: "شعر قصير",
-      }),
-    ).toContain("ملاحظات إضافية عن الهوية: شعر قصير");
   });
 });
 
@@ -307,6 +324,16 @@ describe("scenario descriptions", () => {
 });
 
 describe("negative prompt", () => {
+  it("starts with identity preservation constraints", () => {
+    expect(buildNegativePrompt(baseState)).toMatch(
+      /^no identity change, no face alteration/,
+    );
+  });
+
+  it("contains no identity change", () => {
+    expect(buildNegativePrompt(baseState)).toContain("no identity change");
+  });
+
   it("keeps baseline realism constraints", () => {
     const prompt = buildNegativePrompt(baseState);
     expect(prompt).toContain("no waxy skin");
@@ -350,6 +377,20 @@ describe("negative prompt", () => {
         scenario: "adjusting-clothing",
       }),
     ).toContain("no partially undressed subject");
+  });
+});
+
+describe("quality tail", () => {
+  it("adds the smartphone realism tail in English", () => {
+    expect(buildPromptEnglish(baseState)).toContain(
+      "Realistic smartphone photography, natural skin texture, balanced dynamic range.",
+    );
+  });
+
+  it("adds the equivalent realism tail in Arabic", () => {
+    expect(buildPromptArabic(baseState)).toContain(
+      "تصوير هاتف ذكي واقعي، ملمس بشرة طبيعي، ونطاق ديناميكي متوازن",
+    );
   });
 });
 
