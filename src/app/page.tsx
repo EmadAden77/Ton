@@ -2,6 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 
+import { getFieldConstraints } from "@/features/prompt-studio/constraints";
 import {
   buildNegativePrompt,
   buildPromptArabic,
@@ -9,18 +10,14 @@ import {
 } from "@/features/prompt-studio/promptBuilder";
 import { SCENARIOS } from "@/features/prompt-studio/scenarios";
 import type { SceneState } from "@/features/prompt-studio/types";
-import { getFieldConstraints } from "../features/prompt-studio/constraints";
+
+type SelectOption = { value: string; label: string };
 
 type CollapsibleSectionProps = {
   title: string;
-  badge?: string;
+  badge: string;
   defaultOpen?: boolean;
   children: ReactNode;
-};
-
-type SelectOption = {
-  value: string;
-  label: string;
 };
 
 interface SmartSelectProps {
@@ -33,133 +30,44 @@ interface SmartSelectProps {
   className?: string;
 }
 
-interface SmartCheckboxProps {
-  id: string;
-  field: keyof SceneState;
-  state: SceneState;
-  onChange: (value: boolean) => void;
-  label: string;
-  className?: string;
-}
-
-interface SmartTextareaProps {
-  id: string;
-  field: keyof SceneState;
-  state: SceneState;
-  onChange: (value: string) => void;
-  label: string;
-  placeholder?: string;
-  className?: string;
-}
-
-const constraintFields: (keyof SceneState)[] = [
-  "shotType",
-  "lightingSource",
-  "lightingIntensity",
-  "roomType",
+const constrainedFields: (keyof SceneState)[] = [
   "cameraDistance",
-  "cameraAngle",
-  "lightingDirection",
-  "colorTemperature",
-  "roomCleanliness",
-  "roomWindow",
-  "roomHasBed",
-  "clothingTop",
-  "clothingBottom",
-  "clothingMaterial",
-  "clothingColor",
-  "referenceProvided",
-  "identityPriority",
-  "identityNotes",
-  "hairStyle",
-  "hairLength",
-  "hairTexture",
-  "poseType",
-  "headDirection",
-  "shoulderPosition",
-  "handPlacement",
-  "backPosture",
-  "faceExpression",
-  "eyeDirection",
-  "mouthState",
   "freeHandPosition",
-  "handFingersState",
-  "handVisibility",
-  "scenario",
+  "eyeDirection",
+  "faceExpression",
 ];
 
 const shotTypeOptions: SelectOption[] = [
   { value: "front-selfie", label: "سيلفي أمامي (Front selfie)" },
   { value: "mirror-selfie", label: "سيلفي مرآة (Mirror selfie)" },
 ];
-
 const cameraDistanceOptions: SelectOption[] = [
   { value: "close", label: "قريبة (Close)" },
   { value: "arm-length", label: "طول الذراع (Arm length)" },
   { value: "extended", label: "ذراع ممدودة (Extended)" },
 ];
-
 const cameraAngleOptions: SelectOption[] = [
   { value: "eye-level", label: "بمستوى العين (Eye level)" },
   { value: "slightly-above", label: "أعلى قليلاً (Slightly above)" },
   { value: "slightly-below", label: "أسفل قليلاً (Slightly below)" },
 ];
-
+const lightingModeOptions: SelectOption[] = [
+  { value: "as-in-photo", label: "كما في الصورة (As in photo)" },
+  { value: "phone-screen", label: "ضوء شاشة الهاتف (Phone screen)" },
+  {
+    value: "daylight-closed",
+    label: "ضوء نهار — ستائر مغلقة (Daylight, closed curtains)",
+  },
+  {
+    value: "daylight-open",
+    label: "ضوء نهار — ستائر مفتوحة (Daylight, open curtains)",
+  },
+];
 const identityPriorityOptions: SelectOption[] = [
   { value: "strict", label: "قصوى (Strict)" },
   { value: "balanced", label: "متوازنة (Balanced)" },
   { value: "flexible", label: "مرنة (Flexible)" },
 ];
-
-const roomTypeOptions: SelectOption[] = [
-  { value: "simple", label: "بسيطة (Simple)" },
-  { value: "modern", label: "حديثة (Modern)" },
-  { value: "small", label: "صغيرة (Small)" },
-  { value: "medium", label: "متوسطة (Medium)" },
-];
-
-const roomCleanlinessOptions: SelectOption[] = [
-  { value: "very-tidy", label: "مرتبة جداً (Very tidy)" },
-  { value: "natural", label: "طبيعي (Natural)" },
-  { value: "light-mess", label: "فوضى خفيفة (Light mess)" },
-  { value: "moderate-mess", label: "فوضى متوسطة (Moderate mess)" },
-];
-
-const roomWindowOptions: SelectOption[] = [
-  { value: "none", label: "بلا نافذة (None)" },
-  { value: "small", label: "صغيرة (Small)" },
-  { value: "medium", label: "متوسطة (Medium)" },
-  { value: "large", label: "كبيرة (Large)" },
-];
-
-const lightingSourceOptions: SelectOption[] = [
-  { value: "window-day", label: "نافذة نهار (Day window)" },
-  { value: "window-sunset", label: "نافذة غروب (Sunset window)" },
-  { value: "ceiling", label: "سقف (Ceiling)" },
-  { value: "bedside-lamp", label: "مصباح سرير (Bedside lamp)" },
-  { value: "laptop-screen", label: "ضوء شاشة لابتوب (Laptop screen)" },
-];
-
-const lightingIntensityOptions: SelectOption[] = [
-  { value: "dim", label: "خافتة (Dim)" },
-  { value: "soft", label: "ناعمة (Soft)" },
-  { value: "medium", label: "متوسطة (Medium)" },
-  { value: "bright", label: "ساطعة (Bright)" },
-];
-
-const lightingDirectionOptions: SelectOption[] = [
-  { value: "front", label: "أمامي (Front)" },
-  { value: "side", label: "جانبي (Side)" },
-  { value: "top", label: "علوي (Top)" },
-  { value: "back-soft", label: "خلفي ناعم (Soft back)" },
-];
-
-const colorTemperatureOptions: SelectOption[] = [
-  { value: "warm", label: "دافئة (Warm)" },
-  { value: "neutral", label: "محايدة (Neutral)" },
-  { value: "cool", label: "باردة (Cool)" },
-];
-
 const clothingTopOptions: SelectOption[] = [
   { value: "t-shirt", label: "تي شيرت (T-shirt)" },
   { value: "shirt", label: "قميص (Shirt)" },
@@ -168,7 +76,6 @@ const clothingTopOptions: SelectOption[] = [
   { value: "sweater", label: "كنزة (Sweater)" },
   { value: "tank-top", label: "قميص بلا أكمام (Tank top)" },
 ];
-
 const clothingBottomOptions: SelectOption[] = [
   { value: "jeans", label: "بنطال جينز (Jeans)" },
   { value: "shorts", label: "شورت (Shorts)" },
@@ -176,7 +83,6 @@ const clothingBottomOptions: SelectOption[] = [
   { value: "sweatpants", label: "بنطال رياضي (Sweatpants)" },
   { value: "none-visible", label: "غير ظاهرة (Not visible)" },
 ];
-
 const clothingMaterialOptions: SelectOption[] = [
   { value: "cotton", label: "قطن (Cotton)" },
   { value: "denim", label: "دنيم (Denim)" },
@@ -184,7 +90,6 @@ const clothingMaterialOptions: SelectOption[] = [
   { value: "polyester", label: "بوليستر (Polyester)" },
   { value: "linen", label: "كتان (Linen)" },
 ];
-
 const clothingColorOptions: SelectOption[] = [
   { value: "neutral", label: "محايد (Neutral)" },
   { value: "dark", label: "داكن (Dark)" },
@@ -192,27 +97,23 @@ const clothingColorOptions: SelectOption[] = [
   { value: "earth-tone", label: "ترابي (Earth tone)" },
   { value: "pastel", label: "باستيل (Pastel)" },
 ];
-
 const hairStyleOptions: SelectOption[] = [
   { value: "natural", label: "طبيعي (Natural)" },
   { value: "combed", label: "ممشط (Combed)" },
   { value: "messy-light", label: "فوضوي خفيف (Light messy)" },
   { value: "side-part", label: "مفرق جانبي (Side part)" },
-  { value: "slicked-back", label: "مرفوع للخلف (Slicked back)" },
+  { value: "slicked-back", label: "ممشط للخلف (Slicked back)" },
 ];
-
 const hairLengthOptions: SelectOption[] = [
   { value: "short", label: "قصير (Short)" },
   { value: "medium", label: "متوسط (Medium)" },
   { value: "long", label: "طويل (Long)" },
 ];
-
 const hairTextureOptions: SelectOption[] = [
   { value: "straight", label: "أملس (Straight)" },
   { value: "wavy", label: "مموج (Wavy)" },
   { value: "curly", label: "مجعد (Curly)" },
 ];
-
 const poseTypeOptions: SelectOption[] = [
   { value: "standing", label: "وقوف (Standing)" },
   { value: "sitting-bed", label: "جلوس على السرير (Sitting on bed)" },
@@ -220,7 +121,6 @@ const poseTypeOptions: SelectOption[] = [
   { value: "lying-bed", label: "استلقاء على السرير (Lying on bed)" },
   { value: "standing-window", label: "وقوف قرب النافذة (Standing by window)" },
 ];
-
 const headDirectionOptions: SelectOption[] = [
   { value: "forward", label: "للأمام (Forward)" },
   { value: "slightly-left", label: "يساراً قليلاً (Slightly left)" },
@@ -228,19 +128,16 @@ const headDirectionOptions: SelectOption[] = [
   { value: "down", label: "للأسفل (Down)" },
   { value: "up-soft", label: "لأعلى برفق (Gently up)" },
 ];
-
 const shoulderPositionOptions: SelectOption[] = [
   { value: "relaxed", label: "مسترخيان (Relaxed)" },
   { value: "one-raised", label: "كتف مرتفع قليلاً (One raised)" },
   { value: "both-back", label: "للخلف (Both back)" },
 ];
-
 const backPostureOptions: SelectOption[] = [
   { value: "straight", label: "مستقيم (Straight)" },
   { value: "relaxed", label: "مسترخٍ (Relaxed)" },
   { value: "slightly-leaning", label: "مائل قليلاً (Slightly leaning)" },
 ];
-
 const faceExpressionOptions: SelectOption[] = [
   { value: "neutral", label: "محايد طبيعي (Neutral)" },
   { value: "soft-smile", label: "ابتسامة خفيفة (Soft smile)" },
@@ -251,14 +148,12 @@ const faceExpressionOptions: SelectOption[] = [
   { value: "sleepy", label: "نعاس خفيف (Sleepy)" },
   { value: "light-laugh", label: "ضحكة خفيفة (Light laugh)" },
 ];
-
 const eyeDirectionOptions: SelectOption[] = [
   { value: "camera", label: "نحو الكاميرا (Camera)" },
   { value: "mirror", label: "نحو المرآة (Mirror)" },
   { value: "away-soft", label: "بعيداً بلطف (Away)" },
   { value: "down-soft", label: "للأسفل بلطف (Down)" },
 ];
-
 const mouthStateOptions: SelectOption[] = [
   { value: "closed", label: "مغلق (Closed)" },
   { value: "slightly-open", label: "مفتوح قليلاً (Slightly open)" },
@@ -268,7 +163,6 @@ const mouthStateOptions: SelectOption[] = [
     label: "ابتسامة مفتوحة خفيفة (Light open smile)",
   },
 ];
-
 const freeHandPositionOptions: SelectOption[] = [
   { value: "at-side", label: "بجانب الجسم (At side)" },
   { value: "on-hair", label: "على الشعر (On hair)" },
@@ -280,50 +174,37 @@ const freeHandPositionOptions: SelectOption[] = [
   { value: "on-keyboard", label: "على لوحة المفاتيح (On keyboard)" },
   { value: "holding-cloth", label: "تحمل قطعة قماش (Holding cloth)" },
 ];
-
 const handFingersStateOptions: SelectOption[] = [
   { value: "relaxed", label: "مسترخية (Relaxed)" },
   { value: "slightly-curled", label: "ملتفة قليلاً (Slightly curled)" },
   { value: "gripping-soft", label: "قابضة برفق (Soft grip)" },
 ];
-
 const handVisibilityOptions: SelectOption[] = [
   { value: "fully-visible", label: "ظاهرة بالكامل (Fully visible)" },
-  { value: "partially-visible", label: "ظاهرة جزئياً (Partially)" },
+  { value: "partially-visible", label: "ظاهرة جزئياً (Partially visible)" },
   { value: "off-frame", label: "خارج الإطار (Off-frame)" },
-];
-
-const handPlacementOptions: SelectOption[] = [
-  { value: "at-side", label: "بجانب الجسم (At side)" },
-  { value: "holding-phone", label: "تساند الهاتف (Holding phone)" },
-  { value: "touching-hair", label: "تلامس الشعر (Touching hair)" },
-  { value: "on-lap", label: "على الحضن (On lap)" },
-  { value: "in-pocket", label: "في الجيب (In pocket)" },
 ];
 
 function resolveLockedState(state: SceneState): SceneState {
   let resolved = { ...state };
-  let changed = true;
-  let pass = 0;
 
-  while (changed && pass < constraintFields.length) {
-    changed = false;
-    pass += 1;
+  for (let pass = 0; pass < constrainedFields.length; pass += 1) {
+    let changed = false;
 
-    for (const field of constraintFields) {
+    for (const field of constrainedFields) {
       const constraints = getFieldConstraints(field, resolved);
       if (constraints?.lockedTo === undefined) continue;
 
-      const lockedValue =
-        field === "roomHasBed"
-          ? constraints.lockedTo === "true"
-          : constraints.lockedTo;
-
-      if (String(resolved[field]) !== String(lockedValue)) {
-        resolved = { ...resolved, [field]: lockedValue } as SceneState;
+      if (String(resolved[field]) !== constraints.lockedTo) {
+        resolved = {
+          ...resolved,
+          [field]: constraints.lockedTo,
+        } as SceneState;
         changed = true;
       }
     }
+
+    if (!changed) break;
   }
 
   return resolved;
@@ -354,8 +235,9 @@ function CollapsibleSection({
           </span>
           <span className="font-semibold">{title}</span>
         </span>
-        {badge && <span className="text-sm text-slate-400">{badge}</span>}
+        <span className="text-sm text-slate-400">{badge}</span>
       </button>
+
       {isOpen && (
         <div className="grid gap-5 border-t border-white/10 p-5 sm:grid-cols-2">
           {children}
@@ -376,7 +258,7 @@ function SmartSelect({
 }: SmartSelectProps) {
   const constraints = getFieldConstraints(field, state);
   const lockedTo = constraints?.lockedTo;
-  const currentValue = lockedTo ?? String(state[field] ?? "");
+  const value = lockedTo ?? String(state[field] ?? "");
 
   return (
     <label className={`grid gap-2 ${className}`} htmlFor={id}>
@@ -386,104 +268,24 @@ function SmartSelect({
       </span>
       <select
         id={id}
-        value={currentValue}
+        value={value}
         disabled={lockedTo !== undefined}
         onChange={(event) => onChange(event.target.value)}
         className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100 disabled:cursor-not-allowed disabled:opacity-70"
       >
         {options.map((option) => {
-          const optionConstraint = constraints?.options.find(
+          const constraint = constraints?.options.find(
             (item) => item.value === option.value,
           );
-          const disabled = optionConstraint?.disabled ?? false;
-          const reason = optionConstraint?.reason;
-
+          const disabled = constraint?.disabled ?? false;
           return (
             <option key={option.value} value={option.value} disabled={disabled}>
               {option.label}
-              {disabled && reason ? ` (${reason})` : ""}
+              {disabled && constraint?.reason ? ` (${constraint.reason})` : ""}
             </option>
           );
         })}
       </select>
-      {lockedTo !== undefined && constraints?.lockReason && (
-        <span className="text-xs leading-5 text-amber-300">
-          ↳ {constraints.lockReason}
-        </span>
-      )}
-    </label>
-  );
-}
-
-function SmartCheckbox({
-  id,
-  field,
-  state,
-  onChange,
-  label,
-  className = "",
-}: SmartCheckboxProps) {
-  const constraints = getFieldConstraints(field, state);
-  const lockedTo = constraints?.lockedTo;
-  const lockedValue =
-    lockedTo === "true" ? true : lockedTo === "false" ? false : undefined;
-  const checked = lockedValue ?? Boolean(state[field]);
-
-  return (
-    <div className={`grid gap-2 ${className}`}>
-      <label
-        className="flex items-center gap-3 rounded-lg border border-white/20 bg-slate-900 p-3"
-        htmlFor={id}
-      >
-        <input
-          id={id}
-          type="checkbox"
-          checked={checked}
-          disabled={lockedValue !== undefined}
-          onChange={(event) => onChange(event.target.checked)}
-          className="h-4 w-4 accent-amber-300 disabled:cursor-not-allowed disabled:opacity-70"
-        />
-        {lockedValue !== undefined && <span aria-hidden="true">🔒</span>}
-        <span>{label}</span>
-      </label>
-      {lockedValue !== undefined && constraints?.lockReason && (
-        <span className="text-xs leading-5 text-amber-300">
-          ↳ {constraints.lockReason}
-        </span>
-      )}
-    </div>
-  );
-}
-
-function SmartTextarea({
-  id,
-  field,
-  state,
-  onChange,
-  label,
-  placeholder,
-  className = "",
-}: SmartTextareaProps) {
-  const constraints = getFieldConstraints(field, state);
-  const lockedTo = constraints?.lockedTo;
-  const value = lockedTo ?? String(state[field] ?? "");
-
-  return (
-    <label className={`grid gap-2 ${className}`} htmlFor={id}>
-      <span className="flex items-center gap-2">
-        {lockedTo !== undefined && <span aria-hidden="true">🔒</span>}
-        <span>{label}</span>
-      </span>
-      <textarea
-        id={id}
-        value={value}
-        disabled={lockedTo !== undefined}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
-        rows={3}
-        maxLength={200}
-        className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100 disabled:cursor-not-allowed disabled:opacity-70"
-      />
       {lockedTo !== undefined && constraints?.lockReason && (
         <span className="text-xs leading-5 text-amber-300">
           ↳ {constraints.lockReason}
@@ -499,16 +301,9 @@ export default function Home() {
   );
   const [state, setState] = useState<SceneState>({
     shotType: "front-selfie",
-    lightingSource: "window-day",
-    lightingIntensity: "soft",
-    roomType: "simple",
+    lightingMode: "as-in-photo",
     cameraDistance: "arm-length",
     cameraAngle: "eye-level",
-    lightingDirection: "front",
-    colorTemperature: "neutral",
-    roomCleanliness: "natural",
-    roomWindow: "medium",
-    roomHasBed: true,
     clothingTop: "t-shirt",
     clothingBottom: "shorts",
     clothingMaterial: "cotton",
@@ -542,35 +337,24 @@ export default function Home() {
     setState((current) => ({ ...current, [field]: value }));
   }
 
-  function handleScenarioChange(id: SceneState["scenario"]) {
+  function handleScenarioChange(id: NonNullable<SceneState["scenario"]>) {
     setState((current) => {
       if (id === "none") return { ...current, scenario: "none" };
       const preset = SCENARIOS.find((item) => item.id === id);
-      return preset ? { ...preset.apply(current), scenario: id } : current;
+      return preset ? preset.apply(current) : current;
     });
   }
 
-  const englishPrompt = buildPromptEnglish(resolvedState);
-  const arabicPrompt = buildPromptArabic(resolvedState);
-  const negativePrompt = buildNegativePrompt(resolvedState);
-  const activePrompt =
-    activeTab === "english"
-      ? englishPrompt
-      : activeTab === "arabic"
-        ? arabicPrompt
-        : negativePrompt;
+  const prompts = {
+    english: buildPromptEnglish(resolvedState),
+    arabic: buildPromptArabic(resolvedState),
+    negative: buildNegativePrompt(resolvedState),
+  };
   const previewTabs = [
     { id: "english", label: "English" },
     { id: "arabic", label: "العربية" },
     { id: "negative", label: "Negative" },
   ] as const;
-  const scenarioOptions: SelectOption[] = [
-    { value: "none", label: "بدون سيناريو (None)" },
-    ...SCENARIOS.map((scenario) => ({
-      value: scenario.id ?? "none",
-      label: `${scenario.labelAr} (${scenario.labelEn})`,
-    })),
-  ];
 
   return (
     <main
@@ -581,22 +365,30 @@ export default function Home() {
         <header className="px-1 pb-6">
           <h1 className="text-4xl font-bold">Ton</h1>
           <p className="mt-4 text-slate-300">
-            صفحة واحدة ذكية لبناء مشهد سيلفي متوافق، مع إظهار القيود والأقفال
-            مباشرة أثناء الاختيار.
+            ابنِ لقطة سيلفي داخل الغرفة الثابتة، واختر الإضاءة والشخص والوضعية
+            فقط.
           </p>
 
-          <div className="mt-6">
-            <SmartSelect
+          <label className="mt-6 grid gap-2" htmlFor="scenario">
+            سيناريو جاهز
+            <select
               id="scenario"
-              field="scenario"
-              state={resolvedState}
-              label="سيناريو جاهز"
-              options={scenarioOptions}
-              onChange={(value) =>
-                handleScenarioChange(value as SceneState["scenario"])
+              value={state.scenario ?? "none"}
+              onChange={(event) =>
+                handleScenarioChange(
+                  event.target.value as NonNullable<SceneState["scenario"]>,
+                )
               }
-            />
-          </div>
+              className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+            >
+              <option value="none">بدون سيناريو (None)</option>
+              {SCENARIOS.map((scenario) => (
+                <option key={scenario.id} value={scenario.id}>
+                  {scenario.labelAr} ({scenario.labelEn})
+                </option>
+              ))}
+            </select>
+          </label>
         </header>
 
         <div className="grid gap-4">
@@ -637,14 +429,22 @@ export default function Home() {
           </CollapsibleSection>
 
           <CollapsibleSection title="الصورة المرجعية" badge="3 حقول">
-            <SmartCheckbox
-              id="reference-provided"
-              field="referenceProvided"
-              state={resolvedState}
-              label="لدي صورة مرجعية"
-              onChange={(value) => updateField("referenceProvided", value)}
-              className="sm:col-span-2"
-            />
+            <label
+              className="flex items-center gap-3 rounded-lg border border-white/20 bg-slate-900 p-3 sm:col-span-2"
+              htmlFor="reference-provided"
+            >
+              <input
+                id="reference-provided"
+                type="checkbox"
+                checked={state.referenceProvided}
+                onChange={(event) =>
+                  updateField("referenceProvided", event.target.checked)
+                }
+                className="h-4 w-4 accent-amber-300"
+              />
+              لدي صورة مرجعية
+            </label>
+
             <SmartSelect
               id="identity-priority"
               field="identityPriority"
@@ -659,121 +459,42 @@ export default function Home() {
               }
               className="sm:col-span-2"
             />
-            <SmartTextarea
-              id="identity-notes"
-              field="identityNotes"
-              state={resolvedState}
-              label="ملاحظات عن الملامح (اختياري)"
-              placeholder="مثال: شعر قصير، حاجب رقيق، عيون واسعة"
-              onChange={(value) => updateField("identityNotes", value)}
-              className="sm:col-span-2"
-            />
+
+            <label
+              className="grid gap-2 sm:col-span-2"
+              htmlFor="identity-notes"
+            >
+              ملاحظات عن الملامح (اختياري)
+              <textarea
+                id="identity-notes"
+                value={state.identityNotes}
+                onChange={(event) =>
+                  updateField("identityNotes", event.target.value)
+                }
+                placeholder="مثال: شعر قصير، حاجب رقيق، عيون واسعة"
+                rows={3}
+                maxLength={200}
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              />
+            </label>
+
             <p className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-200 sm:col-span-2">
-              لا ترفع صور أشخاص آخرين بدون موافقتهم. لا تستخدم النظام لانتحال
-              الهوية أو التضليل. في هذه المرحلة، لا يتم رفع أي صورة فعلياً، فقط
-              تُحفظ اختياراتك محلياً في المتصفح.
+              الصورة المرجعية هنا إعداد نصي فقط. لا يتم رفع صورة فعلية في هذه
+              المرحلة.
             </p>
           </CollapsibleSection>
 
-          <CollapsibleSection title="الغرفة والخلفية" badge="4 حقول">
+          <CollapsibleSection title="الإضاءة" badge="1 حقل" defaultOpen>
             <SmartSelect
-              id="room-type"
-              field="roomType"
+              id="lighting-mode"
+              field="lightingMode"
               state={resolvedState}
-              label="نوع الغرفة"
-              options={roomTypeOptions}
+              label="نمط الإضاءة"
+              options={lightingModeOptions}
               onChange={(value) =>
-                updateField("roomType", value as SceneState["roomType"])
+                updateField("lightingMode", value as SceneState["lightingMode"])
               }
-            />
-            <SmartSelect
-              id="room-cleanliness"
-              field="roomCleanliness"
-              state={resolvedState}
-              label="ترتيب الغرفة"
-              options={roomCleanlinessOptions}
-              onChange={(value) =>
-                updateField(
-                  "roomCleanliness",
-                  value as SceneState["roomCleanliness"],
-                )
-              }
-            />
-            <SmartSelect
-              id="room-window"
-              field="roomWindow"
-              state={resolvedState}
-              label="حجم النافذة"
-              options={roomWindowOptions}
-              onChange={(value) =>
-                updateField("roomWindow", value as SceneState["roomWindow"])
-              }
-            />
-            <SmartCheckbox
-              id="room-has-bed"
-              field="roomHasBed"
-              state={resolvedState}
-              label="يوجد سرير (Bed)"
-              onChange={(value) => updateField("roomHasBed", value)}
-            />
-          </CollapsibleSection>
-
-          <CollapsibleSection
-            title="الإضاءة الواقعية"
-            badge="4 حقول"
-            defaultOpen
-          >
-            <SmartSelect
-              id="lighting-source"
-              field="lightingSource"
-              state={resolvedState}
-              label="مصدر الإضاءة"
-              options={lightingSourceOptions}
-              onChange={(value) =>
-                updateField(
-                  "lightingSource",
-                  value as SceneState["lightingSource"],
-                )
-              }
-            />
-            <SmartSelect
-              id="lighting-intensity"
-              field="lightingIntensity"
-              state={resolvedState}
-              label="شدة الإضاءة"
-              options={lightingIntensityOptions}
-              onChange={(value) =>
-                updateField(
-                  "lightingIntensity",
-                  value as SceneState["lightingIntensity"],
-                )
-              }
-            />
-            <SmartSelect
-              id="lighting-direction"
-              field="lightingDirection"
-              state={resolvedState}
-              label="اتجاه الضوء"
-              options={lightingDirectionOptions}
-              onChange={(value) =>
-                updateField(
-                  "lightingDirection",
-                  value as SceneState["lightingDirection"],
-                )
-              }
-            />
-            <SmartSelect
-              id="color-temperature"
-              field="colorTemperature"
-              state={resolvedState}
-              label="حرارة اللون"
-              options={colorTemperatureOptions}
-              onChange={(value) =>
-                updateField(
-                  "colorTemperature",
-                  value as SceneState["colorTemperature"],
-                )
-              }
+              className="sm:col-span-2"
             />
           </CollapsibleSection>
 
@@ -988,22 +709,6 @@ export default function Home() {
               }
             />
           </CollapsibleSection>
-
-          <CollapsibleSection title="خيارات متقدمة" badge="1 حقل">
-            <SmartSelect
-              id="hand-placement"
-              field="handPlacement"
-              state={resolvedState}
-              label="موضع اليد العام"
-              options={handPlacementOptions}
-              onChange={(value) =>
-                updateField(
-                  "handPlacement",
-                  value as SceneState["handPlacement"],
-                )
-              }
-            />
-          </CollapsibleSection>
         </div>
 
         <section
@@ -1025,23 +730,6 @@ export default function Home() {
                 aria-controls="prompt-panel"
                 tabIndex={activeTab === id ? 0 : -1}
                 onClick={() => setActiveTab(id)}
-                onKeyDown={(event) => {
-                  const offset =
-                    event.key === "ArrowRight"
-                      ? -1
-                      : event.key === "ArrowLeft"
-                        ? 1
-                        : 0;
-                  if (!offset) return;
-                  event.preventDefault();
-                  const index = previewTabs.findIndex((tab) => tab.id === id);
-                  const next =
-                    previewTabs[
-                      (index + offset + previewTabs.length) % previewTabs.length
-                    ].id;
-                  setActiveTab(next);
-                  document.getElementById(`tab-${next}`)?.focus();
-                }}
                 className={
                   activeTab === id
                     ? "rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white"
@@ -1061,12 +749,14 @@ export default function Home() {
             dir={activeTab === "arabic" ? "rtl" : "ltr"}
             className="mt-4 min-h-[150px] max-h-72 overflow-y-auto rounded-lg border border-white/10 bg-slate-950/80 p-4 leading-7 text-slate-200"
           >
-            {activePrompt}
+            {prompts[activeTab]}
           </div>
 
           <button
             type="button"
-            onClick={() => void navigator.clipboard.writeText(activePrompt)}
+            onClick={() =>
+              void navigator.clipboard.writeText(prompts[activeTab])
+            }
             className="mt-4 rounded-lg border border-white/20 px-4 py-2 text-sm hover:bg-white/10"
           >
             نسخ

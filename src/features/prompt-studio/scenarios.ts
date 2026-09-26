@@ -1,7 +1,9 @@
 import type { SceneState } from "./types";
 
+type ScenarioId = Exclude<NonNullable<SceneState["scenario"]>, "none">;
+
 export interface ScenarioPreset {
-  id: SceneState["scenario"];
+  id: ScenarioId;
   labelAr: string;
   labelEn: string;
   apply: (current: SceneState) => SceneState;
@@ -21,11 +23,7 @@ export const SCENARIOS: ScenarioPreset[] = [
       headDirection: "down",
       eyeDirection: "down-soft",
       faceExpression: "calm-focus",
-      roomType: "modern",
-      lightingSource: "ceiling",
-      lightingIntensity: "medium",
-      lightingDirection: "top",
-      colorTemperature: "neutral",
+      lightingMode: "as-in-photo",
     }),
   },
   {
@@ -41,10 +39,7 @@ export const SCENARIOS: ScenarioPreset[] = [
       headDirection: "down",
       eyeDirection: "down-soft",
       faceExpression: "calm-focus",
-      lightingSource: "bedside-lamp",
-      lightingIntensity: "soft",
-      colorTemperature: "warm",
-      roomHasBed: true,
+      lightingMode: "as-in-photo",
     }),
   },
   {
@@ -60,6 +55,7 @@ export const SCENARIOS: ScenarioPreset[] = [
       faceExpression: "soft-smile",
       eyeDirection: "mirror",
       mouthState: "smile-closed",
+      lightingMode: "as-in-photo",
     }),
   },
   {
@@ -74,10 +70,7 @@ export const SCENARIOS: ScenarioPreset[] = [
       freeHandPosition: "on-hair",
       faceExpression: "calm-focus",
       eyeDirection: "mirror",
-      lightingSource: "window-day",
-      lightingIntensity: "medium",
-      colorTemperature: "neutral",
-      roomWindow: current.roomWindow === "none" ? "medium" : current.roomWindow,
+      lightingMode: "daylight-open",
     }),
   },
   {
@@ -92,10 +85,7 @@ export const SCENARIOS: ScenarioPreset[] = [
       headDirection: "slightly-right",
       eyeDirection: "down-soft",
       faceExpression: "neutral",
-      roomHasBed: true,
-      lightingSource: "bedside-lamp",
-      lightingIntensity: "dim",
-      colorTemperature: "warm",
+      lightingMode: "phone-screen",
     }),
   },
   {
@@ -111,11 +101,7 @@ export const SCENARIOS: ScenarioPreset[] = [
       headDirection: "forward",
       eyeDirection: "away-soft",
       faceExpression: "calm-focus",
-      roomWindow: current.roomWindow === "none" ? "medium" : current.roomWindow,
-      lightingSource: "window-day",
-      lightingIntensity: "bright",
-      lightingDirection: "side",
-      colorTemperature: "cool",
+      lightingMode: "daylight-open",
     }),
   },
   {
@@ -130,12 +116,7 @@ export const SCENARIOS: ScenarioPreset[] = [
       faceExpression: "calm-focus",
       eyeDirection: "down-soft",
       headDirection: "down",
-      roomType: "modern",
-      roomCleanliness: "natural",
-      lightingSource: "ceiling",
-      lightingIntensity: "medium",
-      lightingDirection: "top",
-      colorTemperature: "neutral",
+      lightingMode: "as-in-photo",
     }),
   },
   {
@@ -152,14 +133,9 @@ export const SCENARIOS: ScenarioPreset[] = [
       headDirection: "forward",
       shoulderPosition: "relaxed",
       backPosture: "straight",
-      roomType: "modern",
-      roomCleanliness: "natural",
       clothingTop: "sweater",
       clothingBottom: "jeans",
-      lightingSource: "window-day",
-      lightingIntensity: "medium",
-      lightingDirection: "front",
-      colorTemperature: "neutral",
+      lightingMode: "daylight-open",
     }),
   },
 ];
