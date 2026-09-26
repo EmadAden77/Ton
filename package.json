@@ -14,7 +14,7 @@
     "format:check": "prettier . --check"
   },
   "dependencies": {
-    "next": "latest",
+    "next": "^15.0.0",
     "react": "latest",
     "react-dom": "latest"
   },
@@ -24,7 +24,7 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "eslint": "latest",
-    "eslint-config-next": "latest",
+    "eslint-config-next": "^15.0.0",
     "eslint-config-prettier": "latest",
     "prettier": "latest",
     "tailwindcss": "latest",
