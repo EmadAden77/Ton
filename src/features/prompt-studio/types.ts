@@ -135,4 +135,51 @@ export interface SceneState {
     | "wavy"
     // شعر مجعد.
     | "curly";
+  poseType:
+    // وقوف.
+    | "standing"
+    // جلوس على السرير.
+    | "sitting-bed"
+    // جلوس على كرسي.
+    | "sitting-chair"
+    // استلقاء على السرير.
+    | "lying-bed"
+    // وقوف قرب النافذة.
+    | "standing-window";
+  headDirection:
+    // الرأس للأمام.
+    | "forward"
+    // الرأس مائل قليلاً لليسار.
+    | "slightly-left"
+    // الرأس مائل قليلاً لليمين.
+    | "slightly-right"
+    // الرأس لأسفل.
+    | "down"
+    // الرأس لأعلى برفق.
+    | "up-soft";
+  shoulderPosition:
+    // الكتفان مسترخيان.
+    | "relaxed"
+    // كتف واحد مرتفع قليلاً.
+    | "one-raised"
+    // الكتفان للخلف.
+    | "both-back";
+  handPlacement:
+    // اليد الحرة بجانب الجسم.
+    | "at-side"
+    // اليد الحرة تساند الهاتف.
+    | "holding-phone"
+    // اليد الحرة تلامس الشعر.
+    | "touching-hair"
+    // اليد الحرة على الحضن.
+    | "on-lap"
+    // اليد الحرة في الجيب.
+    | "in-pocket";
+  backPosture:
+    // ظهر مستقيم.
+    | "straight"
+    // ظهر مسترخٍ.
+    | "relaxed"
+    // ظهر مائل قليلاً.
+    | "slightly-leaning";
 }
