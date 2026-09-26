@@ -233,7 +233,9 @@ export interface SceneState {
     // على لوحة المفاتيح.
     | "on-keyboard"
     // تحمل قطعة قماش.
-    | "holding-cloth";
+    | "holding-cloth"
+    // تحمل الهاتف.
+    | "holding-phone";
   handFingersState:
     // أصابع مسترخية.
     | "relaxed"
