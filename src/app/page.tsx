@@ -76,7 +76,8 @@ export default function Home() {
         <header className="px-1 pb-6">
           <h1 className="text-4xl font-bold">Ton</h1>
           <p className="mt-4 text-slate-300">
-            اختر إعدادات اللقطة والكاميرا والغرفة والملابس والإضاءة لمعاينة وصف المشهد.
+            اختر إعدادات اللقطة والكاميرا والغرفة والملابس والإضاءة لمعاينة وصف
+            المشهد.
           </p>
         </header>
 
@@ -253,7 +254,8 @@ export default function Home() {
                 onChange={(event) =>
                   setState((current) => ({
                     ...current,
-                    clothingTop: event.target.value as SceneState["clothingTop"],
+                    clothingTop: event.target
+                      .value as SceneState["clothingTop"],
                   }))
                 }
                 className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
@@ -275,7 +277,8 @@ export default function Home() {
                 onChange={(event) =>
                   setState((current) => ({
                     ...current,
-                    clothingBottom: event.target.value as SceneState["clothingBottom"],
+                    clothingBottom: event.target
+                      .value as SceneState["clothingBottom"],
                   }))
                 }
                 className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
@@ -296,7 +299,8 @@ export default function Home() {
                 onChange={(event) =>
                   setState((current) => ({
                     ...current,
-                    clothingMaterial: event.target.value as SceneState["clothingMaterial"],
+                    clothingMaterial: event.target
+                      .value as SceneState["clothingMaterial"],
                   }))
                 }
                 className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
@@ -317,7 +321,8 @@ export default function Home() {
                 onChange={(event) =>
                   setState((current) => ({
                     ...current,
-                    clothingColor: event.target.value as SceneState["clothingColor"],
+                    clothingColor: event.target
+                      .value as SceneState["clothingColor"],
                   }))
                 }
                 className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
