@@ -53,7 +53,9 @@ function CollapsibleSection({
 }
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"english" | "arabic" | "negative">("english");
+  const [activeTab, setActiveTab] = useState<"english" | "arabic" | "negative">(
+    "english",
+  );
   const [state, setState] = useState<SceneState>({
     shotType: "front-selfie",
     lightingSource: "window-day",
@@ -442,7 +444,11 @@ export default function Home() {
           aria-label="المعاينة"
           className="mt-6 rounded-xl border border-white/10 bg-slate-900 p-5"
         >
-          <div role="tablist" aria-label="نوع المعاينة" className="flex flex-wrap gap-2">
+          <div
+            role="tablist"
+            aria-label="نوع المعاينة"
+            className="flex flex-wrap gap-2"
+          >
             {previewTabs.map(({ id, label }) => (
               <button
                 key={id}
@@ -482,7 +488,6 @@ export default function Home() {
             نسخ
           </button>
         </section>
-
       </div>
     </main>
   );
