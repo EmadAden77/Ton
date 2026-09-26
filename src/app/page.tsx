@@ -8,6 +8,7 @@ import {
   buildPromptEnglish,
 } from "@/features/prompt-studio/promptBuilder";
 import type { SceneState } from "@/features/prompt-studio/types";
+import { SCENARIOS } from "@/features/prompt-studio/scenarios";
 
 type CollapsibleSectionProps = {
   title: string;
@@ -92,7 +93,16 @@ export default function Home() {
     freeHandPosition: "at-side",
     handFingersState: "relaxed",
     handVisibility: "fully-visible",
+    scenario: "none",
   });
+
+  function handleScenarioChange(id: SceneState["scenario"]) {
+    setState((current) => {
+      if (id === "none") return { ...current, scenario: "none" };
+      const preset = SCENARIOS.find((item) => item.id === id);
+      return preset ? { ...preset.apply(current), scenario: id } : current;
+    });
+  }
 
   const englishPrompt = buildPromptEnglish(state);
   const arabicPrompt = buildPromptArabic(state);
@@ -128,6 +138,29 @@ export default function Home() {
             المشهد.
           </p>
         </header>
+
+        <div className="mt-6">
+          <label className="grid gap-2" htmlFor="scenario">
+            سيناريو جاهز
+            <select
+              id="scenario"
+              value={state.scenario}
+              onChange={(event) =>
+                handleScenarioChange(
+                  event.target.value as SceneState["scenario"],
+                )
+              }
+              className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+            >
+              <option value="none">بدون سيناريو (None)</option>
+              {SCENARIOS.map((scenario) => (
+                <option key={scenario.id} value={scenario.id}>
+                  {scenario.labelAr} ({scenario.labelEn})
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
 
         <nav aria-label="أقسام إعدادات المشهد" className="mt-6">
           <div
@@ -864,6 +897,9 @@ export default function Home() {
                 <option value="at-side">بجانب الجسم (At side)</option>
                 <option value="on-hair">على الشعر (On hair)</option>
                 <option value="holding-cup">تحمل كوباً (Holding cup)</option>
+                <option value="holding-phone">
+                  تحمل الهاتف (Holding phone)
+                </option>
                 <option value="touching-chin">
                   تلمس الذقن (Touching chin)
                 </option>

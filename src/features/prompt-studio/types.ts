@@ -233,7 +233,9 @@ export interface SceneState {
     // على لوحة المفاتيح.
     | "on-keyboard"
     // تحمل قطعة قماش.
-    | "holding-cloth";
+    | "holding-cloth"
+    // تحمل الهاتف.
+    | "holding-phone";
   handFingersState:
     // أصابع مسترخية.
     | "relaxed"
@@ -248,4 +250,19 @@ export interface SceneState {
     | "partially-visible"
     // اليد خارج الإطار.
     | "off-frame";
+  scenario?:
+    // إعداد يدوي بلا سيناريو.
+    | "none"
+    // عمل على لابتوب عند المكتب.
+    | "working-laptop"
+    // جلوس على السرير مع لابتوب.
+    | "bed-laptop"
+    // سيلفي أمام المرآة.
+    | "mirror-selfie"
+    // استعداد للخروج.
+    | "getting-ready"
+    // استلقاء مع الهاتف.
+    | "lying-with-phone"
+    // وقوف قرب النافذة.
+    | "standing-window";
 }

@@ -298,6 +298,7 @@ const freeHandPositionLabels: Record<SceneState["freeHandPosition"], string> = {
   "on-bed": "على السرير",
   "on-keyboard": "على لوحة المفاتيح",
   "holding-cloth": "تحمل قطعة قماش",
+  "holding-phone": "تحمل الهاتف",
 };
 
 const handFingersStateLabels: Record<SceneState["handFingersState"], string> = {
@@ -559,6 +560,7 @@ const englishFreeHandPositions: Record<SceneState["freeHandPosition"], string> =
     "on-bed": "on the bed",
     "on-keyboard": "on the keyboard",
     "holding-cloth": "holding a piece of cloth",
+    "holding-phone": "holding a phone",
   };
 
 const englishHandFingersStates: Record<SceneState["handFingersState"], string> =
