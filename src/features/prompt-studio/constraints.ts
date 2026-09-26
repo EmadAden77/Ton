@@ -13,7 +13,11 @@ export interface FieldConstraints {
 }
 
 type ConstrainedField =
-  "cameraDistance" | "freeHandPosition" | "eyeDirection" | "faceExpression";
+  | "cameraDistance"
+  | "freeHandPosition"
+  | "phonePosition"
+  | "eyeDirection"
+  | "faceExpression";
 
 type Rule = {
   allowed?: readonly string[];
@@ -32,10 +36,12 @@ const values: Record<ConstrainedField, readonly string[]> = {
     "touching-chin",
     "in-pocket",
     "on-bed",
+    "on-chest",
     "on-keyboard",
     "holding-cloth",
     "holding-phone",
   ],
+  phonePosition: ["front-of-face", "chest-level", "above-chest", "side-soft"],
   eyeDirection: ["camera", "mirror", "away-soft", "down-soft"],
   faceExpression: [
     "neutral",
@@ -62,34 +68,56 @@ const rules: Record<ConstrainedField, (state: SceneState) => Rule> = {
         },
 
   freeHandPosition: (state) => {
-    const allowedByPose: Partial<
-      Record<SceneState["poseType"], readonly SceneState["freeHandPosition"][]>
-    > = {
-      "lying-bed": ["holding-phone", "on-bed", "at-side"],
-      "sitting-chair": [
-        "on-keyboard",
-        "at-side",
-        "holding-cup",
-        "touching-chin",
-      ],
-    };
-
-    const allowed = allowedByPose[state.poseType];
-    if (allowed) {
+    if (state.poseType === "lying-bed") {
       return {
-        allowed,
+        allowed: ["on-bed", "on-chest", "holding-phone"],
+        reason: "غير منطقي في وضعية الاستلقاء",
+      };
+    }
+
+    if (state.poseType === "sitting-chair") {
+      return {
+        allowed: ["on-keyboard", "at-side", "holding-cup", "touching-chin"],
         reason: "موضع اليد لا يناسب الوضعية المختارة",
       };
     }
 
     if (state.poseType === "standing") {
       return {
-        disabled: ["on-bed", "on-keyboard"],
+        disabled: ["on-bed", "on-chest"],
         reason: "موضع اليد لا يناسب الوقوف",
       };
     }
 
+    if (state.poseType === "sitting-bed") {
+      return {
+        disabled: ["in-pocket"],
+        reason: "موضع اليد لا يناسب الجلوس على السرير",
+      };
+    }
+
     return {};
+  },
+
+  phonePosition: (state) => {
+    if (state.poseType === "lying-bed") {
+      return {
+        lockedTo: "above-chest",
+        lockReason: "الاستلقاء يتطلب رفع الهاتف فوق الصدر",
+      };
+    }
+
+    if (state.shotType === "mirror-selfie") {
+      return {
+        lockedTo: "chest-level",
+        lockReason: "السيلفي أمام المرآة يضع الهاتف عند الصدر",
+      };
+    }
+
+    return {
+      lockedTo: "front-of-face",
+      lockReason: "السيلفي الأمامي يتطلب الهاتف أمام الوجه",
+    };
   },
 
   eyeDirection: (state) =>
@@ -150,8 +178,16 @@ export function getFieldConstraints(
 
 export function getConflicts(state: SceneState): string[] {
   const conflicts: string[] = [];
+  const lyingWithPhoneInFront =
+    state.poseType === "lying-bed" && state.phonePosition === "front-of-face";
+
+  if (lyingWithPhoneInFront) {
+    conflicts.push("الهاتف أمام الوجه في وضعية الاستلقاء غير منطقي");
+  }
 
   for (const field of Object.keys(values) as ConstrainedField[]) {
+    if (field === "phonePosition" && lyingWithPhoneInFront) continue;
+
     const constraints = getFieldConstraints(field, state);
     const value = String(state[field]);
     const option = constraints?.options.find((item) => item.value === value);
