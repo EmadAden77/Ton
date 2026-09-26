@@ -248,7 +248,7 @@ export interface SceneState {
     | "partially-visible"
     // اليد خارج الإطار.
     | "off-frame";
-  scenario:
+  scenario?:
     // إعداد يدوي بلا سيناريو.
     | "none"
     // عمل على لابتوب عند المكتب.
