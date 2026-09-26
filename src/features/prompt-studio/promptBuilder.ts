@@ -102,6 +102,10 @@ const colorTemperatures: Record<SceneState["colorTemperature"], string> = {
 
 export function buildPromptArabic(state: SceneState): string {
   const bedDescription = state.roomHasBed ? "، مع سرير مرتب في الخلفية" : "";
+  const lightingSourceDescription =
+    !state.roomHasBed && state.lightingSource === "bedside-lamp"
+      ? "مصباح جانبي"
+      : lightingSources[state.lightingSource];
 
-  return `لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}، ${roomCleanlinessLabels[state.roomCleanliness]}، ${roomWindowLabels[state.roomWindow]}${bedDescription}. مصدر الإضاءة ${lightingSources[state.lightingSource]} وشدتها ${lightingIntensities[state.lightingIntensity]}، واتجاه الضوء ${lightingDirections[state.lightingDirection]}، وحرارة اللون ${colorTemperatures[state.colorTemperature]}.`;
+  return `لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}، ${roomCleanlinessLabels[state.roomCleanliness]}، ${roomWindowLabels[state.roomWindow]}${bedDescription}. مصدر الإضاءة ${lightingSourceDescription} وشدتها ${lightingIntensities[state.lightingIntensity]}، واتجاه الضوء ${lightingDirections[state.lightingDirection]}، وحرارة اللون ${colorTemperatures[state.colorTemperature]}.`;
 }
