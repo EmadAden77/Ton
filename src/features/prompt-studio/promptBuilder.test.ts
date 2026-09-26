@@ -10,6 +10,8 @@ const baseState: SceneState = {
   roomType: "simple",
   cameraDistance: "arm-length",
   cameraAngle: "eye-level",
+  lightingDirection: "front",
+  colorTemperature: "neutral",
 };
 
 describe("buildPromptArabic", () => {
@@ -57,5 +59,41 @@ describe("buildPromptArabic", () => {
     expect(
       buildPromptArabic({ ...baseState, cameraAngle: "slightly-below" }),
     ).toContain("أسفل من مستوى العين قليلاً");
+  });
+
+  it("describes front and side light directions", () => {
+    expect(buildPromptArabic(baseState)).toContain("اتجاه الضوء من الأمام");
+    expect(
+      buildPromptArabic({ ...baseState, lightingDirection: "side" }),
+    ).toContain("اتجاه الضوء من الجانب");
+  });
+
+  it("describes top and soft back light directions", () => {
+    expect(
+      buildPromptArabic({ ...baseState, lightingDirection: "top" }),
+    ).toContain("اتجاه الضوء من الأعلى");
+    expect(
+      buildPromptArabic({ ...baseState, lightingDirection: "back-soft" }),
+    ).toContain("اتجاه الضوء ناعم من الخلف");
+  });
+
+  it("describes warm and neutral color temperature", () => {
+    expect(
+      buildPromptArabic({ ...baseState, colorTemperature: "warm" }),
+    ).toContain("حرارة اللون دافئة");
+    expect(buildPromptArabic(baseState)).toContain("حرارة اللون محايدة");
+  });
+
+  it("describes cool color temperature after light direction", () => {
+    const prompt = buildPromptArabic({
+      ...baseState,
+      lightingDirection: "side",
+      colorTemperature: "cool",
+    });
+
+    expect(prompt).toContain("حرارة اللون باردة");
+    expect(prompt.indexOf("اتجاه الضوء")).toBeLessThan(
+      prompt.indexOf("حرارة اللون"),
+    );
   });
 });

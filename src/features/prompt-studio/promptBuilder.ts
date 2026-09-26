@@ -58,6 +58,26 @@ const lightingIntensities: Record<SceneState["lightingIntensity"], string> = {
   bright: "ساطعة",
 };
 
+const lightingDirections: Record<SceneState["lightingDirection"], string> = {
+  // الضوء من الأمام.
+  front: "من الأمام",
+  // الضوء من الجانب.
+  side: "من الجانب",
+  // الضوء من الأعلى.
+  top: "من الأعلى",
+  // الضوء ناعم من الخلف.
+  "back-soft": "ناعم من الخلف",
+};
+
+const colorTemperatures: Record<SceneState["colorTemperature"], string> = {
+  // لون دافئ.
+  warm: "دافئة",
+  // لون محايد.
+  neutral: "محايدة",
+  // لون بارد.
+  cool: "باردة",
+};
+
 export function buildPromptArabic(state: SceneState): string {
-  return `لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}. مصدر الإضاءة ${lightingSources[state.lightingSource]} وشدتها ${lightingIntensities[state.lightingIntensity]}.`;
+  return `لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}. مصدر الإضاءة ${lightingSources[state.lightingSource]} وشدتها ${lightingIntensities[state.lightingIntensity]}، واتجاه الضوء ${lightingDirections[state.lightingDirection]}، وحرارة اللون ${colorTemperatures[state.colorTemperature]}.`;
 }

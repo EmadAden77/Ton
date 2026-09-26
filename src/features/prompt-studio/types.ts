@@ -17,4 +17,20 @@ export interface SceneState {
     | "slightly-above"
     // أسفل من مستوى العين قليلاً.
     | "slightly-below";
+  lightingDirection:
+    // من الأمام.
+    | "front"
+    // من الجانب.
+    | "side"
+    // من الأعلى.
+    | "top"
+    // من الخلف بضوء ناعم.
+    | "back-soft";
+  colorTemperature:
+    // لون دافئ.
+    | "warm"
+    // لون محايد.
+    | "neutral"
+    // لون بارد.
+    | "cool";
 }

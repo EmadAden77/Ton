@@ -13,6 +13,8 @@ export default function Home() {
     roomType: "simple",
     cameraDistance: "arm-length",
     cameraAngle: "eye-level",
+    lightingDirection: "front",
+    colorTemperature: "neutral",
   });
 
   return (
@@ -40,50 +42,8 @@ export default function Home() {
               }
               className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
             >
-              <option value="front-selfie">سيلفي بالكاميرا الأمامية</option>
-              <option value="mirror-selfie">سيلفي أمام المرآة</option>
-            </select>
-          </label>
-
-          <label className="grid gap-2" htmlFor="lighting-source">
-            مصدر الإضاءة
-            <select
-              id="lighting-source"
-              value={state.lightingSource}
-              onChange={(event) =>
-                setState((current) => ({
-                  ...current,
-                  lightingSource: event.target
-                    .value as SceneState["lightingSource"],
-                }))
-              }
-              className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
-            >
-              <option value="window-day">ضوء النهار من النافذة</option>
-              <option value="window-sunset">ضوء الغروب من النافذة</option>
-              <option value="ceiling">إنارة السقف</option>
-              <option value="bedside-lamp">مصباح بجانب السرير</option>
-            </select>
-          </label>
-
-          <label className="grid gap-2" htmlFor="lighting-intensity">
-            شدة الإضاءة
-            <select
-              id="lighting-intensity"
-              value={state.lightingIntensity}
-              onChange={(event) =>
-                setState((current) => ({
-                  ...current,
-                  lightingIntensity: event.target
-                    .value as SceneState["lightingIntensity"],
-                }))
-              }
-              className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
-            >
-              <option value="dim">خافتة</option>
-              <option value="soft">ناعمة</option>
-              <option value="medium">متوسطة</option>
-              <option value="bright">ساطعة</option>
+              <option value="front-selfie">سيلفي أمامي (Front selfie)</option>
+              <option value="mirror-selfie">سيلفي مرآة (Mirror selfie)</option>
             </select>
           </label>
 
@@ -101,9 +61,9 @@ export default function Home() {
               }
               className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
             >
-              <option value="close">قريبة من الوجه</option>
-              <option value="arm-length">عند طول الذراع</option>
-              <option value="extended">عند امتداد الذراع</option>
+              <option value="close">قريبة (Close)</option>
+              <option value="arm-length">طول الذراع (Arm length)</option>
+              <option value="extended">ذراع ممدودة (Extended)</option>
             </select>
           </label>
 
@@ -120,9 +80,96 @@ export default function Home() {
               }
               className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
             >
-              <option value="eye-level">بمستوى العين</option>
-              <option value="slightly-above">أعلى من مستوى العين قليلاً</option>
-              <option value="slightly-below">أسفل من مستوى العين قليلاً</option>
+              <option value="eye-level">بمستوى العين (Eye level)</option>
+              <option value="slightly-above">
+                أعلى قليلاً (Slightly above)
+              </option>
+              <option value="slightly-below">
+                أسفل قليلاً (Slightly below)
+              </option>
+            </select>
+          </label>
+
+          <label className="grid gap-2" htmlFor="lighting-source">
+            مصدر الإضاءة
+            <select
+              id="lighting-source"
+              value={state.lightingSource}
+              onChange={(event) =>
+                setState((current) => ({
+                  ...current,
+                  lightingSource: event.target
+                    .value as SceneState["lightingSource"],
+                }))
+              }
+              className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+            >
+              <option value="window-day">نافذة نهار (Day window)</option>
+              <option value="window-sunset">نافذة غروب (Sunset window)</option>
+              <option value="ceiling">سقف (Ceiling)</option>
+              <option value="bedside-lamp">مصباح سرير (Bedside lamp)</option>
+            </select>
+          </label>
+
+          <label className="grid gap-2" htmlFor="lighting-intensity">
+            شدة الإضاءة
+            <select
+              id="lighting-intensity"
+              value={state.lightingIntensity}
+              onChange={(event) =>
+                setState((current) => ({
+                  ...current,
+                  lightingIntensity: event.target
+                    .value as SceneState["lightingIntensity"],
+                }))
+              }
+              className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+            >
+              <option value="dim">خافتة (Dim)</option>
+              <option value="soft">ناعمة (Soft)</option>
+              <option value="medium">متوسطة (Medium)</option>
+              <option value="bright">ساطعة (Bright)</option>
+            </select>
+          </label>
+
+          <label className="grid gap-2" htmlFor="lighting-direction">
+            اتجاه الضوء
+            <select
+              id="lighting-direction"
+              value={state.lightingDirection}
+              onChange={(event) =>
+                setState((current) => ({
+                  ...current,
+                  lightingDirection: event.target
+                    .value as SceneState["lightingDirection"],
+                }))
+              }
+              className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+            >
+              <option value="front">أمامي (Front)</option>
+              <option value="side">جانبي (Side)</option>
+              <option value="top">علوي (Top)</option>
+              <option value="back-soft">خلفي ناعم (Soft back)</option>
+            </select>
+          </label>
+
+          <label className="grid gap-2" htmlFor="color-temperature">
+            حرارة اللون
+            <select
+              id="color-temperature"
+              value={state.colorTemperature}
+              onChange={(event) =>
+                setState((current) => ({
+                  ...current,
+                  colorTemperature: event.target
+                    .value as SceneState["colorTemperature"],
+                }))
+              }
+              className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+            >
+              <option value="warm">دافئة (Warm)</option>
+              <option value="neutral">محايدة (Neutral)</option>
+              <option value="cool">باردة (Cool)</option>
             </select>
           </label>
         </div>
