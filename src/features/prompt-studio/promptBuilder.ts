@@ -193,6 +193,63 @@ const hairTextureLabels: Record<SceneState["hairTexture"], string> = {
   curly: "مجعد",
 };
 
+const poseTypeLabels: Record<SceneState["poseType"], string> = {
+  // وقوف في الغرفة.
+  standing: "واقف",
+  // جلوس على السرير.
+  "sitting-bed": "جالس على السرير",
+  // جلوس على الكرسي.
+  "sitting-chair": "جالس على كرسي",
+  // استلقاء على السرير.
+  "lying-bed": "مستلْقٍ على السرير",
+  // وقوف قرب النافذة.
+  "standing-window": "واقف قرب النافذة",
+};
+
+const headDirectionLabels: Record<SceneState["headDirection"], string> = {
+  // باتجاه الأمام.
+  forward: "للأمام",
+  // يساراً قليلاً.
+  "slightly-left": "لليسار قليلاً",
+  // يميناً قليلاً.
+  "slightly-right": "لليمين قليلاً",
+  // للأسفل.
+  down: "للأسفل",
+  // للأعلى برفق.
+  "up-soft": "للأعلى قليلاً",
+};
+
+const shoulderPositionLabels: Record<SceneState["shoulderPosition"], string> = {
+  // كتفان مسترخيان.
+  relaxed: "مسترخيان",
+  // كتف مرتفع قليلاً.
+  "one-raised": "أحدهما مرتفع قليلاً",
+  // كتفان للخلف.
+  "both-back": "للخلف",
+};
+
+const handPlacementLabels: Record<SceneState["handPlacement"], string> = {
+  // اليد الحرة بجانب الجسم.
+  "at-side": "بجانب الجسم",
+  // اليد الحرة تساند الهاتف.
+  "holding-phone": "تساند الهاتف",
+  // اليد الحرة تلامس الشعر.
+  "touching-hair": "تلامس الشعر",
+  // اليد الحرة على الحضن.
+  "on-lap": "على الحضن",
+  // اليد الحرة في الجيب.
+  "in-pocket": "في الجيب",
+};
+
+const backPostureLabels: Record<SceneState["backPosture"], string> = {
+  // ظهر مستقيم.
+  straight: "مستقيم",
+  // ظهر مسترخٍ.
+  relaxed: "مسترخٍ",
+  // ظهر مائل قليلاً.
+  "slightly-leaning": "مائل قليلاً",
+};
+
 export function buildPromptArabic(state: SceneState): string {
   const identityDescription = state.referenceProvided
     ? `${arabicIdentityPriorities[state.identityPriority]}. `
@@ -217,7 +274,21 @@ export function buildPromptArabic(state: SceneState): string {
     lightingSourceDescription = "ضوء الغروب";
   }
 
-  return `${identityDescription}لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}، ${roomCleanlinessLabels[state.roomCleanliness]}، ${roomWindowLabels[state.roomWindow]}${bedDescription}. الملابس: القطعة العلوية ${clothingTopLabels[state.clothingTop]}، والقطعة السفلية ${clothingBottomLabels[state.clothingBottom]}، ومادة القماش ${clothingMaterialLabels[state.clothingMaterial]}، وفئة اللون ${clothingColorLabels[state.clothingColor]}. مع شعر ${hairLengthLabels[state.hairLength]} ${hairTextureLabels[state.hairTexture]} ${hairStyleLabels[state.hairStyle]}. مصدر الإضاءة ${lightingSourceDescription} وشدتها ${lightingIntensities[state.lightingIntensity]}، واتجاه الضوء ${lightingDirections[state.lightingDirection]}، وحرارة اللون ${colorTemperatures[state.colorTemperature]}.${identityNotesDescription}`;
+  const poseDescription =
+    !state.roomHasBed && (state.poseType === "sitting-bed" || state.poseType === "lying-bed")
+      ? "في وضعية مريحة داخل الغرفة"
+      : state.roomWindow === "none" && state.poseType === "standing-window"
+        ? poseTypeLabels.standing
+        : poseTypeLabels[state.poseType];
+  const isStanding = state.poseType === "standing" || state.poseType === "standing-window";
+  const handDescription =
+    isStanding && state.handPlacement === "on-lap"
+      ? "أمام الجسم"
+      : state.poseType === "lying-bed" && state.handPlacement === "in-pocket"
+        ? "بجانب الجسم"
+        : handPlacementLabels[state.handPlacement];
+
+  return `${identityDescription}لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}، ${roomCleanlinessLabels[state.roomCleanliness]}، ${roomWindowLabels[state.roomWindow]}${bedDescription}. الملابس: القطعة العلوية ${clothingTopLabels[state.clothingTop]}، والقطعة السفلية ${clothingBottomLabels[state.clothingBottom]}، ومادة القماش ${clothingMaterialLabels[state.clothingMaterial]}، وفئة اللون ${clothingColorLabels[state.clothingColor]}. مع شعر ${hairLengthLabels[state.hairLength]} ${hairTextureLabels[state.hairTexture]} ${hairStyleLabels[state.hairStyle]}. الشخص ${poseDescription}، رأسه ${headDirectionLabels[state.headDirection]}، وكتفاه ${shoulderPositionLabels[state.shoulderPosition]}، ويده الحرة ${handDescription}، وظهره ${backPostureLabels[state.backPosture]}. مصدر الإضاءة ${lightingSourceDescription} وشدتها ${lightingIntensities[state.lightingIntensity]}، واتجاه الضوء ${lightingDirections[state.lightingDirection]}، وحرارة اللون ${colorTemperatures[state.colorTemperature]}.${identityNotesDescription}`;
 }
 
 const englishShotTypes: Record<SceneState["shotType"], string> = {
@@ -358,6 +429,42 @@ const englishHairTextures: Record<SceneState["hairTexture"], string> = {
   curly: "curly",
 };
 
+const englishPoseTypes: Record<SceneState["poseType"], string> = {
+  standing: "standing",
+  "sitting-bed": "sitting on the bed",
+  "sitting-chair": "sitting on a chair",
+  "lying-bed": "lying on the bed",
+  "standing-window": "standing near the window",
+};
+
+const englishHeadDirections: Record<SceneState["headDirection"], string> = {
+  forward: "facing forward",
+  "slightly-left": "turned slightly left",
+  "slightly-right": "turned slightly right",
+  down: "angled down",
+  "up-soft": "angled gently upward",
+};
+
+const englishShoulderPositions: Record<SceneState["shoulderPosition"], string> = {
+  relaxed: "relaxed",
+  "one-raised": "with one shoulder slightly raised",
+  "both-back": "drawn back",
+};
+
+const englishHandPlacements: Record<SceneState["handPlacement"], string> = {
+  "at-side": "at the side",
+  "holding-phone": "supporting the phone",
+  "touching-hair": "touching the hair",
+  "on-lap": "on the lap",
+  "in-pocket": "in a pocket",
+};
+
+const englishBackPostures: Record<SceneState["backPosture"], string> = {
+  straight: "straight",
+  relaxed: "relaxed",
+  "slightly-leaning": "slightly leaning",
+};
+
 export function buildPromptEnglish(state: SceneState): string {
   const identityDescription = state.referenceProvided
     ? `${englishIdentityPriorities[state.identityPriority]}. `
@@ -389,7 +496,21 @@ export function buildPromptEnglish(state: SceneState): string {
     lightingSource = "sunset light";
   }
 
-  return `${identityDescription}A ${englishShotTypes[state.shotType]} taken ${englishCameraDistances[state.cameraDistance]} from ${englishCameraAngles[state.cameraAngle]} in a ${englishRoomTypes[state.roomType]} bedroom that is ${englishRoomCleanliness[state.roomCleanliness]}, with ${windowDescription}${bedDescription}; the subject wears a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]}${bottomDescription} in ${englishClothingColors[state.clothingColor]} tones, with ${englishHairLengths[state.hairLength]} ${englishHairTextures[state.hairTexture]} ${englishHairStyles[state.hairStyle]} hair; lighting is ${englishLightingIntensities[state.lightingIntensity]} ${lightingSource}, ${englishLightingDirections[state.lightingDirection]}, with a ${englishColorTemperatures[state.colorTemperature]} color temperature.${identityNotesDescription}`;
+  const poseDescription =
+    !state.roomHasBed && (state.poseType === "sitting-bed" || state.poseType === "lying-bed")
+      ? "in a relaxed pose in the room"
+      : state.roomWindow === "none" && state.poseType === "standing-window"
+        ? englishPoseTypes.standing
+        : englishPoseTypes[state.poseType];
+  const isStanding = state.poseType === "standing" || state.poseType === "standing-window";
+  const handDescription =
+    isStanding && state.handPlacement === "on-lap"
+      ? "in front of the body"
+      : state.poseType === "lying-bed" && state.handPlacement === "in-pocket"
+        ? "at the side"
+        : englishHandPlacements[state.handPlacement];
+
+  return `${identityDescription}A ${englishShotTypes[state.shotType]} taken ${englishCameraDistances[state.cameraDistance]} from ${englishCameraAngles[state.cameraAngle]} in a ${englishRoomTypes[state.roomType]} bedroom that is ${englishRoomCleanliness[state.roomCleanliness]}, with ${windowDescription}${bedDescription}; the subject wears a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]}${bottomDescription} in ${englishClothingColors[state.clothingColor]} tones, with ${englishHairLengths[state.hairLength]} ${englishHairTextures[state.hairTexture]} ${englishHairStyles[state.hairStyle]} hair; the subject is ${poseDescription}, head ${englishHeadDirections[state.headDirection]}, shoulders ${englishShoulderPositions[state.shoulderPosition]}, free hand ${handDescription}, back posture ${englishBackPostures[state.backPosture]}; lighting is ${englishLightingIntensities[state.lightingIntensity]} ${lightingSource}, ${englishLightingDirections[state.lightingDirection]}, with a ${englishColorTemperatures[state.colorTemperature]} color temperature.${identityNotesDescription}`;
 }
 
 export function buildNegativePrompt(state: SceneState): string {
