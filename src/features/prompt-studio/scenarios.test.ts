@@ -90,3 +90,11 @@ describe("ready-made scenarios", () => {
     expect(result?.clothingTop).toBe("hoodie");
   });
 });
+
+describe("phone scenario", () => {
+  it("puts the phone in the live free hand field", () => {
+    const preset = SCENARIOS.find((item) => item.id === "lying-with-phone");
+    const scene = preset?.apply(baseState);
+    expect(scene?.freeHandPosition).toBe("holding-phone");
+  });
+});
