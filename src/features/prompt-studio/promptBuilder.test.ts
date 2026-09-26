@@ -12,6 +12,9 @@ const baseState: SceneState = {
   cameraAngle: "eye-level",
   lightingDirection: "front",
   colorTemperature: "neutral",
+  roomCleanliness: "natural",
+  roomWindow: "medium",
+  roomHasBed: true,
 };
 
 describe("buildPromptArabic", () => {
@@ -95,5 +98,65 @@ describe("buildPromptArabic", () => {
     expect(prompt.indexOf("اتجاه الضوء")).toBeLessThan(
       prompt.indexOf("حرارة اللون"),
     );
+  });
+  it("describes the selected room cleanliness", () => {
+    expect(buildPromptArabic(baseState)).toContain("بترتيب طبيعي");
+    expect(
+      buildPromptArabic({ ...baseState, roomCleanliness: "very-tidy" }),
+    ).toContain("مرتبة جداً");
+    expect(
+      buildPromptArabic({ ...baseState, roomCleanliness: "light-mess" }),
+    ).toContain("بفوضى خفيفة");
+    expect(
+      buildPromptArabic({ ...baseState, roomCleanliness: "moderate-mess" }),
+    ).toContain("بفوضى متوسطة");
+  });
+
+  it("describes the selected window size", () => {
+    expect(buildPromptArabic(baseState)).toContain("بنافذة متوسطة");
+    expect(buildPromptArabic({ ...baseState, roomWindow: "small" })).toContain(
+      "بنافذة صغيرة",
+    );
+    expect(buildPromptArabic({ ...baseState, roomWindow: "large" })).toContain(
+      "بنافذة كبيرة",
+    );
+    expect(buildPromptArabic({ ...baseState, roomWindow: "none" })).toContain(
+      "بلا نافذة",
+    );
+  });
+
+  it("includes a tidy bed when the room has a bed", () => {
+    expect(buildPromptArabic(baseState)).toContain("مع سرير مرتب في الخلفية");
+  });
+
+  it("omits the bed when the room has no bed", () => {
+    const prompt = buildPromptArabic({
+      ...baseState,
+      roomHasBed: false,
+      lightingSource: "ceiling",
+    });
+
+    expect(prompt).not.toContain("سرير");
+    expect(prompt).toContain("إنارة السقف");
+  });
+
+  it("does not mention a bed for a bedside lamp in a room without a bed", () => {
+    const prompt = buildPromptArabic({
+      ...baseState,
+      roomHasBed: false,
+      lightingSource: "bedside-lamp",
+    });
+
+    expect(prompt).not.toContain("سرير");
+  });
+
+  it("uses an appropriate side lamp description without a bed", () => {
+    const prompt = buildPromptArabic({
+      ...baseState,
+      roomHasBed: false,
+      lightingSource: "bedside-lamp",
+    });
+
+    expect(prompt).toContain("مصدر الإضاءة مصباح جانبي");
   });
 });
