@@ -36,6 +36,28 @@ const roomTypes: Record<SceneState["roomType"], string> = {
   medium: "متوسطة الحجم",
 };
 
+const roomCleanlinessLabels: Record<SceneState["roomCleanliness"], string> = {
+  // غرفة مرتبة جداً.
+  "very-tidy": "مرتبة جداً",
+  // ترتيب يومي طبيعي.
+  natural: "بترتيب طبيعي",
+  // فوضى خفيفة.
+  "light-mess": "بفوضى خفيفة",
+  // فوضى متوسطة.
+  "moderate-mess": "بفوضى متوسطة",
+};
+
+const roomWindowLabels: Record<SceneState["roomWindow"], string> = {
+  // بلا نافذة.
+  none: "بلا نافذة",
+  // نافذة صغيرة.
+  small: "بنافذة صغيرة",
+  // نافذة متوسطة.
+  medium: "بنافذة متوسطة",
+  // نافذة كبيرة.
+  large: "بنافذة كبيرة",
+};
+
 const lightingSources: Record<SceneState["lightingSource"], string> = {
   // ضوء النهار من النافذة.
   "window-day": "ضوء النهار من النافذة",
@@ -79,5 +101,7 @@ const colorTemperatures: Record<SceneState["colorTemperature"], string> = {
 };
 
 export function buildPromptArabic(state: SceneState): string {
-  return `لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}. مصدر الإضاءة ${lightingSources[state.lightingSource]} وشدتها ${lightingIntensities[state.lightingIntensity]}، واتجاه الضوء ${lightingDirections[state.lightingDirection]}، وحرارة اللون ${colorTemperatures[state.colorTemperature]}.`;
+  const bedDescription = state.roomHasBed ? "، مع سرير مرتب في الخلفية" : "";
+
+  return `لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}، ${roomCleanlinessLabels[state.roomCleanliness]}، ${roomWindowLabels[state.roomWindow]}${bedDescription}. مصدر الإضاءة ${lightingSources[state.lightingSource]} وشدتها ${lightingIntensities[state.lightingIntensity]}، واتجاه الضوء ${lightingDirections[state.lightingDirection]}، وحرارة اللون ${colorTemperatures[state.colorTemperature]}.`;
 }
