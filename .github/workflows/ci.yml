@@ -2,20 +2,28 @@ name: CI
 
 on:
   push:
+    branches: ["**"]
   pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
 
 jobs:
   quality:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 22
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
@@ -29,5 +37,18 @@ jobs:
       - name: Test
         run: npm run test
 
-      - name: Check formatting
+      - name: Auto-format with Prettier
+        run: npm run format
+
+      - name: Commit formatting changes if any
+        run: |
+          if ! git diff --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -m "style: auto-format with prettier [skip ci]"
+            git push
+          fi
+
+      - name: Verify formatting is clean
         run: npm run format:check
