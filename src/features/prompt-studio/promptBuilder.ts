@@ -314,6 +314,9 @@ const handVisibilityLabels: Record<SceneState["handVisibility"], string> = {
 };
 
 export function buildPromptArabic(state: SceneState): string {
+  const modestDescription = state.scenario === "adjusting-clothing"
+    ? " الشخص بملابس كاملة محتشمة ويرتب شعره أمام المرآة."
+    : "";
   const identityDescription = state.referenceProvided
     ? `${arabicIdentityPriorities[state.identityPriority]}. `
     : "";
@@ -355,7 +358,7 @@ export function buildPromptArabic(state: SceneState): string {
       ? "اليد الحرة خارج الإطار"
       : `اليد الحرة ${handDescription}، والأصابع ${handFingersStateLabels[state.handFingersState]}، واليد ${handVisibilityLabels[state.handVisibility]}`;
 
-  return `${identityDescription}لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}، ${roomCleanlinessLabels[state.roomCleanliness]}، ${roomWindowLabels[state.roomWindow]}${bedDescription}. الملابس: القطعة العلوية ${clothingTopLabels[state.clothingTop]}، والقطعة السفلية ${clothingBottomLabels[state.clothingBottom]}، ومادة القماش ${clothingMaterialLabels[state.clothingMaterial]}، وفئة اللون ${clothingColorLabels[state.clothingColor]}. مع شعر ${hairLengthLabels[state.hairLength]} ${hairTextureLabels[state.hairTexture]} ${hairStyleLabels[state.hairStyle]}. الشخص ${poseDescription}، رأسه ${headDirectionLabels[state.headDirection]}، وكتفاه ${shoulderPositionLabels[state.shoulderPosition]}، وظهره ${backPostureLabels[state.backPosture]}. تعبير الوجه ${faceExpressionLabels[state.faceExpression]}، والنظر ${eyeDirectionLabels[effectiveEyeDirection(state)]}، والفم ${mouthStateLabels[effectiveMouthState(state)]}. ${handSummary}. مصدر الإضاءة ${lightingSourceDescription} وشدتها ${lightingIntensities[state.lightingIntensity]}، واتجاه الضوء ${lightingDirections[state.lightingDirection]}، وحرارة اللون ${colorTemperatures[state.colorTemperature]}.${identityNotesDescription}`;
+  return `${identityDescription}لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}، ${roomCleanlinessLabels[state.roomCleanliness]}، ${roomWindowLabels[state.roomWindow]}${bedDescription}. الملابس: القطعة العلوية ${clothingTopLabels[state.clothingTop]}، والقطعة السفلية ${clothingBottomLabels[state.clothingBottom]}، ومادة القماش ${clothingMaterialLabels[state.clothingMaterial]}، وفئة اللون ${clothingColorLabels[state.clothingColor]}. مع شعر ${hairLengthLabels[state.hairLength]} ${hairTextureLabels[state.hairTexture]} ${hairStyleLabels[state.hairStyle]}. الشخص ${poseDescription}، رأسه ${headDirectionLabels[state.headDirection]}، وكتفاه ${shoulderPositionLabels[state.shoulderPosition]}، وظهره ${backPostureLabels[state.backPosture]}. تعبير الوجه ${faceExpressionLabels[state.faceExpression]}، والنظر ${eyeDirectionLabels[effectiveEyeDirection(state)]}، والفم ${mouthStateLabels[effectiveMouthState(state)]}. ${handSummary}. مصدر الإضاءة ${lightingSourceDescription} وشدتها ${lightingIntensities[state.lightingIntensity]}، واتجاه الضوء ${lightingDirections[state.lightingDirection]}، وحرارة اللون ${colorTemperatures[state.colorTemperature]}.${modestDescription}${identityNotesDescription}`;
 }
 
 const englishShotTypes: Record<SceneState["shotType"], string> = {
@@ -577,6 +580,9 @@ const englishHandVisibilities: Record<SceneState["handVisibility"], string> = {
 };
 
 export function buildPromptEnglish(state: SceneState): string {
+  const modestDescription = state.scenario === "adjusting-clothing"
+    ? " Fully dressed, the subject adjusts their hair in front of the mirror."
+    : "";
   const identityDescription = state.referenceProvided
     ? `${englishIdentityPriorities[state.identityPriority]}. `
     : "";
@@ -625,7 +631,7 @@ export function buildPromptEnglish(state: SceneState): string {
       ? "the free hand is off-frame"
       : `the free hand is ${handDescription}, fingers ${englishHandFingersStates[state.handFingersState]}, ${englishHandVisibilities[state.handVisibility]}`;
 
-  return `${identityDescription}A ${englishShotTypes[state.shotType]} taken ${englishCameraDistances[state.cameraDistance]} from ${englishCameraAngles[state.cameraAngle]} in a ${englishRoomTypes[state.roomType]} bedroom that is ${englishRoomCleanliness[state.roomCleanliness]}, with ${windowDescription}${bedDescription}; the subject wears a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]}${bottomDescription} in ${englishClothingColors[state.clothingColor]} tones, with ${englishHairLengths[state.hairLength]} ${englishHairTextures[state.hairTexture]} ${englishHairStyles[state.hairStyle]} hair; the subject is ${poseDescription}, head ${englishHeadDirections[state.headDirection]}, shoulders ${englishShoulderPositions[state.shoulderPosition]}, back posture ${englishBackPostures[state.backPosture]}; facial expression is ${englishFaceExpressions[state.faceExpression]}, eyes directed ${englishEyeDirections[effectiveEyeDirection(state)]}, mouth ${englishMouthStates[effectiveMouthState(state)]}; ${handSummary}; lighting is ${englishLightingIntensities[state.lightingIntensity]} ${lightingSource}, ${englishLightingDirections[state.lightingDirection]}, with a ${englishColorTemperatures[state.colorTemperature]} color temperature.${identityNotesDescription}`;
+  return `${identityDescription}A ${englishShotTypes[state.shotType]} taken ${englishCameraDistances[state.cameraDistance]} from ${englishCameraAngles[state.cameraAngle]} in a ${englishRoomTypes[state.roomType]} bedroom that is ${englishRoomCleanliness[state.roomCleanliness]}, with ${windowDescription}${bedDescription}; the subject wears a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]}${bottomDescription} in ${englishClothingColors[state.clothingColor]} tones, with ${englishHairLengths[state.hairLength]} ${englishHairTextures[state.hairTexture]} ${englishHairStyles[state.hairStyle]} hair; the subject is ${poseDescription}, head ${englishHeadDirections[state.headDirection]}, shoulders ${englishShoulderPositions[state.shoulderPosition]}, back posture ${englishBackPostures[state.backPosture]}; facial expression is ${englishFaceExpressions[state.faceExpression]}, eyes directed ${englishEyeDirections[effectiveEyeDirection(state)]}, mouth ${englishMouthStates[effectiveMouthState(state)]}; ${handSummary}; lighting is ${englishLightingIntensities[state.lightingIntensity]} ${lightingSource}, ${englishLightingDirections[state.lightingDirection]}, with a ${englishColorTemperatures[state.colorTemperature]} color temperature.${modestDescription}${identityNotesDescription}`;
 }
 
 export function buildNegativePrompt(state: SceneState): string {
@@ -658,6 +664,10 @@ export function buildNegativePrompt(state: SceneState): string {
 
   if (state.lightingIntensity === "dim") {
     constraints.push("no excessive noise reduction");
+  }
+
+  if (state.scenario === "adjusting-clothing") {
+    constraints.push("no nudity; no partially undressed subject; no suggestive pose; no exposed skin beyond face and hands");
   }
 
   return constraints.join(", ");
