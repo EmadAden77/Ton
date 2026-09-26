@@ -1,10 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  CURRENT_PHASE,
-  PROJECT_NAME,
-  getProjectStatus,
-} from "./project-info";
+import { CURRENT_PHASE, PROJECT_NAME, getProjectStatus } from "./project-info";
 
 describe("project foundation", () => {
   it("exposes the expected Phase 1A draft metadata", () => {
