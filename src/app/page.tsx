@@ -11,6 +11,8 @@ export default function Home() {
     lightingSource: "window-day",
     lightingIntensity: "soft",
     roomType: "simple",
+    cameraDistance: "arm-length",
+    cameraAngle: "eye-level",
   });
 
   return (
@@ -21,7 +23,7 @@ export default function Home() {
       <section className="mx-auto max-w-2xl rounded-2xl border border-white/10 bg-white/[0.04] p-6 sm:p-10">
         <h1 className="text-4xl font-bold">Ton</h1>
         <p className="mt-4 text-slate-300">
-          اختر نوع اللقطة ومصدر الإضاءة لمعاينة وصف المشهد.
+          اختر إعدادات اللقطة والكاميرا والإضاءة لمعاينة وصف المشهد.
         </p>
 
         <div className="mt-8 grid gap-5 sm:grid-cols-2">
@@ -61,6 +63,66 @@ export default function Home() {
               <option value="window-sunset">ضوء الغروب من النافذة</option>
               <option value="ceiling">إنارة السقف</option>
               <option value="bedside-lamp">مصباح بجانب السرير</option>
+            </select>
+          </label>
+
+          <label className="grid gap-2" htmlFor="lighting-intensity">
+            شدة الإضاءة
+            <select
+              id="lighting-intensity"
+              value={state.lightingIntensity}
+              onChange={(event) =>
+                setState((current) => ({
+                  ...current,
+                  lightingIntensity: event.target
+                    .value as SceneState["lightingIntensity"],
+                }))
+              }
+              className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+            >
+              <option value="dim">خافتة</option>
+              <option value="soft">ناعمة</option>
+              <option value="medium">متوسطة</option>
+              <option value="bright">ساطعة</option>
+            </select>
+          </label>
+
+          <label className="grid gap-2" htmlFor="camera-distance">
+            مسافة الكاميرا
+            <select
+              id="camera-distance"
+              value={state.cameraDistance}
+              onChange={(event) =>
+                setState((current) => ({
+                  ...current,
+                  cameraDistance: event.target
+                    .value as SceneState["cameraDistance"],
+                }))
+              }
+              className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+            >
+              <option value="close">قريبة من الوجه</option>
+              <option value="arm-length">عند طول الذراع</option>
+              <option value="extended">عند امتداد الذراع</option>
+            </select>
+          </label>
+
+          <label className="grid gap-2" htmlFor="camera-angle">
+            زاوية الكاميرا
+            <select
+              id="camera-angle"
+              value={state.cameraAngle}
+              onChange={(event) =>
+                setState((current) => ({
+                  ...current,
+                  cameraAngle: event.target.value as SceneState["cameraAngle"],
+                }))
+              }
+              className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+            >
+              <option value="eye-level">بمستوى العين</option>
+              <option value="slightly-above">أعلى من مستوى العين قليلاً</option>
+              <option value="slightly-below">أسفل من مستوى العين قليلاً</option>
             </select>
           </label>
         </div>
