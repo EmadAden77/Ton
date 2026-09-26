@@ -1,9 +1,52 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 import { buildPromptArabic } from "@/features/prompt-studio/promptBuilder";
 import type { SceneState } from "@/features/prompt-studio/types";
+
+type CollapsibleSectionProps = {
+  title: string;
+  badge?: string;
+  defaultOpen?: boolean;
+  children: ReactNode;
+};
+
+function CollapsibleSection({
+  title,
+  badge,
+  defaultOpen = false,
+  children,
+}: CollapsibleSectionProps) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
+  return (
+    <section className="overflow-hidden rounded-xl border border-white/10 bg-slate-900/70">
+      <button
+        type="button"
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen((open) => !open)}
+        className="flex w-full items-center justify-between gap-3 p-5 text-right"
+      >
+        <span className="flex items-center gap-3">
+          <span
+            aria-hidden="true"
+            className={isOpen ? "inline-block rotate-180" : "inline-block"}
+          >
+            ⌄
+          </span>
+          <span className="font-semibold">{title}</span>
+        </span>
+        {badge && <span className="text-sm text-slate-400">{badge}</span>}
+      </button>
+      {isOpen && (
+        <div className="grid gap-5 border-t border-white/10 p-5 sm:grid-cols-2">
+          {children}
+        </div>
+      )}
+    </section>
+  );
+}
 
 export default function Home() {
   const [state, setState] = useState<SceneState>({
@@ -25,13 +68,26 @@ export default function Home() {
       dir="rtl"
       className="min-h-screen bg-slate-950 px-4 py-10 text-slate-100 sm:px-6"
     >
-      <section className="mx-auto max-w-2xl rounded-2xl border border-white/10 bg-white/[0.04] p-6 sm:p-10">
-        <h1 className="text-4xl font-bold">Ton</h1>
-        <p className="mt-4 text-slate-300">
-          اختر إعدادات اللقطة والكاميرا والغرفة والإضاءة لمعاينة وصف المشهد.
-        </p>
+      <div className="mx-auto max-w-2xl">
+        <header className="px-1 pb-6">
+          <h1 className="text-4xl font-bold">Ton</h1>
+          <p className="mt-4 text-slate-300">
+            اختر إعدادات اللقطة والكاميرا والغرفة والإضاءة لمعاينة وصف المشهد.
+          </p>
+        </header>
 
-        <div className="mt-8 grid gap-5 sm:grid-cols-2">
+        <section
+          aria-live="polite"
+          className="sticky top-0 z-10 rounded-xl border border-amber-300/20 bg-slate-900/95 p-5 shadow-lg backdrop-blur"
+        >
+          <h2 className="font-semibold">المعاينة الحية</h2>
+          <p className="mt-3 leading-8 text-slate-200">
+            {buildPromptArabic(state)}
+          </p>
+        </section>
+
+        <div className="mt-6 grid gap-4">
+          <CollapsibleSection title="الكاميرا والتصوير" badge="3 حقول" defaultOpen>
           <label className="grid gap-2" htmlFor="shot-type">
             نوع اللقطة
             <select
@@ -92,7 +148,15 @@ export default function Home() {
               </option>
             </select>
           </label>
+          </CollapsibleSection>
 
+          <CollapsibleSection title="الغرفة والخلفية" badge="3 حقول + نوع ثابت">
+            <div className="grid gap-2">
+              <span>نوع الغرفة</span>
+              <p className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-300">
+                بسيطة (Simple)
+              </p>
+            </div>
           <label className="grid gap-2" htmlFor="room-cleanliness">
             ترتيب الغرفة
             <select
@@ -134,6 +198,27 @@ export default function Home() {
             </select>
           </label>
 
+          <label
+            className="flex items-center gap-3 rounded-lg border border-white/20 bg-slate-900 p-3"
+            htmlFor="room-has-bed"
+          >
+            <input
+              id="room-has-bed"
+              type="checkbox"
+              checked={state.roomHasBed}
+              onChange={(event) =>
+                setState((current) => ({
+                  ...current,
+                  roomHasBed: event.target.checked,
+                }))
+              }
+              className="h-4 w-4 accent-amber-300"
+            />
+            يوجد سرير (Bed)
+          </label>
+          </CollapsibleSection>
+
+          <CollapsibleSection title="الإضاءة الواقعية" badge="4 حقول">
           <label className="grid gap-2" htmlFor="lighting-source">
             مصدر الإضاءة
             <select
@@ -216,37 +301,13 @@ export default function Home() {
               <option value="cool">باردة (Cool)</option>
             </select>
           </label>
+          </CollapsibleSection>
 
-          <label
-            className="flex items-center gap-3 rounded-lg border border-white/20 bg-slate-900 p-3"
-            htmlFor="room-has-bed"
-          >
-            <input
-              id="room-has-bed"
-              type="checkbox"
-              checked={state.roomHasBed}
-              onChange={(event) =>
-                setState((current) => ({
-                  ...current,
-                  roomHasBed: event.target.checked,
-                }))
-              }
-              className="h-4 w-4 accent-amber-300"
-            />
-            يوجد سرير (Bed)
-          </label>
+          <CollapsibleSection title="خيارات متقدمة" badge="0 حقول">
+            {null}
+          </CollapsibleSection>
         </div>
-
-        <section
-          aria-live="polite"
-          className="mt-8 rounded-xl bg-slate-900 p-5"
-        >
-          <h2 className="font-semibold">معاينة النص</h2>
-          <p className="mt-3 leading-8 text-slate-200">
-            {buildPromptArabic(state)}
-          </p>
-        </section>
-      </section>
+      </div>
     </main>
   );
 }
