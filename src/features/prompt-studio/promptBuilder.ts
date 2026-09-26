@@ -154,7 +154,22 @@ const colorTemperatures: Record<SceneState["colorTemperature"], string> = {
   cool: "باردة",
 };
 
+const arabicIdentityPriorities: Record<SceneState["identityPriority"], string> =
+  {
+    strict: "حافظ على هوية الشخص من الصورة المرجعية بأولوية قصوى",
+    balanced:
+      "حافظ على هوية الشخص من الصورة المرجعية، مع توازن مع مرونة المشهد",
+    flexible: "حافظ على هوية الشخص بشكل مرن، مع السماح بتعديلات على المشهد",
+  };
+
 export function buildPromptArabic(state: SceneState): string {
+  const identityDescription = state.referenceProvided
+    ? `${arabicIdentityPriorities[state.identityPriority]}. `
+    : "";
+  const notes = state.identityNotes.trim();
+  const identityNotesDescription = notes
+    ? ` ملاحظات إضافية عن الهوية: ${notes}.`
+    : "";
   const bedDescription = state.roomHasBed ? "، مع سرير مرتب في الخلفية" : "";
   let lightingSourceDescription = lightingSources[state.lightingSource];
   if (!state.roomHasBed && state.lightingSource === "bedside-lamp") {
@@ -171,7 +186,7 @@ export function buildPromptArabic(state: SceneState): string {
     lightingSourceDescription = "ضوء الغروب";
   }
 
-  return `لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}، ${roomCleanlinessLabels[state.roomCleanliness]}، ${roomWindowLabels[state.roomWindow]}${bedDescription}. الملابس: القطعة العلوية ${clothingTopLabels[state.clothingTop]}، والقطعة السفلية ${clothingBottomLabels[state.clothingBottom]}، ومادة القماش ${clothingMaterialLabels[state.clothingMaterial]}، وفئة اللون ${clothingColorLabels[state.clothingColor]}. مصدر الإضاءة ${lightingSourceDescription} وشدتها ${lightingIntensities[state.lightingIntensity]}، واتجاه الضوء ${lightingDirections[state.lightingDirection]}، وحرارة اللون ${colorTemperatures[state.colorTemperature]}.`;
+  return `${identityDescription}لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}، ${roomCleanlinessLabels[state.roomCleanliness]}، ${roomWindowLabels[state.roomWindow]}${bedDescription}. الملابس: القطعة العلوية ${clothingTopLabels[state.clothingTop]}، والقطعة السفلية ${clothingBottomLabels[state.clothingBottom]}، ومادة القماش ${clothingMaterialLabels[state.clothingMaterial]}، وفئة اللون ${clothingColorLabels[state.clothingColor]}. مصدر الإضاءة ${lightingSourceDescription} وشدتها ${lightingIntensities[state.lightingIntensity]}، واتجاه الضوء ${lightingDirections[state.lightingDirection]}، وحرارة اللون ${colorTemperatures[state.colorTemperature]}.${identityNotesDescription}`;
 }
 
 const englishShotTypes: Record<SceneState["shotType"], string> = {
@@ -280,7 +295,26 @@ const englishColorTemperatures: Record<SceneState["colorTemperature"], string> =
     cool: "cool",
   };
 
+const englishIdentityPriorities: Record<
+  SceneState["identityPriority"],
+  string
+> = {
+  strict:
+    "Preserve the subject's identity from the reference image with strict priority",
+  balanced:
+    "Preserve the subject's identity from the reference image, balanced with scene flexibility",
+  flexible:
+    "Preserve the subject's identity loosely, allowing scene adjustments",
+};
+
 export function buildPromptEnglish(state: SceneState): string {
+  const identityDescription = state.referenceProvided
+    ? `${englishIdentityPriorities[state.identityPriority]}. `
+    : "";
+  const notes = state.identityNotes.trim();
+  const identityNotesDescription = notes
+    ? ` Additional identity notes: ${notes}.`
+    : "";
   const windowDescription = englishRoomWindows[state.roomWindow];
   const bedDescription = state.roomHasBed
     ? ", with a neatly made bed in the background"
@@ -304,7 +338,7 @@ export function buildPromptEnglish(state: SceneState): string {
     lightingSource = "sunset light";
   }
 
-  return `A ${englishShotTypes[state.shotType]} taken ${englishCameraDistances[state.cameraDistance]} from ${englishCameraAngles[state.cameraAngle]} in a ${englishRoomTypes[state.roomType]} bedroom that is ${englishRoomCleanliness[state.roomCleanliness]}, with ${windowDescription}${bedDescription}; the subject wears a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]}${bottomDescription} in ${englishClothingColors[state.clothingColor]} tones; lighting is ${englishLightingIntensities[state.lightingIntensity]} ${lightingSource}, ${englishLightingDirections[state.lightingDirection]}, with a ${englishColorTemperatures[state.colorTemperature]} color temperature.`;
+  return `${identityDescription}A ${englishShotTypes[state.shotType]} taken ${englishCameraDistances[state.cameraDistance]} from ${englishCameraAngles[state.cameraAngle]} in a ${englishRoomTypes[state.roomType]} bedroom that is ${englishRoomCleanliness[state.roomCleanliness]}, with ${windowDescription}${bedDescription}; the subject wears a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]}${bottomDescription} in ${englishClothingColors[state.clothingColor]} tones; lighting is ${englishLightingIntensities[state.lightingIntensity]} ${lightingSource}, ${englishLightingDirections[state.lightingDirection]}, with a ${englishColorTemperatures[state.colorTemperature]} color temperature.${identityNotesDescription}`;
 }
 
 export function buildNegativePrompt(state: SceneState): string {

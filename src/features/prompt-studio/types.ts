@@ -99,4 +99,15 @@ export interface SceneState {
     | "earth-tone"
     // لون باستيل.
     | "pastel";
+  // هل لدى المستخدم صورة مرجعية؛ لا ترفع الصورة في هذه المرحلة.
+  referenceProvided: boolean;
+  identityPriority:
+    // الحفاظ على الهوية بأولوية قصوى.
+    | "strict"
+    // توازن الهوية مع مرونة المشهد.
+    | "balanced"
+    // مرونة أكبر مع احتمال ضعف حفظ الهوية.
+    | "flexible";
+  // ملاحظات اختيارية عن الملامح المراد الحفاظ عليها.
+  identityNotes: string;
 }

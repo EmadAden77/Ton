@@ -23,6 +23,9 @@ const baseState: SceneState = {
   clothingBottom: "shorts",
   clothingMaterial: "cotton",
   clothingColor: "neutral",
+  referenceProvided: false,
+  identityPriority: "balanced",
+  identityNotes: "",
 };
 
 describe("buildPromptArabic", () => {
@@ -314,5 +317,80 @@ describe("windowless room lighting", () => {
     expect(daylight).not.toContain("من النافذة");
     expect(sunset).toContain("ضوء الغروب");
     expect(sunset).not.toContain("من النافذة");
+  });
+});
+
+describe("reference image preferences", () => {
+  it("uses strict identity priority in English when a reference is provided", () => {
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        referenceProvided: true,
+        identityPriority: "strict",
+      }),
+    ).toContain("reference image with strict priority");
+  });
+
+  it("uses balanced identity priority in English", () => {
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        referenceProvided: true,
+        identityPriority: "balanced",
+      }),
+    ).toContain("balanced with scene flexibility");
+  });
+
+  it("uses flexible identity priority in English", () => {
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        referenceProvided: true,
+        identityPriority: "flexible",
+      }),
+    ).toContain("allowing scene adjustments");
+  });
+
+  it("omits reference image instructions when no reference is provided", () => {
+    expect(buildPromptEnglish(baseState)).not.toContain("reference image");
+    expect(buildPromptArabic(baseState)).not.toContain("الصورة المرجعية");
+  });
+
+  it("includes trimmed identity notes when provided", () => {
+    const prompt = buildPromptEnglish({
+      ...baseState,
+      identityNotes: "  short hair, thin eyebrows  ",
+    });
+    expect(prompt).toContain(
+      "Additional identity notes: short hair, thin eyebrows",
+    );
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        identityNotes: "  ",
+      }),
+    ).not.toContain("Additional identity notes");
+  });
+
+  it("uses Arabic identity priority and notes when a reference is provided", () => {
+    const prompt = buildPromptArabic({
+      ...baseState,
+      referenceProvided: true,
+      identityPriority: "strict",
+      identityNotes: "شعر قصير",
+    });
+    expect(prompt).toContain("الصورة المرجعية بأولوية قصوى");
+    expect(prompt).toContain("ملاحظات إضافية عن الهوية: شعر قصير");
+  });
+
+  it("keeps identity preferences out of the negative prompt", () => {
+    const prompt = buildNegativePrompt({
+      ...baseState,
+      referenceProvided: true,
+      identityPriority: "strict",
+      identityNotes: "short hair",
+    });
+    expect(prompt).not.toContain("reference image");
+    expect(prompt).not.toContain("short hair");
   });
 });
