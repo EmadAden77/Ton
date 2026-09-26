@@ -1,39 +1,112 @@
 # Ton
 
-تطبيق عربي لبناء وصف نصي لمشهد سيلفي داخل غرفة نوم. يركز التطوير على فصل حالة المشهد عن صياغة النص والواجهة.
+تطبيق ويب عربي لبناء Prompts واقعية لصور سيلفي داخل غرفة نوم.
 
-## الحالة
+**استخدم التطبيق:** https://ton-seven-nu.vercel.app/
 
-دُمجت Phase 1A (أساس المشروع) وPhase 1C (إثبات بنية توليد النص) في `main`. تُبنى Phase 1B على شكل أقسام صغيرة؛ قسم الكاميرا هو الشريحة الحالية.
+---
 
-الواجهة عربية باتجاه RTL وبخلفية داكنة. تعرض اختيارات اللقطة والإضاءة والكاميرا، مع معاينة نصية تتغير عند تغييرها. لا يوجد رفع صورة أو توليد صورة أو اتصال بمزوّد خارجي.
+## ما يفعله التطبيق
+
+تختار إعدادات الكاميرا والغرفة والإضاءة والملابس والشعر والوضعية وتعابير الوجه واليد الحرة.
+يمكنك البدء بأحد السيناريوهات الجاهزة ثم تعديل الخيارات كما تريد.
+يُنشئ التطبيق ثلاثة نصوص قابلة للنسخ، بهدف وصف صورة فوتوغرافية طبيعية وتجنب المظاهر المصطنعة الشائعة في صور AI.
+التطبيق يبني نصوصاً فقط؛ لا يرفع صورة مرجعية ولا يولّد الصور بنفسه.
+
+---
+
+## المخرجات الثلاثة
+
+- **Prompt (English):** وصف إنجليزي قابل للنسخ إلى أدوات توليد الصور مثل Midjourney وDALL-E وStable Diffusion.
+- **Prompt (العربية):** وصف عربي للفهم والاستخدام باللغة العربية.
+- **Negative Prompt:** قيود مرتبطة بالمشهد، ومنها قيود اليد بحسب ظهورها في الإطار.
+
+---
+
+## المميزات
+
+- 10 مجموعات قابلة للطي ضمن 4 تبويبات: الكاميرا، الغرفة، الشخص، ومتقدم.
+- 6 سيناريوهات جاهزة مع إمكانية تعديل الخيارات بعد تطبيق أي منها.
+- 33 حقلاً في `SceneState`، منها `handPlacement` القديم للتوافق؛ 32 مدخلاً ظاهراً في الواجهة.
+- 71 اختباراً باستخدام Vitest.
+- واجهة عربية باتجاه RTL تعمل على الجوال والكمبيوتر، مع معاينة حية ونسخ النص.
+
+---
+
+## التقنية
+
+- Next.js 15 (App Router)، وفق نطاق الإصدار في `package.json`.
+- TypeScript وTailwind CSS.
+- Vitest للاختبارات، وESLint وPrettier لجودة الكود.
+- GitHub Actions لفحوص CI، وVercel للاستضافة.
+
+---
 
 ## البنية
 
-- `src/features/prompt-studio/types.ts`: تعريف `SceneState` لخيارات المشهد.
-- `src/features/prompt-studio/promptBuilder.ts`: دالة `buildPromptArabic` النقية والخرائط العربية.
-- `src/features/prompt-studio/promptBuilder.test.ts`: اختبارات نص اللقطة والإضاءة والكاميرا.
-- `src/app/page.tsx`: عناصر الاختيار والمعاينة الحية.
+```text
+src/
+├── app/
+│   ├── layout.tsx
+│   ├── page.tsx
+│   └── globals.css
+├── features/prompt-studio/
+│   ├── types.ts
+│   ├── promptBuilder.ts
+│   ├── promptBuilder.test.ts
+│   ├── scenarios.ts
+│   └── scenarios.test.ts
+├── lib/
+│   ├── project-info.ts
+│   └── project-info.test.ts
+└── types/
+    └── css.d.ts
+```
 
-السلسلة المستخدمة: `SceneState → buildPromptArabic → نص عربي`. لا توجد طبقة تحقق من المشهد في هذه الشريحة.
+السلسلة: `UI → SceneState → buildPromptArabic / buildPromptEnglish / buildNegativePrompt → نصوص`.
+تطبّق `scenarios.ts` إعدادات جاهزة على `SceneState`، ويمكن تغييرها بعد الاختيار.
 
-## المتطلبات والتشغيل
+---
 
-يتطلب المشروع Node.js 22+ وnpm. ثبّت الاعتماديات الموجودة في ملف القفل:
+## التشغيل المحلي
+
+يتطلب Node.js 22+ وnpm.
+
+### 1. Vercel (موصى به)
+
+الرابط المباشر: https://ton-seven-nu.vercel.app/ . مع ربط المشروع بـGit، يؤدي دفع التغييرات إلى `main` إلى نشر نسخة الإنتاج تلقائياً.
+
+### 2. Linux / macOS / Windows
 
 ```bash
-npm ci
+git clone https://github.com/EmadAden77/Ton.git
+cd Ton
+npm install
 npm run dev
 ```
 
-افتح `http://localhost:3000`. على Android/Termux استخدم Webpack لأن Turbopack غير مدعوم على ARM64:
+افتح `http://localhost:3000`.
+
+### 3. Android / Termux
+
+بعد تثبيت Git وNode.js 22+ في Termux:
 
 ```bash
+git clone https://github.com/EmadAden77/Ton.git
+cd Ton
+npm install
 npm run dev -- --webpack
 ```
 
+استخدم `--webpack` لأن Turbopack لا يدعم ARM64 في بيئة Termux المستخدمة هنا.
+
 ## الفحوص
 
-يشغّل CI خمسة فحوص/خطوات جودة: `npm ci`، `npm run lint`، `npm run typecheck`، `npm run test`، `npm run format:check`.
+```bash
+npm run lint
+npm run typecheck
+npm run test
+npm run format:check
+```
 
-لا تضع مفاتيح API أو كلمات مرور في المستودع. أي تكامل مستقبلي مع مزوّد صور يحتاج إبقاء المفتاح في الخادم.
+ينفذ CI أيضاً `npm ci`، ويشغّل مهمة منفصلة للتنسيق الآلي عند الحاجة.
