@@ -26,6 +26,9 @@ const baseState: SceneState = {
   referenceProvided: false,
   identityPriority: "balanced",
   identityNotes: "",
+  hairStyle: "natural",
+  hairLength: "medium",
+  hairTexture: "wavy",
 };
 
 describe("buildPromptArabic", () => {
@@ -392,5 +395,43 @@ describe("reference image preferences", () => {
     });
     expect(prompt).not.toContain("reference image");
     expect(prompt).not.toContain("short hair");
+  });
+});
+
+describe("hair descriptions", () => {
+  it("includes the selected hair style in English", () => {
+    expect(buildPromptEnglish({
+      ...baseState,
+      hairStyle: "slicked-back",
+    })).toContain("slicked-back hair");
+  });
+
+  it("describes the hair length and texture in English", () => {
+    expect(buildPromptEnglish({
+      ...baseState,
+      hairLength: "short",
+      hairTexture: "curly",
+    })).toContain("short curly natural hair");
+  });
+
+  it("includes the selected hair style in Arabic", () => {
+    expect(buildPromptArabic({
+      ...baseState,
+      hairStyle: "side-part",
+    })).toContain("مفرق جانبياً");
+  });
+
+  it("describes the hair length and texture in Arabic", () => {
+    expect(buildPromptArabic({
+      ...baseState,
+      hairLength: "long",
+      hairTexture: "straight",
+    })).toContain("شعر طويل أملس طبيعي");
+  });
+
+  it("keeps the hair description after clothing and before lighting", () => {
+    const prompt = buildPromptEnglish(baseState);
+    expect(prompt.indexOf("hair;")).toBeGreaterThan(prompt.indexOf("tones"));
+    expect(prompt.indexOf("hair;")).toBeLessThan(prompt.indexOf("lighting is"));
   });
 });
