@@ -14,7 +14,7 @@
     "format:check": "prettier . --check"
   },
   "dependencies": {
-    "next": "latest",
+    "next": "^15.0.0",
     "react": "latest",
     "react-dom": "latest"
   },
