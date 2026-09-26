@@ -59,7 +59,7 @@ jobs:
         run: npm ci --ignore-scripts
 
       - name: Format code with Prettier
-        run: npm run format
+        run: ./node_modules/.bin/prettier . --write
 
       - name: Commit and push formatting changes
         run: |
