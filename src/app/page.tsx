@@ -53,6 +53,9 @@ function CollapsibleSection({
 }
 
 export default function Home() {
+  const [activeTab, setActiveTab] = useState<"english" | "arabic" | "negative">(
+    "english",
+  );
   const [state, setState] = useState<SceneState>({
     shotType: "front-selfie",
     lightingSource: "window-day",
@@ -74,6 +77,17 @@ export default function Home() {
   const englishPrompt = buildPromptEnglish(state);
   const arabicPrompt = buildPromptArabic(state);
   const negativePrompt = buildNegativePrompt(state);
+  const activePrompt =
+    activeTab === "english"
+      ? englishPrompt
+      : activeTab === "arabic"
+        ? arabicPrompt
+        : negativePrompt;
+  const previewTabs = [
+    { id: "english", label: "English" },
+    { id: "arabic", label: "العربية" },
+    { id: "negative", label: "Negative" },
+  ] as const;
 
   return (
     <main
@@ -88,61 +102,6 @@ export default function Home() {
             المشهد.
           </p>
         </header>
-
-        <section
-          aria-live="polite"
-          className="sticky top-0 z-10 max-h-[65vh] space-y-3 overflow-y-auto rounded-xl border border-amber-300/20 bg-slate-900/95 p-4 shadow-lg backdrop-blur sm:p-5"
-        >
-          <div className="rounded-lg border border-white/10 bg-slate-950/80 p-4">
-            <div className="flex items-center justify-between gap-3">
-              <h2 className="font-semibold">Prompt (English)</h2>
-              <button
-                type="button"
-                onClick={() =>
-                  void navigator.clipboard.writeText(englishPrompt)
-                }
-                className="rounded-lg border border-white/20 px-3 py-1 text-sm hover:bg-white/10"
-              >
-                نسخ
-              </button>
-            </div>
-            <p dir="ltr" className="mt-3 text-left leading-7 text-slate-200">
-              {englishPrompt}
-            </p>
-          </div>
-
-          <div className="rounded-lg border border-white/10 bg-slate-950/80 p-4">
-            <div className="flex items-center justify-between gap-3">
-              <h2 className="font-semibold">Prompt (العربية)</h2>
-              <button
-                type="button"
-                onClick={() => void navigator.clipboard.writeText(arabicPrompt)}
-                className="rounded-lg border border-white/20 px-3 py-1 text-sm hover:bg-white/10"
-              >
-                نسخ
-              </button>
-            </div>
-            <p className="mt-3 leading-7 text-slate-200">{arabicPrompt}</p>
-          </div>
-
-          <div className="rounded-lg border border-white/10 bg-slate-950/80 p-4">
-            <div className="flex items-center justify-between gap-3">
-              <h2 className="font-semibold">Negative Prompt</h2>
-              <button
-                type="button"
-                onClick={() =>
-                  void navigator.clipboard.writeText(negativePrompt)
-                }
-                className="rounded-lg border border-white/20 px-3 py-1 text-sm hover:bg-white/10"
-              >
-                نسخ
-              </button>
-            </div>
-            <p dir="ltr" className="mt-3 text-left leading-7 text-slate-200">
-              {negativePrompt}
-            </p>
-          </div>
-        </section>
 
         <div className="mt-6 grid gap-4">
           <CollapsibleSection
@@ -480,6 +439,73 @@ export default function Home() {
             {null}
           </CollapsibleSection>
         </div>
+
+        <section
+          aria-label="المعاينة"
+          className="mt-6 rounded-xl border border-white/10 bg-slate-900 p-5"
+        >
+          <div
+            role="tablist"
+            aria-label="نوع المعاينة"
+            className="flex flex-wrap gap-2"
+          >
+            {previewTabs.map(({ id, label }) => (
+              <button
+                key={id}
+                id={`tab-${id}`}
+                type="button"
+                role="tab"
+                aria-selected={activeTab === id}
+                aria-controls="prompt-panel"
+                tabIndex={activeTab === id ? 0 : -1}
+                onClick={() => setActiveTab(id)}
+                onKeyDown={(event) => {
+                  const offset =
+                    event.key === "ArrowRight"
+                      ? -1
+                      : event.key === "ArrowLeft"
+                        ? 1
+                        : 0;
+                  if (!offset) return;
+                  event.preventDefault();
+                  const index = previewTabs.findIndex((tab) => tab.id === id);
+                  const next =
+                    previewTabs[
+                      (index + offset + previewTabs.length) % previewTabs.length
+                    ].id;
+                  setActiveTab(next);
+                  document.getElementById(`tab-${next}`)?.focus();
+                }}
+                className={
+                  activeTab === id
+                    ? "rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white"
+                    : "rounded-lg border border-white/20 px-4 py-2 text-sm text-slate-300 hover:bg-white/10"
+                }
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          <div
+            id="prompt-panel"
+            role="tabpanel"
+            aria-labelledby={`tab-${activeTab}`}
+            aria-live="polite"
+            dir={activeTab === "arabic" ? "rtl" : "ltr"}
+            className="mt-4 min-h-[150px] max-h-72 overflow-y-auto rounded-lg border border-white/10 bg-slate-950/80 p-4 leading-7 text-slate-200"
+          >
+            {activePrompt}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => void navigator.clipboard.writeText(activePrompt)}
+            className="mt-4 rounded-lg border border-white/20 px-4 py-2 text-sm hover:bg-white/10"
+          >
+            نسخ
+          </button>
+        </section>
       </div>
     </main>
   );
