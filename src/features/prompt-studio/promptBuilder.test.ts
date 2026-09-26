@@ -284,3 +284,35 @@ describe("buildNegativePrompt", () => {
     expect(bright.split(", ")).toHaveLength(9);
   });
 });
+
+describe("windowless room lighting", () => {
+  it("does not invent a window in English for daylight or sunset", () => {
+    const daylight = buildPromptEnglish({ ...baseState, roomWindow: "none" });
+    const sunset = buildPromptEnglish({
+      ...baseState,
+      roomWindow: "none",
+      lightingSource: "window-sunset",
+    });
+
+    expect(daylight).toContain("no window");
+    expect(daylight).toContain("bright daylight");
+    expect(daylight).not.toContain("from the window");
+    expect(sunset).toContain("sunset light");
+    expect(sunset).not.toContain("from the window");
+  });
+
+  it("does not invent a window in Arabic for daylight or sunset", () => {
+    const daylight = buildPromptArabic({ ...baseState, roomWindow: "none" });
+    const sunset = buildPromptArabic({
+      ...baseState,
+      roomWindow: "none",
+      lightingSource: "window-sunset",
+    });
+
+    expect(daylight).toContain("بلا نافذة");
+    expect(daylight).toContain("ضوء النهار");
+    expect(daylight).not.toContain("من النافذة");
+    expect(sunset).toContain("ضوء الغروب");
+    expect(sunset).not.toContain("من النافذة");
+  });
+});
