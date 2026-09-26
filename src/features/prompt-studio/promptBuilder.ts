@@ -154,11 +154,13 @@ const colorTemperatures: Record<SceneState["colorTemperature"], string> = {
   cool: "باردة",
 };
 
-const arabicIdentityPriorities: Record<SceneState["identityPriority"], string> = {
-  strict: "حافظ على هوية الشخص من الصورة المرجعية بأولوية قصوى",
-  balanced: "حافظ على هوية الشخص من الصورة المرجعية، مع توازن مع مرونة المشهد",
-  flexible: "حافظ على هوية الشخص بشكل مرن، مع السماح بتعديلات على المشهد",
-};
+const arabicIdentityPriorities: Record<SceneState["identityPriority"], string> =
+  {
+    strict: "حافظ على هوية الشخص من الصورة المرجعية بأولوية قصوى",
+    balanced:
+      "حافظ على هوية الشخص من الصورة المرجعية، مع توازن مع مرونة المشهد",
+    flexible: "حافظ على هوية الشخص بشكل مرن، مع السماح بتعديلات على المشهد",
+  };
 
 export function buildPromptArabic(state: SceneState): string {
   const identityDescription = state.referenceProvided
@@ -293,10 +295,16 @@ const englishColorTemperatures: Record<SceneState["colorTemperature"], string> =
     cool: "cool",
   };
 
-const englishIdentityPriorities: Record<SceneState["identityPriority"], string> = {
-  strict: "Preserve the subject's identity from the reference image with strict priority",
-  balanced: "Preserve the subject's identity from the reference image, balanced with scene flexibility",
-  flexible: "Preserve the subject's identity loosely, allowing scene adjustments",
+const englishIdentityPriorities: Record<
+  SceneState["identityPriority"],
+  string
+> = {
+  strict:
+    "Preserve the subject's identity from the reference image with strict priority",
+  balanced:
+    "Preserve the subject's identity from the reference image, balanced with scene flexibility",
+  flexible:
+    "Preserve the subject's identity loosely, allowing scene adjustments",
 };
 
 export function buildPromptEnglish(state: SceneState): string {

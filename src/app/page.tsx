@@ -127,7 +127,10 @@ export default function Home() {
               لدي صورة مرجعية
             </label>
 
-            <label className="grid gap-2 sm:col-span-2" htmlFor="identity-priority">
+            <label
+              className="grid gap-2 sm:col-span-2"
+              htmlFor="identity-priority"
+            >
               أولوية الحفاظ على الهوية
               <select
                 id="identity-priority"
@@ -135,7 +138,8 @@ export default function Home() {
                 onChange={(event) =>
                   setState((current) => ({
                     ...current,
-                    identityPriority: event.target.value as SceneState["identityPriority"],
+                    identityPriority: event.target
+                      .value as SceneState["identityPriority"],
                   }))
                 }
                 className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
@@ -146,7 +150,10 @@ export default function Home() {
               </select>
             </label>
 
-            <label className="grid gap-2 sm:col-span-2" htmlFor="identity-notes">
+            <label
+              className="grid gap-2 sm:col-span-2"
+              htmlFor="identity-notes"
+            >
               ملاحظات عن الملامح (اختياري)
               <textarea
                 id="identity-notes"
@@ -165,8 +172,9 @@ export default function Home() {
             </label>
 
             <p className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-200 sm:col-span-2">
-              لا ترفع صور أشخاص آخرين بدون موافقتهم. لا تستخدم النظام لانتحال الهوية أو التضليل.
-              في هذه المرحلة، لا يتم رفع أي صورة فعلياً — فقط تُحفظ اختياراتك محلياً في المتصفح.
+              لا ترفع صور أشخاص آخرين بدون موافقتهم. لا تستخدم النظام لانتحال
+              الهوية أو التضليل. في هذه المرحلة، لا يتم رفع أي صورة فعلياً — فقط
+              تُحفظ اختياراتك محلياً في المتصفح.
             </p>
           </CollapsibleSection>
 

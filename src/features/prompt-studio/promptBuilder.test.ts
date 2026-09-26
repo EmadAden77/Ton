@@ -322,27 +322,33 @@ describe("windowless room lighting", () => {
 
 describe("reference image preferences", () => {
   it("uses strict identity priority in English when a reference is provided", () => {
-    expect(buildPromptEnglish({
-      ...baseState,
-      referenceProvided: true,
-      identityPriority: "strict",
-    })).toContain("reference image with strict priority");
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        referenceProvided: true,
+        identityPriority: "strict",
+      }),
+    ).toContain("reference image with strict priority");
   });
 
   it("uses balanced identity priority in English", () => {
-    expect(buildPromptEnglish({
-      ...baseState,
-      referenceProvided: true,
-      identityPriority: "balanced",
-    })).toContain("balanced with scene flexibility");
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        referenceProvided: true,
+        identityPriority: "balanced",
+      }),
+    ).toContain("balanced with scene flexibility");
   });
 
   it("uses flexible identity priority in English", () => {
-    expect(buildPromptEnglish({
-      ...baseState,
-      referenceProvided: true,
-      identityPriority: "flexible",
-    })).toContain("allowing scene adjustments");
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        referenceProvided: true,
+        identityPriority: "flexible",
+      }),
+    ).toContain("allowing scene adjustments");
   });
 
   it("omits reference image instructions when no reference is provided", () => {
@@ -355,11 +361,15 @@ describe("reference image preferences", () => {
       ...baseState,
       identityNotes: "  short hair, thin eyebrows  ",
     });
-    expect(prompt).toContain("Additional identity notes: short hair, thin eyebrows");
-    expect(buildPromptEnglish({
-      ...baseState,
-      identityNotes: "  ",
-    })).not.toContain("Additional identity notes");
+    expect(prompt).toContain(
+      "Additional identity notes: short hair, thin eyebrows",
+    );
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        identityNotes: "  ",
+      }),
+    ).not.toContain("Additional identity notes");
   });
 
   it("uses Arabic identity priority and notes when a reference is provided", () => {
