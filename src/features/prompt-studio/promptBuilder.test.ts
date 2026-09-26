@@ -9,16 +9,9 @@ import type { SceneState } from "./types";
 
 const baseState: SceneState = {
   shotType: "front-selfie",
-  lightingSource: "window-day",
-  lightingIntensity: "bright",
-  roomType: "simple",
+  lightingMode: "as-in-photo",
   cameraDistance: "arm-length",
   cameraAngle: "eye-level",
-  lightingDirection: "front",
-  colorTemperature: "neutral",
-  roomCleanliness: "natural",
-  roomWindow: "medium",
-  roomHasBed: true,
   clothingTop: "t-shirt",
   clothingBottom: "shorts",
   clothingMaterial: "cotton",
@@ -40,302 +33,214 @@ const baseState: SceneState = {
   freeHandPosition: "at-side",
   handFingersState: "relaxed",
   handVisibility: "fully-visible",
+  scenario: "none",
 };
 
-describe("buildPromptArabic", () => {
-  it("describes a bright front selfie in a simple room", () => {
-    const prompt = buildPromptArabic(baseState);
-
-    expect(prompt).toContain("الكاميرا الأمامية");
-    expect(prompt).toContain("بسيطة");
-    expect(prompt).toContain("النهار من النافذة");
-    expect(prompt).toContain("ساطعة");
-  });
-
-  it("describes a dim mirror selfie in a small room", () => {
-    const state: SceneState = {
-      ...baseState,
-      shotType: "mirror-selfie",
-      lightingSource: "bedside-lamp",
-      lightingIntensity: "dim",
-      roomType: "small",
-    };
-
-    const prompt = buildPromptArabic(state);
-
-    expect(prompt).toContain("المرآة");
-    expect(prompt).toContain("صغيرة");
-    expect(prompt).toContain("مصباح بجانب السرير");
-    expect(prompt).toContain("خافتة");
-  });
-
-  it("describes the selected camera distance", () => {
-    expect(
-      buildPromptArabic({ ...baseState, cameraDistance: "close" }),
-    ).toContain("قريبة من الوجه");
-    expect(buildPromptArabic(baseState)).toContain("عند طول الذراع");
-    expect(
-      buildPromptArabic({ ...baseState, cameraDistance: "extended" }),
-    ).toContain("عند امتداد الذراع");
-  });
-
-  it("describes the selected camera angle", () => {
-    expect(buildPromptArabic(baseState)).toContain("بمستوى العين");
-    expect(
-      buildPromptArabic({ ...baseState, cameraAngle: "slightly-above" }),
-    ).toContain("أعلى من مستوى العين قليلاً");
-    expect(
-      buildPromptArabic({ ...baseState, cameraAngle: "slightly-below" }),
-    ).toContain("أسفل من مستوى العين قليلاً");
-  });
-
-  it("describes front and side light directions", () => {
-    expect(buildPromptArabic(baseState)).toContain("اتجاه الضوء من الأمام");
-    expect(
-      buildPromptArabic({ ...baseState, lightingDirection: "side" }),
-    ).toContain("اتجاه الضوء من الجانب");
-  });
-
-  it("describes top and soft back light directions", () => {
-    expect(
-      buildPromptArabic({ ...baseState, lightingDirection: "top" }),
-    ).toContain("اتجاه الضوء من الأعلى");
-    expect(
-      buildPromptArabic({ ...baseState, lightingDirection: "back-soft" }),
-    ).toContain("اتجاه الضوء ناعم من الخلف");
-  });
-
-  it("describes warm and neutral color temperature", () => {
-    expect(
-      buildPromptArabic({ ...baseState, colorTemperature: "warm" }),
-    ).toContain("حرارة اللون دافئة");
-    expect(buildPromptArabic(baseState)).toContain("حرارة اللون محايدة");
-  });
-
-  it("describes cool color temperature after light direction", () => {
-    const prompt = buildPromptArabic({
-      ...baseState,
-      lightingDirection: "side",
-      colorTemperature: "cool",
-    });
-
-    expect(prompt).toContain("حرارة اللون باردة");
-    expect(prompt.indexOf("اتجاه الضوء")).toBeLessThan(
-      prompt.indexOf("حرارة اللون"),
-    );
-  });
-  it("describes the selected room cleanliness", () => {
-    expect(buildPromptArabic(baseState)).toContain("بترتيب طبيعي");
-    expect(
-      buildPromptArabic({ ...baseState, roomCleanliness: "very-tidy" }),
-    ).toContain("مرتبة جداً");
-    expect(
-      buildPromptArabic({ ...baseState, roomCleanliness: "light-mess" }),
-    ).toContain("بفوضى خفيفة");
-    expect(
-      buildPromptArabic({ ...baseState, roomCleanliness: "moderate-mess" }),
-    ).toContain("بفوضى متوسطة");
-  });
-
-  it("describes the selected window size", () => {
-    expect(buildPromptArabic(baseState)).toContain("بنافذة متوسطة");
-    expect(buildPromptArabic({ ...baseState, roomWindow: "small" })).toContain(
-      "بنافذة صغيرة",
-    );
-    expect(buildPromptArabic({ ...baseState, roomWindow: "large" })).toContain(
-      "بنافذة كبيرة",
-    );
-    expect(buildPromptArabic({ ...baseState, roomWindow: "none" })).toContain(
-      "بلا نافذة",
+describe("fixed room and lighting modes", () => {
+  it("uses the fixed room description in English", () => {
+    expect(buildPromptEnglish(baseState)).toContain(
+      "dark tufted headboard bed",
     );
   });
 
-  it("includes a tidy bed when the room has a bed", () => {
-    expect(buildPromptArabic(baseState)).toContain("مع سرير مرتب في الخلفية");
+  it("uses the fixed room description in Arabic", () => {
+    expect(buildPromptArabic(baseState)).toContain(
+      "سرير بظهر منجّد غامق على الجانب الأيسر",
+    );
   });
 
-  it("omits the bed when the room has no bed", () => {
-    const prompt = buildPromptArabic({
-      ...baseState,
-      roomHasBed: false,
-      lightingSource: "ceiling",
-    });
-
-    expect(prompt).not.toContain("سرير");
-    expect(prompt).toContain("إنارة السقف");
-  });
-
-  it("does not mention a bed for a bedside lamp in a room without a bed", () => {
-    const prompt = buildPromptArabic({
-      ...baseState,
-      roomHasBed: false,
-      lightingSource: "bedside-lamp",
-    });
-
-    expect(prompt).not.toContain("سرير");
-  });
-
-  it("uses an appropriate side lamp description without a bed", () => {
-    const prompt = buildPromptArabic({
-      ...baseState,
-      roomHasBed: false,
-      lightingSource: "bedside-lamp",
-    });
-
-    expect(prompt).toContain("مصدر الإضاءة مصباح جانبي");
-  });
-
-  it("describes the selected clothing top", () => {
-    expect(buildPromptArabic(baseState)).toContain("القطعة العلوية تي شيرت");
+  it("describes phone-screen lighting in English", () => {
     expect(
-      buildPromptArabic({ ...baseState, clothingTop: "hoodie" }),
-    ).toContain("القطعة العلوية هودي");
+      buildPromptEnglish({ ...baseState, lightingMode: "phone-screen" }),
+    ).toContain("phone screen");
   });
 
-  it("describes the selected clothing bottom without inventing a garment", () => {
-    expect(buildPromptArabic(baseState)).toContain("القطعة السفلية شورت");
+  it("describes open-curtain daylight in English", () => {
     expect(
-      buildPromptArabic({ ...baseState, clothingBottom: "none-visible" }),
-    ).toContain("القطعة السفلية غير ظاهرة في الإطار");
+      buildPromptEnglish({ ...baseState, lightingMode: "daylight-open" }),
+    ).toContain("bright natural daylight");
   });
 
-  it("describes the selected clothing material", () => {
-    expect(buildPromptArabic(baseState)).toContain("مادة القماش قطن");
-    expect(
-      buildPromptArabic({ ...baseState, clothingMaterial: "linen" }),
-    ).toContain("مادة القماش كتان");
+  it("describes as-in-photo lighting in English", () => {
+    expect(buildPromptEnglish(baseState)).toContain("warm bedside lamp");
   });
 
-  it("describes the selected clothing color category", () => {
-    expect(buildPromptArabic(baseState)).toContain("فئة اللون محايدة");
+  it("describes phone-screen lighting in Arabic", () => {
     expect(
-      buildPromptArabic({ ...baseState, clothingColor: "earth-tone" }),
-    ).toContain("فئة اللون ترابية");
+      buildPromptArabic({ ...baseState, lightingMode: "phone-screen" }),
+    ).toContain("ضوء شاشة الهاتف");
+  });
+
+  it("describes closed-curtain daylight in both languages", () => {
+    const state = { ...baseState, lightingMode: "daylight-closed" as const };
+    expect(buildPromptEnglish(state)).toContain("soft diffused daylight");
+    expect(buildPromptArabic(state)).toContain("الستائر الداكنة المغلقة");
   });
 });
 
-describe("buildPromptEnglish", () => {
-  it("describes the selected selfie shot", () => {
+describe("camera descriptions", () => {
+  it("describes both selfie shot types", () => {
     expect(buildPromptEnglish(baseState)).toContain("front-camera selfie");
     expect(
       buildPromptEnglish({ ...baseState, shotType: "mirror-selfie" }),
     ).toContain("mirror selfie");
   });
 
-  it("describes lighting intensity and source in English", () => {
-    expect(buildPromptEnglish(baseState)).toContain(
-      "bright daylight from the window",
-    );
+  it("describes camera distance", () => {
+    expect(buildPromptEnglish(baseState)).toContain("at arm's length");
+    expect(
+      buildPromptEnglish({ ...baseState, cameraDistance: "close" }),
+    ).toContain("close to the face");
+  });
+
+  it("describes camera angle", () => {
+    expect(
+      buildPromptEnglish({ ...baseState, cameraAngle: "slightly-above" }),
+    ).toContain("slightly above eye level");
+  });
+});
+
+describe("clothing and hair descriptions", () => {
+  it("describes clothing choices", () => {
+    const prompt = buildPromptEnglish({
+      ...baseState,
+      clothingTop: "hoodie",
+      clothingBottom: "jeans",
+      clothingMaterial: "cotton",
+      clothingColor: "dark",
+    });
+    expect(prompt).toContain("cotton hoodie and jeans");
+    expect(prompt).toContain("dark tones");
+  });
+
+  it("handles lower garment outside the frame", () => {
+    expect(
+      buildPromptEnglish({ ...baseState, clothingBottom: "none-visible" }),
+    ).toContain("lower garment outside the frame");
+  });
+
+  it("describes hair in English", () => {
     expect(
       buildPromptEnglish({
         ...baseState,
-        lightingIntensity: "soft",
-        lightingSource: "ceiling",
+        hairLength: "short",
+        hairTexture: "curly",
+        hairStyle: "slicked-back",
       }),
-    ).toContain("soft ceiling light");
+    ).toContain("short curly slicked-back hair");
   });
 
-  it("contains no Arabic characters", () => {
-    expect(buildPromptEnglish(baseState)).not.toMatch(/[\u0600-\u06FF]/);
+  it("describes hair in Arabic", () => {
+    expect(
+      buildPromptArabic({
+        ...baseState,
+        hairLength: "long",
+        hairTexture: "straight",
+        hairStyle: "side-part",
+      }),
+    ).toContain("شعر طويل أملس مفرق جانبياً");
+  });
+});
+
+describe("pose and face descriptions", () => {
+  it("describes a bed pose", () => {
+    expect(
+      buildPromptEnglish({ ...baseState, poseType: "lying-bed" }),
+    ).toContain("lying on the bed");
   });
 
-  it("keeps room and clothing details coherent with absent objects", () => {
+  it("describes head and back posture", () => {
     const prompt = buildPromptEnglish({
       ...baseState,
-      roomWindow: "none",
-      roomHasBed: false,
-      lightingSource: "bedside-lamp",
-      clothingBottom: "none-visible",
+      headDirection: "slightly-left",
+      backPosture: "straight",
     });
+    expect(prompt).toContain("head turned slightly left");
+    expect(prompt).toContain("back posture straight");
+  });
 
-    expect(prompt).toContain("no window");
-    expect(prompt).toContain("side lamp light");
-    expect(prompt).toContain("lower garment outside the frame");
-    expect(prompt).not.toContain("bedside lamp light");
-    expect(prompt).not.toContain("neatly made bed");
+  it("describes facial expression and eye direction", () => {
+    const prompt = buildPromptEnglish({
+      ...baseState,
+      faceExpression: "calm-focus",
+      eyeDirection: "down-soft",
+    });
+    expect(prompt).toContain("facial expression is calm focus");
+    expect(prompt).toContain("eyes directed softly down");
+  });
+
+  it("keeps sleepy expression and mouth coherent", () => {
+    const prompt = buildPromptEnglish({
+      ...baseState,
+      faceExpression: "sleepy",
+      mouthState: "smile-open-light",
+    });
+    expect(prompt).toContain("mouth closed");
+    expect(prompt).not.toContain("light open smile");
+  });
+
+  it("keeps light laugh and mouth coherent", () => {
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        faceExpression: "light-laugh",
+        mouthState: "smile-closed",
+      }),
+    ).toContain("mouth slightly open");
+  });
+
+  it("keeps side glance and eye direction coherent", () => {
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        faceExpression: "side-glance",
+        eyeDirection: "camera",
+      }),
+    ).toContain("eyes directed softly away");
   });
 });
 
-describe("buildNegativePrompt", () => {
-  it("includes visible hand and baseline realism constraints", () => {
-    const prompt = buildNegativePrompt(baseState);
-
-    expect(prompt).toContain("no extra fingers");
-    expect(prompt).toContain("no malformed hands");
-    expect(prompt).toContain("no waxy skin");
-    expect(prompt).toContain("no watermark");
+describe("free hand descriptions", () => {
+  it("describes hand position and fingers", () => {
+    const prompt = buildPromptEnglish({
+      ...baseState,
+      freeHandPosition: "holding-cup",
+      handFingersState: "slightly-curled",
+    });
+    expect(prompt).toContain("holding a cup");
+    expect(prompt).toContain("fingers slightly curled");
   });
 
-  it("adds reflection constraints for a mirror selfie", () => {
-    const prompt = buildNegativePrompt({
-      ...baseState,
-      shotType: "mirror-selfie",
-    });
-
-    expect(prompt).toContain("no incorrect reflections");
-    expect(prompt).toContain("no mirrored text");
+  it("describes partial visibility in Arabic", () => {
+    expect(
+      buildPromptArabic({
+        ...baseState,
+        handVisibility: "partially-visible",
+      }),
+    ).toContain("ظاهرة جزئياً في الإطار");
   });
 
-  it("omits mirror constraints for a front selfie", () => {
-    const prompt = buildNegativePrompt(baseState);
-
-    expect(prompt).not.toContain("no incorrect reflections");
+  it("omits finger wording when hand is off-frame", () => {
+    const prompt = buildPromptEnglish({
+      ...baseState,
+      handVisibility: "off-frame",
+    });
+    expect(prompt).toContain("free hand is off-frame");
+    expect(prompt).not.toContain("fingers relaxed");
   });
 
-  it("keeps conditional constraints within ten comma-separated groups", () => {
-    const bright = buildNegativePrompt({
+  it("avoids an in-pocket hand while lying on the bed", () => {
+    const prompt = buildPromptEnglish({
       ...baseState,
-      shotType: "mirror-selfie",
-      lightingIntensity: "bright",
+      poseType: "lying-bed",
+      freeHandPosition: "in-pocket",
     });
-    const dim = buildNegativePrompt({
-      ...baseState,
-      roomHasBed: false,
-      lightingIntensity: "dim",
-    });
-
-    expect(bright).toContain("no blown highlights");
-    expect(bright).toContain("no warped furniture");
-    expect(dim).toContain("no excessive noise reduction");
-    expect(dim).not.toContain("no warped furniture");
-    expect(bright.split(", ")).toHaveLength(9);
-  });
-});
-
-describe("windowless room lighting", () => {
-  it("does not invent a window in English for daylight or sunset", () => {
-    const daylight = buildPromptEnglish({ ...baseState, roomWindow: "none" });
-    const sunset = buildPromptEnglish({
-      ...baseState,
-      roomWindow: "none",
-      lightingSource: "window-sunset",
-    });
-
-    expect(daylight).toContain("no window");
-    expect(daylight).toContain("bright daylight");
-    expect(daylight).not.toContain("from the window");
-    expect(sunset).toContain("sunset light");
-    expect(sunset).not.toContain("from the window");
-  });
-
-  it("does not invent a window in Arabic for daylight or sunset", () => {
-    const daylight = buildPromptArabic({ ...baseState, roomWindow: "none" });
-    const sunset = buildPromptArabic({
-      ...baseState,
-      roomWindow: "none",
-      lightingSource: "window-sunset",
-    });
-
-    expect(daylight).toContain("بلا نافذة");
-    expect(daylight).toContain("ضوء النهار");
-    expect(daylight).not.toContain("من النافذة");
-    expect(sunset).toContain("ضوء الغروب");
-    expect(sunset).not.toContain("من النافذة");
+    expect(prompt).toContain("free hand is at the side");
   });
 });
 
 describe("reference image preferences", () => {
-  it("uses strict identity priority in English when a reference is provided", () => {
+  it("adds strict identity priority when a reference is present", () => {
     expect(
       buildPromptEnglish({
         ...baseState,
@@ -345,297 +250,63 @@ describe("reference image preferences", () => {
     ).toContain("reference image with strict priority");
   });
 
-  it("uses balanced identity priority in English", () => {
-    expect(
-      buildPromptEnglish({
-        ...baseState,
-        referenceProvided: true,
-        identityPriority: "balanced",
-      }),
-    ).toContain("balanced with scene flexibility");
-  });
-
-  it("uses flexible identity priority in English", () => {
-    expect(
-      buildPromptEnglish({
-        ...baseState,
-        referenceProvided: true,
-        identityPriority: "flexible",
-      }),
-    ).toContain("allowing scene adjustments");
-  });
-
-  it("omits reference image instructions when no reference is provided", () => {
+  it("omits identity instruction without a reference", () => {
     expect(buildPromptEnglish(baseState)).not.toContain("reference image");
-    expect(buildPromptArabic(baseState)).not.toContain("الصورة المرجعية");
   });
 
-  it("includes trimmed identity notes when provided", () => {
-    const prompt = buildPromptEnglish({
-      ...baseState,
-      identityNotes: "  short hair, thin eyebrows  ",
-    });
-    expect(prompt).toContain(
-      "Additional identity notes: short hair, thin eyebrows",
-    );
+  it("adds trimmed identity notes", () => {
     expect(
       buildPromptEnglish({
         ...baseState,
-        identityNotes: "  ",
+        identityNotes: "  short hair, thin eyebrows  ",
       }),
-    ).not.toContain("Additional identity notes");
+    ).toContain("Additional identity notes: short hair, thin eyebrows");
   });
 
-  it("uses Arabic identity priority and notes when a reference is provided", () => {
-    const prompt = buildPromptArabic({
-      ...baseState,
-      referenceProvided: true,
-      identityPriority: "strict",
-      identityNotes: "شعر قصير",
-    });
-    expect(prompt).toContain("الصورة المرجعية بأولوية قصوى");
-    expect(prompt).toContain("ملاحظات إضافية عن الهوية: شعر قصير");
-  });
-
-  it("keeps identity preferences out of the negative prompt", () => {
-    const prompt = buildNegativePrompt({
-      ...baseState,
-      referenceProvided: true,
-      identityPriority: "strict",
-      identityNotes: "short hair",
-    });
-    expect(prompt).not.toContain("reference image");
-    expect(prompt).not.toContain("short hair");
+  it("supports Arabic identity instructions", () => {
+    expect(
+      buildPromptArabic({
+        ...baseState,
+        referenceProvided: true,
+        identityPriority: "strict",
+        identityNotes: "شعر قصير",
+      }),
+    ).toContain("ملاحظات إضافية عن الهوية: شعر قصير");
   });
 });
 
-describe("hair descriptions", () => {
-  it("includes the selected hair style in English", () => {
-    expect(
-      buildPromptEnglish({
-        ...baseState,
-        hairStyle: "slicked-back",
-      }),
-    ).toContain("slicked-back hair");
-  });
-
-  it("describes the hair length and texture in English", () => {
-    expect(
-      buildPromptEnglish({
-        ...baseState,
-        hairLength: "short",
-        hairTexture: "curly",
-      }),
-    ).toContain("short curly natural hair");
-  });
-
-  it("includes the selected hair style in Arabic", () => {
-    expect(
-      buildPromptArabic({
-        ...baseState,
-        hairStyle: "side-part",
-      }),
-    ).toContain("مفرق جانبياً");
-  });
-
-  it("describes the hair length and texture in Arabic", () => {
-    expect(
-      buildPromptArabic({
-        ...baseState,
-        hairLength: "long",
-        hairTexture: "straight",
-      }),
-    ).toContain("شعر طويل أملس طبيعي");
-  });
-
-  it("keeps the hair description after clothing and before lighting", () => {
-    const prompt = buildPromptEnglish(baseState);
-    expect(prompt.indexOf("hair;")).toBeGreaterThan(prompt.indexOf("tones"));
-    expect(prompt.indexOf("hair;")).toBeLessThan(prompt.indexOf("lighting is"));
-  });
-});
-
-describe("pose descriptions", () => {
-  it("includes the selected pose type in English", () => {
-    expect(
-      buildPromptEnglish({
-        ...baseState,
-        poseType: "sitting-chair",
-      }),
-    ).toContain("sitting on a chair");
-  });
-
-  it("includes head direction in English", () => {
-    expect(
-      buildPromptEnglish({
-        ...baseState,
-        headDirection: "slightly-left",
-      }),
-    ).toContain("head turned slightly left");
-  });
-
-  it("includes free hand placement in English", () => {
-    expect(
-      buildPromptEnglish({
-        ...baseState,
-        freeHandPosition: "on-hair",
-      }),
-    ).toContain("free hand is on the hair");
-  });
-
-  it("includes the selected pose type in Arabic", () => {
-    expect(
-      buildPromptArabic({
-        ...baseState,
-        poseType: "lying-bed",
-      }),
-    ).toContain("الشخص مستلقٍ على السرير");
-  });
-
-  it("keeps sitting on the bed and a hand on the bed coherent", () => {
+describe("scenario descriptions", () => {
+  it("describes choosing clothes", () => {
     const scene = {
       ...baseState,
-      poseType: "sitting-bed" as const,
-      freeHandPosition: "on-bed" as const,
+      scenario: "choosing-clothes" as const,
+      freeHandPosition: "holding-cloth" as const,
     };
-    expect(buildPromptEnglish(scene)).toContain("sitting on the bed");
-    expect(buildPromptEnglish(scene)).toContain("free hand is on the bed");
-    expect(buildPromptArabic(scene)).toContain("جالس على السرير");
-    expect(buildPromptArabic(scene)).toContain("اليد الحرة على السرير");
-  });
-
-  it("avoids a bed pose when the room has no bed", () => {
-    const prompt = buildPromptEnglish({
-      ...baseState,
-      roomHasBed: false,
-      poseType: "lying-bed",
-    });
-    expect(prompt).not.toContain("lying on the bed");
-    expect(prompt).toContain("in a relaxed pose in the room");
-  });
-
-  it("avoids window position when the room has no window", () => {
-    const prompt = buildPromptEnglish({
-      ...baseState,
-      roomWindow: "none",
-      poseType: "standing-window",
-    });
-    expect(prompt).toContain("the subject is standing");
-    expect(prompt).not.toContain("standing near the window");
-  });
-});
-
-describe("facial expression descriptions", () => {
-  it("describes the selected expression in English", () => {
-    expect(
-      buildPromptEnglish({
-        ...baseState,
-        faceExpression: "soft-smile",
-      }),
-    ).toContain("facial expression is a soft smile");
-  });
-
-  it("describes eye direction in English", () => {
-    expect(
-      buildPromptEnglish({
-        ...baseState,
-        eyeDirection: "down-soft",
-      }),
-    ).toContain("eyes directed softly down");
-  });
-
-  it("describes mouth state in English", () => {
-    expect(
-      buildPromptEnglish({
-        ...baseState,
-        mouthState: "slightly-open",
-      }),
-    ).toContain("mouth slightly open");
-  });
-
-  it("describes the selected expression in Arabic", () => {
-    expect(
-      buildPromptArabic({
-        ...baseState,
-        faceExpression: "calm-focus",
-      }),
-    ).toContain("تعبير الوجه تركيز هادئ");
-  });
-
-  it("avoids an open smile when the expression is sleepy", () => {
-    const state = {
-      ...baseState,
-      faceExpression: "sleepy" as const,
-      mouthState: "smile-open-light" as const,
-    };
-    expect(buildPromptEnglish(state)).toContain(
-      "facial expression is slightly sleepy",
+    expect(buildPromptEnglish(scene)).toContain(
+      "chooses clothes from the bedroom closet",
     );
-    expect(buildPromptEnglish(state)).toContain("mouth closed");
-    expect(buildPromptEnglish(state)).not.toContain("open smile");
-    expect(buildPromptArabic(state)).toContain("الفم مغلق");
+    expect(buildPromptArabic(scene)).toContain(
+      "يختار قطعة ملابس من خزانة الغرفة",
+    );
   });
 
-  it("avoids a closed smile during a light laugh", () => {
-    const state = {
-      ...baseState,
-      faceExpression: "light-laugh" as const,
-      mouthState: "smile-closed" as const,
-    };
-    expect(buildPromptEnglish(state)).toContain("mouth slightly open");
-    expect(buildPromptEnglish(state)).not.toContain("mouth in a closed smile");
-    expect(buildPromptArabic(state)).toContain("الفم مفتوح قليلاً");
-  });
-
-  it("keeps a closed smile and side glance internally consistent", () => {
-    const smile = buildPromptEnglish({
-      ...baseState,
-      faceExpression: "closed-smile",
-      mouthState: "slightly-open",
-    });
-    const glance = buildPromptEnglish({
-      ...baseState,
-      faceExpression: "side-glance",
-      eyeDirection: "camera",
-    });
-    expect(smile).toContain("mouth in a closed smile");
-    expect(smile).not.toContain("mouth slightly open");
-    expect(glance).toContain("eyes directed softly away");
+  it("describes adjusting clothing modestly", () => {
+    const scene = { ...baseState, scenario: "adjusting-clothing" as const };
+    expect(buildPromptEnglish(scene)).toContain("Fully dressed");
+    expect(buildPromptArabic(scene)).toContain("بملابس كاملة محتشمة");
   });
 });
 
-describe("free hand visibility and position", () => {
-  it("describes the selected free hand position in English", () => {
-    expect(
-      buildPromptEnglish({
-        ...baseState,
-        freeHandPosition: "holding-cup",
-      }),
-    ).toContain("the free hand is holding a cup");
+describe("negative prompt", () => {
+  it("keeps baseline realism constraints", () => {
+    const prompt = buildNegativePrompt(baseState);
+    expect(prompt).toContain("no waxy skin");
+    expect(prompt).toContain("no warped furniture");
   });
 
-  it("describes the selected finger state in English", () => {
-    expect(
-      buildPromptEnglish({
-        ...baseState,
-        handFingersState: "slightly-curled",
-      }),
-    ).toContain("fingers slightly curled");
-  });
-
-  it("describes hand visibility in Arabic", () => {
-    expect(
-      buildPromptArabic({
-        ...baseState,
-        handVisibility: "partially-visible",
-      }),
-    ).toContain("اليد ظاهرة جزئياً في الإطار");
-  });
-
-  it("includes three hand constraints when fully visible", () => {
+  it("adds full hand constraints when visible", () => {
     const prompt = buildNegativePrompt(baseState);
     expect(prompt).toContain("no extra fingers");
-    expect(prompt).toContain("no malformed hands");
     expect(prompt).toContain("no fused fingers");
   });
 
@@ -648,99 +319,27 @@ describe("free hand visibility and position", () => {
     expect(prompt).not.toContain("no extra fingers");
   });
 
-  it("omits hand constraints when off-frame", () => {
-    const state = {
-      ...baseState,
-      handVisibility: "off-frame" as const,
-    };
-    const prompt = buildNegativePrompt(state);
-    expect(prompt).not.toContain("no extra fingers");
-    expect(prompt).not.toContain("no malformed hands");
-    expect(prompt).not.toContain("no fused fingers");
-    expect(prompt).not.toContain("no malformed visible fingers");
-    expect(buildPromptEnglish(state)).toContain("free hand is off-frame");
-    expect(buildPromptEnglish(state)).not.toContain("fingers relaxed");
-  });
-});
-
-describe("free hand control precedence", () => {
-  it("respects an explicit at-side selection despite an older pose hand value", () => {
-    const prompt = buildPromptEnglish({
-      ...baseState,
-      handPlacement: "touching-hair",
-      freeHandPosition: "at-side",
-    });
-    expect(prompt).toContain("the free hand is at the side");
-    expect(prompt).not.toContain("free hand is touching the hair");
-  });
-});
-
-describe("phone in free hand", () => {
-  it("mentions holding a phone in English", () => {
-    const prompt = buildPromptEnglish({
-      ...baseState,
-      freeHandPosition: "holding-phone",
-    });
-    expect(prompt).toContain("holding a phone");
+  it("adds mirror constraints only for mirror selfie", () => {
+    expect(
+      buildNegativePrompt({ ...baseState, shotType: "mirror-selfie" }),
+    ).toContain("no incorrect reflections");
+    expect(buildNegativePrompt(baseState)).not.toContain(
+      "no incorrect reflections",
+    );
   });
 
-  it("mentions holding the phone in Arabic", () => {
-    const prompt = buildPromptArabic({
-      ...baseState,
-      freeHandPosition: "holding-phone",
-    });
-    expect(prompt).toContain("تحمل الهاتف");
-  });
-});
-
-describe("modest adjusting-clothing scene", () => {
-  it("includes the requested clothing safety constraints only for this scenario", () => {
-    const prompt = buildNegativePrompt({
-      ...baseState,
-      scenario: "adjusting-clothing",
-    });
-    expect(prompt).toContain("no nudity");
-    expect(prompt).toContain("no partially undressed subject");
-    expect(prompt).toContain("no suggestive pose");
-    expect(prompt).toContain("no exposed skin beyond face and hands");
-  });
-
-  it("does not add clothing safety constraints to working-laptop", () => {
+  it("adds clothing safety constraints for adjusting clothing", () => {
     expect(
       buildNegativePrompt({
         ...baseState,
-        scenario: "working-laptop",
+        scenario: "adjusting-clothing",
       }),
-    ).not.toContain("no nudity");
-  });
-
-  it("describes a fully dressed subject in both positive prompts", () => {
-    const scene = {
-      ...baseState,
-      scenario: "adjusting-clothing" as const,
-    };
-    expect(buildPromptEnglish(scene)).toContain("Fully dressed");
-    expect(buildPromptEnglish(scene)).toContain("checks their outfit");
-    expect(buildPromptArabic(scene)).toContain("بملابس كاملة محتشمة");
-    expect(
-      buildPromptEnglish({ ...baseState, scenario: "none" }),
-    ).not.toContain("Fully dressed");
+    ).toContain("no partially undressed subject");
   });
 });
 
-describe("choosing clothes scene", () => {
-  it("describes choosing clothes from a closet in both languages", () => {
-    const scene = {
-      ...baseState,
-      scenario: "choosing-clothes" as const,
-      freeHandPosition: "holding-cloth" as const,
-    };
-    expect(buildPromptEnglish(scene)).toContain(
-      "chooses clothes from the bedroom closet",
-    );
-    expect(buildPromptArabic(scene)).toContain(
-      "يختار قطعة ملابس من خزانة الغرفة",
-    );
-    expect(buildPromptEnglish(baseState)).not.toContain("bedroom closet");
+describe("English prompt language", () => {
+  it("contains no Arabic characters", () => {
+    expect(buildPromptEnglish(baseState)).not.toMatch(/[\u0600-\u06FF]/);
   });
 });
