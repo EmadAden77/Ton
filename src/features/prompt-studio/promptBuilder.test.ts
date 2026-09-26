@@ -40,9 +40,9 @@ describe("buildPromptArabic", () => {
   });
 
   it("describes the selected camera distance", () => {
-    expect(buildPromptArabic({ ...baseState, cameraDistance: "close" })).toContain(
-      "قريبة من الوجه",
-    );
+    expect(
+      buildPromptArabic({ ...baseState, cameraDistance: "close" }),
+    ).toContain("قريبة من الوجه");
     expect(buildPromptArabic(baseState)).toContain("عند طول الذراع");
     expect(
       buildPromptArabic({ ...baseState, cameraDistance: "extended" }),
