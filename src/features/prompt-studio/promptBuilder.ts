@@ -278,3 +278,32 @@ export function buildPromptEnglish(state: SceneState): string {
 
   return `A ${englishShotTypes[state.shotType]} taken ${englishCameraDistances[state.cameraDistance]} from ${englishCameraAngles[state.cameraAngle]} in a ${englishRoomTypes[state.roomType]} bedroom that is ${englishRoomCleanliness[state.roomCleanliness]}, with ${windowDescription}${bedDescription}; the subject wears a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]}${bottomDescription} in ${englishClothingColors[state.clothingColor]} tones; lighting is ${englishLightingIntensities[state.lightingIntensity]} ${lightingSource}, ${englishLightingDirections[state.lightingDirection]}, with a ${englishColorTemperatures[state.colorTemperature]} color temperature.`;
 }
+
+export function buildNegativePrompt(state: SceneState): string {
+  const constraints = [
+    "no AI-looking artifacts",
+    "no watermark",
+    "no text artifacts",
+    "no distorted face; no waxy skin; no plastic skin",
+    "no extra fingers; no malformed hands",
+    "no unrealistic lighting; no excessive HDR",
+  ];
+
+  if (state.shotType === "mirror-selfie") {
+    constraints.push("no incorrect reflections; no mirrored text");
+  }
+
+  if (state.roomHasBed) {
+    constraints.push("no warped furniture");
+  }
+
+  if (state.lightingIntensity === "bright") {
+    constraints.push("no blown highlights");
+  }
+
+  if (state.lightingIntensity === "dim") {
+    constraints.push("no excessive noise reduction");
+  }
+
+  return constraints.join(", ");
+}
