@@ -1,161 +1,68 @@
 import type { SceneState } from "./types";
 
+const FIXED_ROOM_DESCRIPTION_EN =
+  "in a modern bedroom with a dark tufted headboard bed on the left side, a bedside table with a warm lamp and an open laptop, an AC unit on the left wall above the bed, dark curtains covering the window on the back wall, a large glass-door wardrobe on the right side with blue and white clothes, a wooden dresser on the far right, a beige rug in the center with scattered shoes, grey tiled floor, recessed ceiling spotlights";
+
+const FIXED_ROOM_DESCRIPTION_AR =
+  "في غرفة نوم حديثة، سرير بظهر منجّد غامق على الجانب الأيسر، طاولة جانبية بمصباح دافئ ولابتوب مفتوح، مكيف على الحائط الأيسر فوق السرير، ستائر داكنة على النافذة الخلفية، خزانة زجاجية كبيرة على الجانب الأيمن فيها ملابس زرقاء وبيضاء، كومودينو خشبي على أقصى اليمين، سجادة بيج وسط الغرفة عليها أحذية متنوعة، أرضية بلاط رمادي، إضاءة سقف مدمجة";
+
+const lightingModeLabels: Record<SceneState["lightingMode"], string> = {
+  "as-in-photo": "ceiling spotlights (dim) with a warm bedside lamp",
+  "phone-screen": "only the phone screen glow on the face, room otherwise dark",
+  "daylight-closed": "soft diffused daylight through closed dark curtains",
+  "daylight-open": "bright natural daylight from the back window",
+};
+
+const lightingModeLabelsAr: Record<SceneState["lightingMode"], string> = {
+  "as-in-photo": "إضاءة سقف خافتة مع مصباح سرير دافئ",
+  "phone-screen": "ضوء شاشة الهاتف على الوجه، الغرفة معتمة",
+  "daylight-closed": "ضوء نهار منتشر عبر الستائر الداكنة المغلقة",
+  "daylight-open": "ضوء نهار طبيعي ساطع من النافذة الخلفية",
+};
+
 const shotTypes: Record<SceneState["shotType"], string> = {
-  // سيلفي بالكاميرا الأمامية.
   "front-selfie": "سيلفي بالكاميرا الأمامية",
-  // سيلفي أمام المرآة.
   "mirror-selfie": "سيلفي أمام المرآة",
 };
-
 const cameraDistances: Record<SceneState["cameraDistance"], string> = {
-  // الكاميرا قريبة من الوجه.
   close: "قريبة من الوجه",
-  // الكاميرا عند طول الذراع.
   "arm-length": "عند طول الذراع",
-  // الكاميرا عند امتداد الذراع.
   extended: "عند امتداد الذراع",
 };
-
 const cameraAngles: Record<SceneState["cameraAngle"], string> = {
-  // الكاميرا بمستوى العين.
   "eye-level": "بمستوى العين",
-  // الكاميرا أعلى من العين قليلاً.
   "slightly-above": "أعلى من مستوى العين قليلاً",
-  // الكاميرا أسفل العين قليلاً.
   "slightly-below": "أسفل من مستوى العين قليلاً",
 };
-
-const roomTypes: Record<SceneState["roomType"], string> = {
-  // غرفة بسيطة.
-  simple: "بسيطة",
-  // غرفة حديثة.
-  modern: "حديثة",
-  // غرفة صغيرة.
-  small: "صغيرة",
-  // غرفة متوسطة الحجم.
-  medium: "متوسطة الحجم",
-};
-
-const roomCleanlinessLabels: Record<SceneState["roomCleanliness"], string> = {
-  // غرفة مرتبة جداً.
-  "very-tidy": "مرتبة جداً",
-  // ترتيب يومي طبيعي.
-  natural: "بترتيب طبيعي",
-  // فوضى خفيفة.
-  "light-mess": "بفوضى خفيفة",
-  // فوضى متوسطة.
-  "moderate-mess": "بفوضى متوسطة",
-};
-
-const roomWindowLabels: Record<SceneState["roomWindow"], string> = {
-  // بلا نافذة.
-  none: "بلا نافذة",
-  // نافذة صغيرة.
-  small: "بنافذة صغيرة",
-  // نافذة متوسطة.
-  medium: "بنافذة متوسطة",
-  // نافذة كبيرة.
-  large: "بنافذة كبيرة",
-};
-
 const clothingTopLabels: Record<SceneState["clothingTop"], string> = {
-  // تي شيرت.
   "t-shirt": "تي شيرت",
-  // قميص.
   shirt: "قميص",
-  // هودي.
   hoodie: "هودي",
-  // بلوزة نوم.
   "pajama-top": "بلوزة نوم",
-  // كنزة.
   sweater: "كنزة",
-  // قميص بلا أكمام.
   "tank-top": "قميص بلا أكمام",
 };
-
 const clothingBottomLabels: Record<SceneState["clothingBottom"], string> = {
-  // بنطال جينز.
   jeans: "بنطال جينز",
-  // شورت.
   shorts: "شورت",
-  // بنطال نوم.
   "pajama-pants": "بنطال نوم",
-  // بنطال رياضي.
   sweatpants: "بنطال رياضي",
-  // خارج الإطار.
   "none-visible": "غير ظاهرة في الإطار",
 };
-
 const clothingMaterialLabels: Record<SceneState["clothingMaterial"], string> = {
-  // قطن.
   cotton: "قطن",
-  // دنيم.
   denim: "دنيم",
-  // صوف.
   wool: "صوف",
-  // بوليستر.
   polyester: "بوليستر",
-  // كتان.
   linen: "كتان",
 };
-
 const clothingColorLabels: Record<SceneState["clothingColor"], string> = {
-  // ألوان محايدة.
   neutral: "محايدة",
-  // ألوان داكنة.
   dark: "داكنة",
-  // ألوان فاتحة.
   light: "فاتحة",
-  // ألوان ترابية.
   "earth-tone": "ترابية",
-  // ألوان باستيل.
   pastel: "باستيل",
 };
-
-const lightingSources: Record<SceneState["lightingSource"], string> = {
-  // ضوء النهار من النافذة.
-  "window-day": "ضوء النهار من النافذة",
-  // ضوء الغروب من النافذة.
-  "window-sunset": "ضوء الغروب من النافذة",
-  // إنارة السقف.
-  ceiling: "إنارة السقف",
-  // مصباح بجانب السرير.
-  "bedside-lamp": "مصباح بجانب السرير",
-  // ضوء شاشة لابتوب.
-  "laptop-screen": "ضوء شاشة لابتوب",
-};
-
-const lightingIntensities: Record<SceneState["lightingIntensity"], string> = {
-  // إضاءة خافتة.
-  dim: "خافتة",
-  // إضاءة ناعمة.
-  soft: "ناعمة",
-  // إضاءة متوسطة.
-  medium: "متوسطة",
-  // إضاءة ساطعة.
-  bright: "ساطعة",
-};
-
-const lightingDirections: Record<SceneState["lightingDirection"], string> = {
-  // الضوء من الأمام.
-  front: "من الأمام",
-  // الضوء من الجانب.
-  side: "من الجانب",
-  // الضوء من الأعلى.
-  top: "من الأعلى",
-  // الضوء ناعم من الخلف.
-  "back-soft": "ناعم من الخلف",
-};
-
-const colorTemperatures: Record<SceneState["colorTemperature"], string> = {
-  // لون دافئ.
-  warm: "دافئة",
-  // لون محايد.
-  neutral: "محايدة",
-  // لون بارد.
-  cool: "باردة",
-};
-
 const arabicIdentityPriorities: Record<SceneState["identityPriority"], string> =
   {
     strict: "حافظ على هوية الشخص من الصورة المرجعية بأولوية قصوى",
@@ -163,83 +70,91 @@ const arabicIdentityPriorities: Record<SceneState["identityPriority"], string> =
       "حافظ على هوية الشخص من الصورة المرجعية، مع توازن مع مرونة المشهد",
     flexible: "حافظ على هوية الشخص بشكل مرن، مع السماح بتعديلات على المشهد",
   };
-
 const hairStyleLabels: Record<SceneState["hairStyle"], string> = {
-  // تسريحة طبيعية.
   natural: "طبيعي",
-  // شعر ممشط.
   combed: "ممشط",
-  // فوضى خفيفة.
   "messy-light": "فوضوي قليلاً",
-  // فرق جانبي.
   "side-part": "مفرق جانبياً",
-  // ممشط للخلف.
   "slicked-back": "ممشط للخلف",
 };
-
 const hairLengthLabels: Record<SceneState["hairLength"], string> = {
-  // قصير.
   short: "قصير",
-  // متوسط الطول.
   medium: "متوسط",
-  // طويل.
   long: "طويل",
 };
-
 const hairTextureLabels: Record<SceneState["hairTexture"], string> = {
-  // أملس.
   straight: "أملس",
-  // مموج.
   wavy: "مموج",
-  // مجعد.
   curly: "مجعد",
 };
-
 const poseTypeLabels: Record<SceneState["poseType"], string> = {
-  // وقوف في الغرفة.
   standing: "واقف",
-  // جلوس على السرير.
   "sitting-bed": "جالس على السرير",
-  // جلوس على الكرسي.
   "sitting-chair": "جالس على كرسي",
-  // استلقاء على السرير.
   "lying-bed": "مستلقٍ على السرير",
-  // وقوف قرب النافذة.
   "standing-window": "واقف قرب النافذة",
 };
-
 const headDirectionLabels: Record<SceneState["headDirection"], string> = {
-  // باتجاه الأمام.
   forward: "للأمام",
-  // يساراً قليلاً.
   "slightly-left": "لليسار قليلاً",
-  // يميناً قليلاً.
   "slightly-right": "لليمين قليلاً",
-  // للأسفل.
   down: "للأسفل",
-  // للأعلى برفق.
   "up-soft": "للأعلى قليلاً",
 };
-
 const shoulderPositionLabels: Record<SceneState["shoulderPosition"], string> = {
-  // كتفان مسترخيان.
   relaxed: "مسترخيان",
-  // كتف مرتفع قليلاً.
   "one-raised": "أحدهما مرتفع قليلاً",
-  // كتفان للخلف.
   "both-back": "للخلف",
 };
-
 const backPostureLabels: Record<SceneState["backPosture"], string> = {
-  // ظهر مستقيم.
   straight: "مستقيم",
-  // ظهر مسترخٍ.
   relaxed: "مسترخٍ",
-  // ظهر مائل قليلاً.
   "slightly-leaning": "مائل قليلاً",
 };
+const faceExpressionLabels: Record<SceneState["faceExpression"], string> = {
+  neutral: "محايد طبيعي",
+  "soft-smile": "ابتسامة خفيفة",
+  "closed-smile": "ابتسامة مغلقة",
+  "calm-focus": "تركيز هادئ",
+  "side-glance": "نظرة جانبية",
+  thinking: "تفكير",
+  sleepy: "نعاس خفيف",
+  "light-laugh": "ضحكة خفيفة",
+};
+const eyeDirectionLabels: Record<SceneState["eyeDirection"], string> = {
+  camera: "نحو الكاميرا",
+  mirror: "نحو المرآة",
+  "away-soft": "بعيداً بلطف",
+  "down-soft": "للأسفل بلطف",
+};
+const mouthStateLabels: Record<SceneState["mouthState"], string> = {
+  closed: "مغلق",
+  "slightly-open": "مفتوح قليلاً",
+  "smile-closed": "في ابتسامة مغلقة",
+  "smile-open-light": "في ابتسامة مفتوحة خفيفة",
+};
+const freeHandPositionLabels: Record<SceneState["freeHandPosition"], string> = {
+  "at-side": "بجانب الجسم",
+  "on-hair": "على الشعر",
+  "holding-cup": "تحمل كوباً",
+  "touching-chin": "تلمس الذقن",
+  "in-pocket": "في الجيب",
+  "on-bed": "على السرير",
+  "on-keyboard": "على لوحة المفاتيح",
+  "holding-cloth": "تحمل قطعة قماش",
+  "holding-phone": "تحمل الهاتف",
+};
+const handFingersStateLabels: Record<SceneState["handFingersState"], string> = {
+  relaxed: "مسترخية",
+  "slightly-curled": "ملتفة قليلاً",
+  "gripping-soft": "قابضة برفق",
+};
+const handVisibilityLabels: Record<SceneState["handVisibility"], string> = {
+  "fully-visible": "ظاهرة بالكامل في الإطار",
+  "partially-visible": "ظاهرة جزئياً في الإطار",
+  "off-frame": "خارج الإطار",
+};
 
-// يُبقي وصف الفم متسقاً مع التعبير عند اختيار تركيبة متعارضة.
 function effectiveMouthState(state: SceneState): SceneState["mouthState"] {
   if (
     state.faceExpression === "sleepy" &&
@@ -247,9 +162,7 @@ function effectiveMouthState(state: SceneState): SceneState["mouthState"] {
   ) {
     return "closed";
   }
-  if (state.faceExpression === "closed-smile") {
-    return "smile-closed";
-  }
+  if (state.faceExpression === "closed-smile") return "smile-closed";
   if (
     state.faceExpression === "light-laugh" &&
     (state.mouthState === "closed" || state.mouthState === "smile-closed")
@@ -266,62 +179,17 @@ function effectiveEyeDirection(state: SceneState): SceneState["eyeDirection"] {
     : state.eyeDirection;
 }
 
-const faceExpressionLabels: Record<SceneState["faceExpression"], string> = {
-  neutral: "محايد طبيعي",
-  "soft-smile": "ابتسامة خفيفة",
-  "closed-smile": "ابتسامة مغلقة",
-  "calm-focus": "تركيز هادئ",
-  "side-glance": "نظرة جانبية",
-  thinking: "تفكير",
-  sleepy: "نعاس خفيف",
-  "light-laugh": "ضحكة خفيفة",
-};
-
-const eyeDirectionLabels: Record<SceneState["eyeDirection"], string> = {
-  camera: "نحو الكاميرا",
-  mirror: "نحو المرآة",
-  "away-soft": "بعيداً بلطف",
-  "down-soft": "للأسفل بلطف",
-};
-
-const mouthStateLabels: Record<SceneState["mouthState"], string> = {
-  closed: "مغلق",
-  "slightly-open": "مفتوح قليلاً",
-  "smile-closed": "في ابتسامة مغلقة",
-  "smile-open-light": "في ابتسامة مفتوحة خفيفة",
-};
-
-const freeHandPositionLabels: Record<SceneState["freeHandPosition"], string> = {
-  "at-side": "بجانب الجسم",
-  "on-hair": "على الشعر",
-  "holding-cup": "تحمل كوباً",
-  "touching-chin": "تلمس الذقن",
-  "in-pocket": "في الجيب",
-  "on-bed": "على السرير",
-  "on-keyboard": "على لوحة المفاتيح",
-  "holding-cloth": "تحمل قطعة قماش",
-  "holding-phone": "تحمل الهاتف",
-};
-
-const handFingersStateLabels: Record<SceneState["handFingersState"], string> = {
-  relaxed: "مسترخية",
-  "slightly-curled": "ملتفة قليلاً",
-  "gripping-soft": "قابضة برفق",
-};
-
-const handVisibilityLabels: Record<SceneState["handVisibility"], string> = {
-  "fully-visible": "ظاهرة بالكامل في الإطار",
-  "partially-visible": "ظاهرة جزئياً في الإطار",
-  "off-frame": "خارج الإطار",
-};
+function arabicScenarioDescription(state: SceneState): string {
+  if (state.scenario === "adjusting-clothing") {
+    return " الشخص بملابس كاملة محتشمة يفحص مظهره قبل الخروج ويرتب شعره أمام المرآة.";
+  }
+  if (state.scenario === "choosing-clothes") {
+    return " يختار قطعة ملابس من خزانة الغرفة وهو ممسك بها.";
+  }
+  return "";
+}
 
 export function buildPromptArabic(state: SceneState): string {
-  const scenarioDescription =
-    state.scenario === "adjusting-clothing"
-      ? " الشخص بملابس كاملة محتشمة يفحص مظهره قبل الخروج ويرتب شعره أمام المرآة."
-      : state.scenario === "choosing-clothes"
-        ? " يختار قطعة ملابس من خزانة الغرفة وهو ممسك بها."
-        : "";
   const identityDescription = state.referenceProvided
     ? `${arabicIdentityPriorities[state.identityPriority]}. `
     : "";
@@ -329,81 +197,32 @@ export function buildPromptArabic(state: SceneState): string {
   const identityNotesDescription = notes
     ? ` ملاحظات إضافية عن الهوية: ${notes}.`
     : "";
-  const bedDescription = state.roomHasBed ? "، مع سرير مرتب في الخلفية" : "";
-  let lightingSourceDescription = lightingSources[state.lightingSource];
-  if (!state.roomHasBed && state.lightingSource === "bedside-lamp") {
-    lightingSourceDescription = "مصباح جانبي";
-  } else if (
-    state.roomWindow === "none" &&
-    state.lightingSource === "window-day"
-  ) {
-    lightingSourceDescription = "ضوء النهار";
-  } else if (
-    state.roomWindow === "none" &&
-    state.lightingSource === "window-sunset"
-  ) {
-    lightingSourceDescription = "ضوء الغروب";
-  }
-
-  const poseDescription =
-    !state.roomHasBed &&
-    (state.poseType === "sitting-bed" || state.poseType === "lying-bed")
-      ? "في وضعية مريحة داخل الغرفة"
-      : state.roomWindow === "none" && state.poseType === "standing-window"
-        ? poseTypeLabels.standing
-        : poseTypeLabels[state.poseType];
   const handDescription =
-    state.freeHandPosition === "on-bed" && !state.roomHasBed
+    state.poseType === "lying-bed" && state.freeHandPosition === "in-pocket"
       ? freeHandPositionLabels["at-side"]
-      : state.poseType === "lying-bed" && state.freeHandPosition === "in-pocket"
-        ? freeHandPositionLabels["at-side"]
-        : freeHandPositionLabels[state.freeHandPosition];
+      : freeHandPositionLabels[state.freeHandPosition];
   const handSummary =
     state.handVisibility === "off-frame"
       ? "اليد الحرة خارج الإطار"
       : `اليد الحرة ${handDescription}، والأصابع ${handFingersStateLabels[state.handFingersState]}، واليد ${handVisibilityLabels[state.handVisibility]}`;
 
-  return `${identityDescription}لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}، ${roomCleanlinessLabels[state.roomCleanliness]}، ${roomWindowLabels[state.roomWindow]}${bedDescription}. الملابس: القطعة العلوية ${clothingTopLabels[state.clothingTop]}، والقطعة السفلية ${clothingBottomLabels[state.clothingBottom]}، ومادة القماش ${clothingMaterialLabels[state.clothingMaterial]}، وفئة اللون ${clothingColorLabels[state.clothingColor]}. مع شعر ${hairLengthLabels[state.hairLength]} ${hairTextureLabels[state.hairTexture]} ${hairStyleLabels[state.hairStyle]}. الشخص ${poseDescription}، رأسه ${headDirectionLabels[state.headDirection]}، وكتفاه ${shoulderPositionLabels[state.shoulderPosition]}، وظهره ${backPostureLabels[state.backPosture]}. تعبير الوجه ${faceExpressionLabels[state.faceExpression]}، والنظر ${eyeDirectionLabels[effectiveEyeDirection(state)]}، والفم ${mouthStateLabels[effectiveMouthState(state)]}. ${handSummary}. مصدر الإضاءة ${lightingSourceDescription} وشدتها ${lightingIntensities[state.lightingIntensity]}، واتجاه الضوء ${lightingDirections[state.lightingDirection]}، وحرارة اللون ${colorTemperatures[state.colorTemperature]}.${scenarioDescription}${identityNotesDescription}`;
+  return `${identityDescription}لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. ${FIXED_ROOM_DESCRIPTION_AR}. الملابس: القطعة العلوية ${clothingTopLabels[state.clothingTop]}، والقطعة السفلية ${clothingBottomLabels[state.clothingBottom]}، ومادة القماش ${clothingMaterialLabels[state.clothingMaterial]}، وفئة اللون ${clothingColorLabels[state.clothingColor]}. مع شعر ${hairLengthLabels[state.hairLength]} ${hairTextureLabels[state.hairTexture]} ${hairStyleLabels[state.hairStyle]}. الشخص ${poseTypeLabels[state.poseType]}، رأسه ${headDirectionLabels[state.headDirection]}، وكتفاه ${shoulderPositionLabels[state.shoulderPosition]}، وظهره ${backPostureLabels[state.backPosture]}. تعبير الوجه ${faceExpressionLabels[state.faceExpression]}، والنظر ${eyeDirectionLabels[effectiveEyeDirection(state)]}، والفم ${mouthStateLabels[effectiveMouthState(state)]}. ${handSummary}. الإضاءة: ${lightingModeLabelsAr[state.lightingMode]}.${arabicScenarioDescription(state)}${identityNotesDescription}`;
 }
 
 const englishShotTypes: Record<SceneState["shotType"], string> = {
   "front-selfie": "front-camera selfie",
   "mirror-selfie": "mirror selfie",
 };
-
 const englishCameraDistances: Record<SceneState["cameraDistance"], string> = {
   close: "close to the face",
   "arm-length": "at arm's length",
   extended: "with an extended arm",
 };
-
 const englishCameraAngles: Record<SceneState["cameraAngle"], string> = {
   "eye-level": "eye level",
   "slightly-above": "slightly above eye level",
   "slightly-below": "slightly below eye level",
 };
-
-const englishRoomTypes: Record<SceneState["roomType"], string> = {
-  simple: "simple",
-  modern: "modern",
-  small: "small",
-  medium: "medium-sized",
-};
-
-const englishRoomCleanliness: Record<SceneState["roomCleanliness"], string> = {
-  "very-tidy": "very tidy",
-  natural: "naturally lived-in",
-  "light-mess": "slightly messy",
-  "moderate-mess": "moderately messy",
-};
-
-const englishRoomWindows: Record<SceneState["roomWindow"], string> = {
-  none: "no window",
-  small: "a small window",
-  medium: "a medium-sized window",
-  large: "a large window",
-};
-
 const englishClothingTops: Record<SceneState["clothingTop"], string> = {
   "t-shirt": "T-shirt",
   shirt: "shirt",
@@ -412,7 +231,6 @@ const englishClothingTops: Record<SceneState["clothingTop"], string> = {
   sweater: "sweater",
   "tank-top": "tank top",
 };
-
 const englishClothingBottoms: Record<SceneState["clothingBottom"], string> = {
   jeans: "jeans",
   shorts: "shorts",
@@ -420,7 +238,6 @@ const englishClothingBottoms: Record<SceneState["clothingBottom"], string> = {
   sweatpants: "sweatpants",
   "none-visible": "not visible in the frame",
 };
-
 const englishClothingMaterials: Record<SceneState["clothingMaterial"], string> =
   {
     cotton: "cotton",
@@ -429,7 +246,6 @@ const englishClothingMaterials: Record<SceneState["clothingMaterial"], string> =
     polyester: "polyester",
     linen: "linen",
   };
-
 const englishClothingColors: Record<SceneState["clothingColor"], string> = {
   neutral: "neutral",
   dark: "dark",
@@ -437,42 +253,6 @@ const englishClothingColors: Record<SceneState["clothingColor"], string> = {
   "earth-tone": "earth",
   pastel: "pastel",
 };
-
-const englishLightingSources: Record<SceneState["lightingSource"], string> = {
-  "window-day": "daylight from the window",
-  "window-sunset": "sunset light from the window",
-  ceiling: "ceiling light",
-  "bedside-lamp": "bedside lamp light",
-  "laptop-screen": "laptop screen light",
-};
-
-const englishLightingIntensities: Record<
-  SceneState["lightingIntensity"],
-  string
-> = {
-  dim: "dim",
-  soft: "soft",
-  medium: "moderate",
-  bright: "bright",
-};
-
-const englishLightingDirections: Record<
-  SceneState["lightingDirection"],
-  string
-> = {
-  front: "from the front",
-  side: "from the side",
-  top: "from above",
-  "back-soft": "softly from behind",
-};
-
-const englishColorTemperatures: Record<SceneState["colorTemperature"], string> =
-  {
-    warm: "warm",
-    neutral: "neutral",
-    cool: "cool",
-  };
-
 const englishIdentityPriorities: Record<
   SceneState["identityPriority"],
   string
@@ -484,7 +264,6 @@ const englishIdentityPriorities: Record<
   flexible:
     "Preserve the subject's identity loosely, allowing scene adjustments",
 };
-
 const englishHairStyles: Record<SceneState["hairStyle"], string> = {
   natural: "natural",
   combed: "combed",
@@ -492,19 +271,16 @@ const englishHairStyles: Record<SceneState["hairStyle"], string> = {
   "side-part": "side-parted",
   "slicked-back": "slicked-back",
 };
-
 const englishHairLengths: Record<SceneState["hairLength"], string> = {
   short: "short",
   medium: "medium-length",
   long: "long",
 };
-
 const englishHairTextures: Record<SceneState["hairTexture"], string> = {
   straight: "straight",
   wavy: "wavy",
   curly: "curly",
 };
-
 const englishPoseTypes: Record<SceneState["poseType"], string> = {
   standing: "standing",
   "sitting-bed": "sitting on the bed",
@@ -512,7 +288,6 @@ const englishPoseTypes: Record<SceneState["poseType"], string> = {
   "lying-bed": "lying on the bed",
   "standing-window": "standing near the window",
 };
-
 const englishHeadDirections: Record<SceneState["headDirection"], string> = {
   forward: "facing forward",
   "slightly-left": "turned slightly left",
@@ -520,20 +295,17 @@ const englishHeadDirections: Record<SceneState["headDirection"], string> = {
   down: "angled down",
   "up-soft": "angled gently upward",
 };
-
 const englishShoulderPositions: Record<SceneState["shoulderPosition"], string> =
   {
     relaxed: "relaxed",
     "one-raised": "with one shoulder slightly raised",
     "both-back": "drawn back",
   };
-
 const englishBackPostures: Record<SceneState["backPosture"], string> = {
   straight: "straight",
   relaxed: "relaxed",
   "slightly-leaning": "slightly leaning",
 };
-
 const englishFaceExpressions: Record<SceneState["faceExpression"], string> = {
   neutral: "neutral",
   "soft-smile": "a soft smile",
@@ -544,21 +316,18 @@ const englishFaceExpressions: Record<SceneState["faceExpression"], string> = {
   sleepy: "slightly sleepy",
   "light-laugh": "a light laugh",
 };
-
 const englishEyeDirections: Record<SceneState["eyeDirection"], string> = {
   camera: "at the camera",
   mirror: "at the mirror",
   "away-soft": "softly away",
   "down-soft": "softly down",
 };
-
 const englishMouthStates: Record<SceneState["mouthState"], string> = {
   closed: "closed",
   "slightly-open": "slightly open",
   "smile-closed": "in a closed smile",
   "smile-open-light": "in a light open smile",
 };
-
 const englishFreeHandPositions: Record<SceneState["freeHandPosition"], string> =
   {
     "at-side": "at the side",
@@ -571,27 +340,29 @@ const englishFreeHandPositions: Record<SceneState["freeHandPosition"], string> =
     "holding-cloth": "holding a piece of cloth",
     "holding-phone": "holding a phone",
   };
-
 const englishHandFingersStates: Record<SceneState["handFingersState"], string> =
   {
     relaxed: "relaxed",
     "slightly-curled": "slightly curled",
     "gripping-soft": "gently gripping",
   };
-
 const englishHandVisibilities: Record<SceneState["handVisibility"], string> = {
   "fully-visible": "fully visible in frame",
   "partially-visible": "partially visible in frame",
   "off-frame": "off-frame",
 };
 
+function englishScenarioDescription(state: SceneState): string {
+  if (state.scenario === "adjusting-clothing") {
+    return " Fully dressed, the subject checks their outfit before going out while smoothing their hair in the mirror.";
+  }
+  if (state.scenario === "choosing-clothes") {
+    return " The subject chooses clothes from the bedroom closet while holding a garment.";
+  }
+  return "";
+}
+
 export function buildPromptEnglish(state: SceneState): string {
-  const scenarioDescription =
-    state.scenario === "adjusting-clothing"
-      ? " Fully dressed, the subject checks their outfit before going out while smoothing their hair in the mirror."
-      : state.scenario === "choosing-clothes"
-        ? " The subject chooses clothes from the bedroom closet while holding a garment."
-        : "";
   const identityDescription = state.referenceProvided
     ? `${englishIdentityPriorities[state.identityPriority]}. `
     : "";
@@ -599,48 +370,20 @@ export function buildPromptEnglish(state: SceneState): string {
   const identityNotesDescription = notes
     ? ` Additional identity notes: ${notes}.`
     : "";
-  const windowDescription = englishRoomWindows[state.roomWindow];
-  const bedDescription = state.roomHasBed
-    ? ", with a neatly made bed in the background"
-    : "";
   const bottomDescription =
     state.clothingBottom === "none-visible"
       ? ", with the lower garment outside the frame"
       : ` and ${englishClothingBottoms[state.clothingBottom]}`;
-  let lightingSource = englishLightingSources[state.lightingSource];
-  if (!state.roomHasBed && state.lightingSource === "bedside-lamp") {
-    lightingSource = "side lamp light";
-  } else if (
-    state.roomWindow === "none" &&
-    state.lightingSource === "window-day"
-  ) {
-    lightingSource = "daylight";
-  } else if (
-    state.roomWindow === "none" &&
-    state.lightingSource === "window-sunset"
-  ) {
-    lightingSource = "sunset light";
-  }
-
-  const poseDescription =
-    !state.roomHasBed &&
-    (state.poseType === "sitting-bed" || state.poseType === "lying-bed")
-      ? "in a relaxed pose in the room"
-      : state.roomWindow === "none" && state.poseType === "standing-window"
-        ? englishPoseTypes.standing
-        : englishPoseTypes[state.poseType];
   const handDescription =
-    state.freeHandPosition === "on-bed" && !state.roomHasBed
+    state.poseType === "lying-bed" && state.freeHandPosition === "in-pocket"
       ? englishFreeHandPositions["at-side"]
-      : state.poseType === "lying-bed" && state.freeHandPosition === "in-pocket"
-        ? englishFreeHandPositions["at-side"]
-        : englishFreeHandPositions[state.freeHandPosition];
+      : englishFreeHandPositions[state.freeHandPosition];
   const handSummary =
     state.handVisibility === "off-frame"
       ? "the free hand is off-frame"
       : `the free hand is ${handDescription}, fingers ${englishHandFingersStates[state.handFingersState]}, ${englishHandVisibilities[state.handVisibility]}`;
 
-  return `${identityDescription}A ${englishShotTypes[state.shotType]} taken ${englishCameraDistances[state.cameraDistance]} from ${englishCameraAngles[state.cameraAngle]} in a ${englishRoomTypes[state.roomType]} bedroom that is ${englishRoomCleanliness[state.roomCleanliness]}, with ${windowDescription}${bedDescription}; the subject wears a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]}${bottomDescription} in ${englishClothingColors[state.clothingColor]} tones, with ${englishHairLengths[state.hairLength]} ${englishHairTextures[state.hairTexture]} ${englishHairStyles[state.hairStyle]} hair; the subject is ${poseDescription}, head ${englishHeadDirections[state.headDirection]}, shoulders ${englishShoulderPositions[state.shoulderPosition]}, back posture ${englishBackPostures[state.backPosture]}; facial expression is ${englishFaceExpressions[state.faceExpression]}, eyes directed ${englishEyeDirections[effectiveEyeDirection(state)]}, mouth ${englishMouthStates[effectiveMouthState(state)]}; ${handSummary}; lighting is ${englishLightingIntensities[state.lightingIntensity]} ${lightingSource}, ${englishLightingDirections[state.lightingDirection]}, with a ${englishColorTemperatures[state.colorTemperature]} color temperature.${scenarioDescription}${identityNotesDescription}`;
+  return `${identityDescription}A ${englishShotTypes[state.shotType]} taken ${englishCameraDistances[state.cameraDistance]} from ${englishCameraAngles[state.cameraAngle]} ${FIXED_ROOM_DESCRIPTION_EN}; the subject wears a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]}${bottomDescription} in ${englishClothingColors[state.clothingColor]} tones, with ${englishHairLengths[state.hairLength]} ${englishHairTextures[state.hairTexture]} ${englishHairStyles[state.hairStyle]} hair; the subject is ${englishPoseTypes[state.poseType]}, head ${englishHeadDirections[state.headDirection]}, shoulders ${englishShoulderPositions[state.shoulderPosition]}, back posture ${englishBackPostures[state.backPosture]}; facial expression is ${englishFaceExpressions[state.faceExpression]}, eyes directed ${englishEyeDirections[effectiveEyeDirection(state)]}, mouth ${englishMouthStates[effectiveMouthState(state)]}; ${handSummary}; lighting is ${lightingModeLabels[state.lightingMode]}.${englishScenarioDescription(state)}${identityNotesDescription}`;
 }
 
 export function buildNegativePrompt(state: SceneState): string {
@@ -649,8 +392,8 @@ export function buildNegativePrompt(state: SceneState): string {
     "no watermark",
     "no text artifacts",
     "no distorted face; no waxy skin; no plastic skin",
-
     "no unrealistic lighting; no excessive HDR",
+    "no warped furniture",
   ];
 
   if (state.handVisibility === "fully-visible") {
@@ -661,18 +404,6 @@ export function buildNegativePrompt(state: SceneState): string {
 
   if (state.shotType === "mirror-selfie") {
     constraints.push("no incorrect reflections; no mirrored text");
-  }
-
-  if (state.roomHasBed) {
-    constraints.push("no warped furniture");
-  }
-
-  if (state.lightingIntensity === "bright") {
-    constraints.push("no blown highlights");
-  }
-
-  if (state.lightingIntensity === "dim") {
-    constraints.push("no excessive noise reduction");
   }
 
   if (state.scenario === "adjusting-clothing") {
