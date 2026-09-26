@@ -40,8 +40,8 @@ const baseState: SceneState = {
 };
 
 describe("ready-made scenarios", () => {
-  it("contains six presets", () => {
-    expect(SCENARIOS).toHaveLength(6);
+  it("contains eight presets", () => {
+    expect(SCENARIOS).toHaveLength(8);
   });
 
   it("returns fresh complete scene states without mutating the current state", () => {
@@ -96,5 +96,20 @@ describe("phone scenario", () => {
     const preset = SCENARIOS.find((item) => item.id === "lying-with-phone");
     const scene = preset?.apply(baseState);
     expect(scene?.freeHandPosition).toBe("holding-phone");
+  });
+});
+
+describe("clothing scenarios", () => {
+  it("sets a standing pose and covering clothing when adjusting clothing", () => {
+    const preset = SCENARIOS.find((item) => item.id === "adjusting-clothing");
+    const scene = preset?.apply(baseState);
+    expect(scene?.poseType).toBe("standing");
+    expect(scene?.clothingTop).toBe("sweater");
+    expect(scene?.clothingBottom).toBe("jeans");
+  });
+
+  it("puts a piece of clothing in the free hand when choosing clothes", () => {
+    const preset = SCENARIOS.find((item) => item.id === "choosing-clothes");
+    expect(preset?.apply(baseState).freeHandPosition).toBe("holding-cloth");
   });
 });
