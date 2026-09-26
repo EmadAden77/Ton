@@ -58,6 +58,60 @@ const roomWindowLabels: Record<SceneState["roomWindow"], string> = {
   large: "بنافذة كبيرة",
 };
 
+const clothingTopLabels: Record<SceneState["clothingTop"], string> = {
+  // تي شيرت.
+  "t-shirt": "تي شيرت",
+  // قميص.
+  shirt: "قميص",
+  // هودي.
+  hoodie: "هودي",
+  // بلوزة نوم.
+  "pajama-top": "بلوزة نوم",
+  // كنزة.
+  sweater: "كنزة",
+  // قميص بلا أكمام.
+  "tank-top": "قميص بلا أكمام",
+};
+
+const clothingBottomLabels: Record<SceneState["clothingBottom"], string> = {
+  // بنطال جينز.
+  jeans: "بنطال جينز",
+  // شورت.
+  shorts: "شورت",
+  // بنطال نوم.
+  "pajama-pants": "بنطال نوم",
+  // بنطال رياضي.
+  sweatpants: "بنطال رياضي",
+  // خارج الإطار.
+  "none-visible": "غير ظاهرة في الإطار",
+};
+
+const clothingMaterialLabels: Record<SceneState["clothingMaterial"], string> = {
+  // قطن.
+  cotton: "قطن",
+  // دنيم.
+  denim: "دنيم",
+  // صوف.
+  wool: "صوف",
+  // بوليستر.
+  polyester: "بوليستر",
+  // كتان.
+  linen: "كتان",
+};
+
+const clothingColorLabels: Record<SceneState["clothingColor"], string> = {
+  // ألوان محايدة.
+  neutral: "محايدة",
+  // ألوان داكنة.
+  dark: "داكنة",
+  // ألوان فاتحة.
+  light: "فاتحة",
+  // ألوان ترابية.
+  "earth-tone": "ترابية",
+  // ألوان باستيل.
+  pastel: "باستيل",
+};
+
 const lightingSources: Record<SceneState["lightingSource"], string> = {
   // ضوء النهار من النافذة.
   "window-day": "ضوء النهار من النافذة",
@@ -107,5 +161,5 @@ export function buildPromptArabic(state: SceneState): string {
       ? "مصباح جانبي"
       : lightingSources[state.lightingSource];
 
-  return `لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}، ${roomCleanlinessLabels[state.roomCleanliness]}، ${roomWindowLabels[state.roomWindow]}${bedDescription}. مصدر الإضاءة ${lightingSourceDescription} وشدتها ${lightingIntensities[state.lightingIntensity]}، واتجاه الضوء ${lightingDirections[state.lightingDirection]}، وحرارة اللون ${colorTemperatures[state.colorTemperature]}.`;
+  return `لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}، ${roomCleanlinessLabels[state.roomCleanliness]}، ${roomWindowLabels[state.roomWindow]}${bedDescription}. الملابس: القطعة العلوية ${clothingTopLabels[state.clothingTop]}، والقطعة السفلية ${clothingBottomLabels[state.clothingBottom]}، ومادة القماش ${clothingMaterialLabels[state.clothingMaterial]}، وفئة اللون ${clothingColorLabels[state.clothingColor]}. مصدر الإضاءة ${lightingSourceDescription} وشدتها ${lightingIntensities[state.lightingIntensity]}، واتجاه الضوء ${lightingDirections[state.lightingDirection]}، وحرارة اللون ${colorTemperatures[state.colorTemperature]}.`;
 }
