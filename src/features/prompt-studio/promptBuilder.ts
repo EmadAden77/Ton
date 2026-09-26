@@ -159,9 +159,15 @@ export function buildPromptArabic(state: SceneState): string {
   let lightingSourceDescription = lightingSources[state.lightingSource];
   if (!state.roomHasBed && state.lightingSource === "bedside-lamp") {
     lightingSourceDescription = "مصباح جانبي";
-  } else if (state.roomWindow === "none" && state.lightingSource === "window-day") {
+  } else if (
+    state.roomWindow === "none" &&
+    state.lightingSource === "window-day"
+  ) {
     lightingSourceDescription = "ضوء النهار";
-  } else if (state.roomWindow === "none" && state.lightingSource === "window-sunset") {
+  } else if (
+    state.roomWindow === "none" &&
+    state.lightingSource === "window-sunset"
+  ) {
     lightingSourceDescription = "ضوء الغروب";
   }
 
@@ -286,9 +292,15 @@ export function buildPromptEnglish(state: SceneState): string {
   let lightingSource = englishLightingSources[state.lightingSource];
   if (!state.roomHasBed && state.lightingSource === "bedside-lamp") {
     lightingSource = "side lamp light";
-  } else if (state.roomWindow === "none" && state.lightingSource === "window-day") {
+  } else if (
+    state.roomWindow === "none" &&
+    state.lightingSource === "window-day"
+  ) {
     lightingSource = "daylight";
-  } else if (state.roomWindow === "none" && state.lightingSource === "window-sunset") {
+  } else if (
+    state.roomWindow === "none" &&
+    state.lightingSource === "window-sunset"
+  ) {
     lightingSource = "sunset light";
   }
 
