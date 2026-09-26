@@ -217,4 +217,35 @@ export interface SceneState {
     | "smile-closed"
     // ابتسامة مفتوحة خفيفة.
     | "smile-open-light";
+  freeHandPosition:
+    // بجانب الجسم.
+    | "at-side"
+    // على الشعر.
+    | "on-hair"
+    // تحمل كوباً.
+    | "holding-cup"
+    // تلمس الذقن.
+    | "touching-chin"
+    // في الجيب.
+    | "in-pocket"
+    // على السرير.
+    | "on-bed"
+    // على لوحة المفاتيح.
+    | "on-keyboard"
+    // تحمل قطعة قماش.
+    | "holding-cloth";
+  handFingersState:
+    // أصابع مسترخية.
+    | "relaxed"
+    // أصابع ملتفة قليلاً.
+    | "slightly-curled"
+    // قبضة خفيفة.
+    | "gripping-soft";
+  handVisibility:
+    // اليد ظاهرة بالكامل.
+    | "fully-visible"
+    // اليد ظاهرة جزئياً.
+    | "partially-visible"
+    // اليد خارج الإطار.
+    | "off-frame";
 }

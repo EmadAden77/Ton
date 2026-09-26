@@ -86,6 +86,9 @@ export default function Home() {
     faceExpression: "neutral",
     eyeDirection: "camera",
     mouthState: "closed",
+    freeHandPosition: "at-side",
+    handFingersState: "relaxed",
+    handVisibility: "fully-visible",
   });
 
   const englishPrompt = buildPromptEnglish(state);
@@ -495,7 +498,7 @@ export default function Home() {
             </label>
           </CollapsibleSection>
 
-          <CollapsibleSection title="الوضعية" badge="5 حقول">
+          <CollapsibleSection title="الوضعية" badge="4 حقول">
             <label className="grid gap-2" htmlFor="pose-type">
               الوضعية
               <select
@@ -570,32 +573,6 @@ export default function Home() {
                   كتف مرتفع قليلاً (One raised)
                 </option>
                 <option value="both-back">للخلف (Both back)</option>
-              </select>
-            </label>
-
-            <label className="grid gap-2" htmlFor="hand-placement">
-              اليد الحرة
-              <select
-                id="hand-placement"
-                value={state.handPlacement}
-                onChange={(event) =>
-                  setState((current) => ({
-                    ...current,
-                    handPlacement: event.target
-                      .value as SceneState["handPlacement"],
-                  }))
-                }
-                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
-              >
-                <option value="at-side">بجانب الجسم (At side)</option>
-                <option value="holding-phone">
-                  تساند الهاتف (Holding phone)
-                </option>
-                <option value="touching-hair">
-                  تلمس الشعر (Touching hair)
-                </option>
-                <option value="on-lap">على الحضن (On lap)</option>
-                <option value="in-pocket">في الجيب (In pocket)</option>
               </select>
             </label>
 
@@ -694,6 +671,85 @@ export default function Home() {
                 <option value="smile-open-light">
                   ابتسامة مفتوحة خفيفة (Light open smile)
                 </option>
+              </select>
+            </label>
+          </CollapsibleSection>
+
+          <CollapsibleSection title="اليد الحرة" badge="3 حقول">
+            <label className="grid gap-2" htmlFor="free-hand-position">
+              موقع اليد الحرة
+              <select
+                id="free-hand-position"
+                value={state.freeHandPosition}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    freeHandPosition: event.target
+                      .value as SceneState["freeHandPosition"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="at-side">بجانب الجسم (At side)</option>
+                <option value="on-hair">على الشعر (On hair)</option>
+                <option value="holding-cup">تحمل كوباً (Holding cup)</option>
+                <option value="touching-chin">
+                  تلمس الذقن (Touching chin)
+                </option>
+                <option value="in-pocket">في الجيب (In pocket)</option>
+                <option value="on-bed">على السرير (On bed)</option>
+                <option value="on-keyboard">
+                  على لوحة المفاتيح (On keyboard)
+                </option>
+                <option value="holding-cloth">
+                  تحمل قطعة قماش (Holding cloth)
+                </option>
+              </select>
+            </label>
+
+            <label className="grid gap-2" htmlFor="hand-fingers-state">
+              حالة الأصابع
+              <select
+                id="hand-fingers-state"
+                value={state.handFingersState}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    handFingersState: event.target
+                      .value as SceneState["handFingersState"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="relaxed">مسترخية (Relaxed)</option>
+                <option value="slightly-curled">
+                  ملتفة قليلاً (Slightly curled)
+                </option>
+                <option value="gripping-soft">قابضة برفق (Soft grip)</option>
+              </select>
+            </label>
+
+            <label className="grid gap-2" htmlFor="hand-visibility">
+              ظهور اليد في الإطار
+              <select
+                id="hand-visibility"
+                value={state.handVisibility}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    handVisibility: event.target
+                      .value as SceneState["handVisibility"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="fully-visible">
+                  ظاهرة بالكامل (Fully visible)
+                </option>
+                <option value="partially-visible">
+                  ظاهرة جزئياً (Partially)
+                </option>
+                <option value="off-frame">خارج الإطار (Off-frame)</option>
               </select>
             </label>
           </CollapsibleSection>

@@ -37,6 +37,9 @@ const baseState: SceneState = {
   faceExpression: "neutral",
   eyeDirection: "camera",
   mouthState: "closed",
+  freeHandPosition: "at-side",
+  handFingersState: "relaxed",
+  handVisibility: "fully-visible",
 };
 
 describe("buildPromptArabic", () => {
@@ -475,9 +478,9 @@ describe("pose descriptions", () => {
     expect(
       buildPromptEnglish({
         ...baseState,
-        handPlacement: "touching-hair",
+        freeHandPosition: "on-hair",
       }),
-    ).toContain("free hand touching the hair");
+    ).toContain("free hand is on the hair");
   });
 
   it("includes the selected pose type in Arabic", () => {
@@ -489,16 +492,16 @@ describe("pose descriptions", () => {
     ).toContain("الشخص مستلقٍ على السرير");
   });
 
-  it("keeps sitting on the bed and a hand on the lap coherent", () => {
+  it("keeps sitting on the bed and a hand on the bed coherent", () => {
     const scene = {
       ...baseState,
       poseType: "sitting-bed" as const,
-      handPlacement: "on-lap" as const,
+      freeHandPosition: "on-bed" as const,
     };
     expect(buildPromptEnglish(scene)).toContain("sitting on the bed");
-    expect(buildPromptEnglish(scene)).toContain("free hand on the lap");
+    expect(buildPromptEnglish(scene)).toContain("free hand is on the bed");
     expect(buildPromptArabic(scene)).toContain("جالس على السرير");
-    expect(buildPromptArabic(scene)).toContain("يده الحرة على الحضن");
+    expect(buildPromptArabic(scene)).toContain("اليد الحرة على السرير");
   });
 
   it("avoids a bed pose when the room has no bed", () => {
@@ -598,5 +601,76 @@ describe("facial expression descriptions", () => {
     expect(smile).toContain("mouth in a closed smile");
     expect(smile).not.toContain("mouth slightly open");
     expect(glance).toContain("eyes directed softly away");
+  });
+});
+
+describe("free hand visibility and position", () => {
+  it("describes the selected free hand position in English", () => {
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        freeHandPosition: "holding-cup",
+      }),
+    ).toContain("the free hand is holding a cup");
+  });
+
+  it("describes the selected finger state in English", () => {
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        handFingersState: "slightly-curled",
+      }),
+    ).toContain("fingers slightly curled");
+  });
+
+  it("describes hand visibility in Arabic", () => {
+    expect(
+      buildPromptArabic({
+        ...baseState,
+        handVisibility: "partially-visible",
+      }),
+    ).toContain("اليد ظاهرة جزئياً في الإطار");
+  });
+
+  it("includes three hand constraints when fully visible", () => {
+    const prompt = buildNegativePrompt(baseState);
+    expect(prompt).toContain("no extra fingers");
+    expect(prompt).toContain("no malformed hands");
+    expect(prompt).toContain("no fused fingers");
+  });
+
+  it("limits hand constraints when partially visible", () => {
+    const prompt = buildNegativePrompt({
+      ...baseState,
+      handVisibility: "partially-visible",
+    });
+    expect(prompt).toContain("no malformed visible fingers");
+    expect(prompt).not.toContain("no extra fingers");
+  });
+
+  it("omits hand constraints when off-frame", () => {
+    const state = {
+      ...baseState,
+      handVisibility: "off-frame" as const,
+    };
+    const prompt = buildNegativePrompt(state);
+    expect(prompt).not.toContain("no extra fingers");
+    expect(prompt).not.toContain("no malformed hands");
+    expect(prompt).not.toContain("no fused fingers");
+    expect(prompt).not.toContain("no malformed visible fingers");
+    expect(buildPromptEnglish(state)).toContain("free hand is off-frame");
+    expect(buildPromptEnglish(state)).not.toContain("fingers relaxed");
+  });
+});
+
+describe("free hand control precedence", () => {
+  it("respects an explicit at-side selection despite an older pose hand value", () => {
+    const prompt = buildPromptEnglish({
+      ...baseState,
+      handPlacement: "touching-hair",
+      freeHandPosition: "at-side",
+    });
+    expect(prompt).toContain("the free hand is at the side");
+    expect(prompt).not.toContain("free hand is touching the hair");
   });
 });
