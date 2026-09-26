@@ -1,0 +1,122 @@
+import type { SceneState } from "./types";
+
+export interface ScenarioPreset {
+  id: SceneState["scenario"];
+  labelAr: string;
+  labelEn: string;
+  apply: (current: SceneState) => SceneState;
+}
+
+export const SCENARIOS: ScenarioPreset[] = [
+  {
+    id: "working-laptop",
+    labelAr: "أعمل على لابتوب في المكتب",
+    labelEn: "Working on laptop at desk",
+    apply: (current) => ({
+      ...current,
+      scenario: "working-laptop",
+      poseType: "sitting-chair",
+      handPlacement: "at-side",
+      freeHandPosition: "on-keyboard",
+      headDirection: "down",
+      eyeDirection: "down-soft",
+      faceExpression: "calm-focus",
+      roomType: "modern",
+      lightingSource: "ceiling",
+      lightingIntensity: "medium",
+      lightingDirection: "top",
+      colorTemperature: "neutral",
+    }),
+  },
+  {
+    id: "bed-laptop",
+    labelAr: "أجلس على السرير مع اللابتوب",
+    labelEn: "Sitting on bed with laptop",
+    apply: (current) => ({
+      ...current,
+      scenario: "bed-laptop",
+      poseType: "sitting-bed",
+      handPlacement: "at-side",
+      freeHandPosition: "on-keyboard",
+      headDirection: "down",
+      eyeDirection: "down-soft",
+      faceExpression: "calm-focus",
+      lightingSource: "bedside-lamp",
+      lightingIntensity: "soft",
+      colorTemperature: "warm",
+      roomHasBed: true,
+    }),
+  },
+  {
+    id: "mirror-selfie",
+    labelAr: "سيلفي أمام المرآة",
+    labelEn: "Mirror selfie",
+    apply: (current) => ({
+      ...current,
+      scenario: "mirror-selfie",
+      shotType: "mirror-selfie",
+      cameraDistance: "arm-length",
+      cameraAngle: "eye-level",
+      faceExpression: "soft-smile",
+      eyeDirection: "mirror",
+      mouthState: "smile-closed",
+    }),
+  },
+  {
+    id: "getting-ready",
+    labelAr: "أجهّز نفسي للخروج",
+    labelEn: "Getting ready to go out",
+    apply: (current) => ({
+      ...current,
+      scenario: "getting-ready",
+      poseType: "standing",
+      handPlacement: "at-side",
+      freeHandPosition: "on-hair",
+      faceExpression: "calm-focus",
+      eyeDirection: "mirror",
+      lightingSource: "window-day",
+      lightingIntensity: "medium",
+      colorTemperature: "neutral",
+      roomWindow: current.roomWindow === "none" ? "medium" : current.roomWindow,
+    }),
+  },
+  {
+    id: "lying-with-phone",
+    labelAr: "مستلقٍ على السرير أستخدم الهاتف",
+    labelEn: "Lying on bed using phone",
+    apply: (current) => ({
+      ...current,
+      scenario: "lying-with-phone",
+      poseType: "lying-bed",
+      handPlacement: "holding-phone",
+      freeHandPosition: "at-side",
+      headDirection: "slightly-right",
+      eyeDirection: "down-soft",
+      faceExpression: "neutral",
+      roomHasBed: true,
+      lightingSource: "bedside-lamp",
+      lightingIntensity: "dim",
+      colorTemperature: "warm",
+    }),
+  },
+  {
+    id: "standing-window",
+    labelAr: "واقف قرب النافذة",
+    labelEn: "Standing by the window",
+    apply: (current) => ({
+      ...current,
+      scenario: "standing-window",
+      poseType: "standing-window",
+      handPlacement: "at-side",
+      freeHandPosition: "at-side",
+      headDirection: "forward",
+      eyeDirection: "away-soft",
+      faceExpression: "calm-focus",
+      roomWindow: current.roomWindow === "none" ? "medium" : current.roomWindow,
+      lightingSource: "window-day",
+      lightingIntensity: "bright",
+      lightingDirection: "side",
+      colorTemperature: "cool",
+    }),
+  },
+];
