@@ -75,6 +75,9 @@ export default function Home() {
     referenceProvided: false,
     identityPriority: "balanced",
     identityNotes: "",
+    hairStyle: "natural",
+    hairLength: "medium",
+    hairTexture: "wavy",
   });
 
   const englishPrompt = buildPromptEnglish(state);
@@ -418,6 +421,67 @@ export default function Home() {
                 <option value="light">فاتح (Light)</option>
                 <option value="earth-tone">ترابي (Earth tone)</option>
                 <option value="pastel">باستيل (Pastel)</option>
+              </select>
+            </label>
+          </CollapsibleSection>
+
+          <CollapsibleSection title="الشعر" badge="3 حقول">
+            <label className="grid gap-2" htmlFor="hair-style">
+              التسريحة
+              <select
+                id="hair-style"
+                value={state.hairStyle}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    hairStyle: event.target.value as SceneState["hairStyle"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="natural">طبيعي (Natural)</option>
+                <option value="combed">ممشط (Combed)</option>
+                <option value="messy-light">فوضوي خفيف (Light messy)</option>
+                <option value="side-part">مفرق جانبي (Side part)</option>
+                <option value="slicked-back">مرفوع للخلف (Slicked back)</option>
+              </select>
+            </label>
+
+            <label className="grid gap-2" htmlFor="hair-length">
+              الطول
+              <select
+                id="hair-length"
+                value={state.hairLength}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    hairLength: event.target.value as SceneState["hairLength"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="short">قصير (Short)</option>
+                <option value="medium">متوسط (Medium)</option>
+                <option value="long">طويل (Long)</option>
+              </select>
+            </label>
+
+            <label className="grid gap-2" htmlFor="hair-texture">
+              الملمس
+              <select
+                id="hair-texture"
+                value={state.hairTexture}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    hairTexture: event.target.value as SceneState["hairTexture"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="straight">أملس (Straight)</option>
+                <option value="wavy">مموج (Wavy)</option>
+                <option value="curly">مجعد (Curly)</option>
               </select>
             </label>
           </CollapsibleSection>
