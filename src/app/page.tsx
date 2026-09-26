@@ -157,13 +157,26 @@ export default function Home() {
             </label>
           </CollapsibleSection>
 
-          <CollapsibleSection title="الغرفة والخلفية" badge="3 حقول + نوع ثابت">
-            <div className="grid gap-2">
-              <span>نوع الغرفة</span>
-              <p className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-300">
-                بسيطة (Simple)
-              </p>
-            </div>
+          <CollapsibleSection title="الغرفة والخلفية" badge="4 حقول">
+            <label className="grid gap-2" htmlFor="room-type">
+              نوع الغرفة
+              <select
+                id="room-type"
+                value={state.roomType}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    roomType: event.target.value as SceneState["roomType"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="simple">بسيطة (Simple)</option>
+                <option value="modern">حديثة (Modern)</option>
+                <option value="small">صغيرة (Small)</option>
+                <option value="medium">متوسطة (Medium)</option>
+              </select>
+            </label>
             <label className="grid gap-2" htmlFor="room-cleanliness">
               ترتيب الغرفة
               <select
