@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { buildPromptArabic } from "./promptBuilder";
+import { buildNegativePrompt, buildPromptArabic, buildPromptEnglish } from "./promptBuilder";
 import type { SceneState } from "./types";
 
 const baseState: SceneState = {
@@ -190,5 +190,91 @@ describe("buildPromptArabic", () => {
     expect(
       buildPromptArabic({ ...baseState, clothingColor: "earth-tone" }),
     ).toContain("فئة اللون ترابية");
+  });
+});
+
+describe("buildPromptEnglish", () => {
+  it("describes the selected selfie shot", () => {
+    expect(buildPromptEnglish(baseState)).toContain("front-camera selfie");
+    expect(
+      buildPromptEnglish({ ...baseState, shotType: "mirror-selfie" }),
+    ).toContain("mirror selfie");
+  });
+
+  it("describes lighting intensity and source in English", () => {
+    expect(buildPromptEnglish(baseState)).toContain("bright daylight from the window");
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        lightingIntensity: "soft",
+        lightingSource: "ceiling",
+      }),
+    ).toContain("soft ceiling light");
+  });
+
+  it("contains no Arabic characters", () => {
+    expect(buildPromptEnglish(baseState)).not.toMatch(/[\u0600-\u06FF]/);
+  });
+
+  it("keeps room and clothing details coherent with absent objects", () => {
+    const prompt = buildPromptEnglish({
+      ...baseState,
+      roomWindow: "none",
+      roomHasBed: false,
+      lightingSource: "bedside-lamp",
+      clothingBottom: "none-visible",
+    });
+
+    expect(prompt).toContain("no window");
+    expect(prompt).toContain("side lamp light");
+    expect(prompt).toContain("lower garment outside the frame");
+    expect(prompt).not.toContain("bedside lamp light");
+    expect(prompt).not.toContain("neatly made bed");
+  });
+});
+
+describe("buildNegativePrompt", () => {
+  it("includes visible hand and baseline realism constraints", () => {
+    const prompt = buildNegativePrompt(baseState);
+
+    expect(prompt).toContain("no extra fingers");
+    expect(prompt).toContain("no malformed hands");
+    expect(prompt).toContain("no waxy skin");
+    expect(prompt).toContain("no watermark");
+  });
+
+  it("adds reflection constraints for a mirror selfie", () => {
+    const prompt = buildNegativePrompt({
+      ...baseState,
+      shotType: "mirror-selfie",
+    });
+
+    expect(prompt).toContain("no incorrect reflections");
+    expect(prompt).toContain("no mirrored text");
+  });
+
+  it("omits mirror constraints for a front selfie", () => {
+    const prompt = buildNegativePrompt(baseState);
+
+    expect(prompt).not.toContain("no incorrect reflections");
+  });
+
+  it("keeps conditional constraints within ten comma-separated groups", () => {
+    const bright = buildNegativePrompt({
+      ...baseState,
+      shotType: "mirror-selfie",
+      lightingIntensity: "bright",
+    });
+    const dim = buildNegativePrompt({
+      ...baseState,
+      roomHasBed: false,
+      lightingIntensity: "dim",
+    });
+
+    expect(bright).toContain("no blown highlights");
+    expect(bright).toContain("no warped furniture");
+    expect(dim).toContain("no excessive noise reduction");
+    expect(dim).not.toContain("no warped furniture");
+    expect(bright.split(", ")).toHaveLength(9);
   });
 });
