@@ -474,7 +474,8 @@ export default function Home() {
                 onChange={(event) =>
                   setState((current) => ({
                     ...current,
-                    hairTexture: event.target.value as SceneState["hairTexture"],
+                    hairTexture: event.target
+                      .value as SceneState["hairTexture"],
                   }))
                 }
                 className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
