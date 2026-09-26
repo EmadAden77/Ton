@@ -162,6 +162,37 @@ const arabicIdentityPriorities: Record<SceneState["identityPriority"], string> =
     flexible: "حافظ على هوية الشخص بشكل مرن، مع السماح بتعديلات على المشهد",
   };
 
+const hairStyleLabels: Record<SceneState["hairStyle"], string> = {
+  // تسريحة طبيعية.
+  natural: "طبيعي",
+  // شعر ممشط.
+  combed: "ممشط",
+  // فوضى خفيفة.
+  "messy-light": "فوضوي قليلاً",
+  // فرق جانبي.
+  "side-part": "مفرق جانبياً",
+  // ممشط للخلف.
+  "slicked-back": "ممشط للخلف",
+};
+
+const hairLengthLabels: Record<SceneState["hairLength"], string> = {
+  // قصير.
+  short: "قصير",
+  // متوسط الطول.
+  medium: "متوسط",
+  // طويل.
+  long: "طويل",
+};
+
+const hairTextureLabels: Record<SceneState["hairTexture"], string> = {
+  // أملس.
+  straight: "أملس",
+  // مموج.
+  wavy: "مموج",
+  // مجعد.
+  curly: "مجعد",
+};
+
 export function buildPromptArabic(state: SceneState): string {
   const identityDescription = state.referenceProvided
     ? `${arabicIdentityPriorities[state.identityPriority]}. `
@@ -186,7 +217,7 @@ export function buildPromptArabic(state: SceneState): string {
     lightingSourceDescription = "ضوء الغروب";
   }
 
-  return `${identityDescription}لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}، ${roomCleanlinessLabels[state.roomCleanliness]}، ${roomWindowLabels[state.roomWindow]}${bedDescription}. الملابس: القطعة العلوية ${clothingTopLabels[state.clothingTop]}، والقطعة السفلية ${clothingBottomLabels[state.clothingBottom]}، ومادة القماش ${clothingMaterialLabels[state.clothingMaterial]}، وفئة اللون ${clothingColorLabels[state.clothingColor]}. مصدر الإضاءة ${lightingSourceDescription} وشدتها ${lightingIntensities[state.lightingIntensity]}، واتجاه الضوء ${lightingDirections[state.lightingDirection]}، وحرارة اللون ${colorTemperatures[state.colorTemperature]}.${identityNotesDescription}`;
+  return `${identityDescription}لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}، ${roomCleanlinessLabels[state.roomCleanliness]}، ${roomWindowLabels[state.roomWindow]}${bedDescription}. الملابس: القطعة العلوية ${clothingTopLabels[state.clothingTop]}، والقطعة السفلية ${clothingBottomLabels[state.clothingBottom]}، ومادة القماش ${clothingMaterialLabels[state.clothingMaterial]}، وفئة اللون ${clothingColorLabels[state.clothingColor]}. مع شعر ${hairLengthLabels[state.hairLength]} ${hairTextureLabels[state.hairTexture]} ${hairStyleLabels[state.hairStyle]}. مصدر الإضاءة ${lightingSourceDescription} وشدتها ${lightingIntensities[state.lightingIntensity]}، واتجاه الضوء ${lightingDirections[state.lightingDirection]}، وحرارة اللون ${colorTemperatures[state.colorTemperature]}.${identityNotesDescription}`;
 }
 
 const englishShotTypes: Record<SceneState["shotType"], string> = {
@@ -307,6 +338,26 @@ const englishIdentityPriorities: Record<
     "Preserve the subject's identity loosely, allowing scene adjustments",
 };
 
+const englishHairStyles: Record<SceneState["hairStyle"], string> = {
+  natural: "natural",
+  combed: "combed",
+  "messy-light": "slightly tousled",
+  "side-part": "side-parted",
+  "slicked-back": "slicked-back",
+};
+
+const englishHairLengths: Record<SceneState["hairLength"], string> = {
+  short: "short",
+  medium: "medium-length",
+  long: "long",
+};
+
+const englishHairTextures: Record<SceneState["hairTexture"], string> = {
+  straight: "straight",
+  wavy: "wavy",
+  curly: "curly",
+};
+
 export function buildPromptEnglish(state: SceneState): string {
   const identityDescription = state.referenceProvided
     ? `${englishIdentityPriorities[state.identityPriority]}. `
@@ -338,7 +389,7 @@ export function buildPromptEnglish(state: SceneState): string {
     lightingSource = "sunset light";
   }
 
-  return `${identityDescription}A ${englishShotTypes[state.shotType]} taken ${englishCameraDistances[state.cameraDistance]} from ${englishCameraAngles[state.cameraAngle]} in a ${englishRoomTypes[state.roomType]} bedroom that is ${englishRoomCleanliness[state.roomCleanliness]}, with ${windowDescription}${bedDescription}; the subject wears a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]}${bottomDescription} in ${englishClothingColors[state.clothingColor]} tones; lighting is ${englishLightingIntensities[state.lightingIntensity]} ${lightingSource}, ${englishLightingDirections[state.lightingDirection]}, with a ${englishColorTemperatures[state.colorTemperature]} color temperature.${identityNotesDescription}`;
+  return `${identityDescription}A ${englishShotTypes[state.shotType]} taken ${englishCameraDistances[state.cameraDistance]} from ${englishCameraAngles[state.cameraAngle]} in a ${englishRoomTypes[state.roomType]} bedroom that is ${englishRoomCleanliness[state.roomCleanliness]}, with ${windowDescription}${bedDescription}; the subject wears a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]}${bottomDescription} in ${englishClothingColors[state.clothingColor]} tones, with ${englishHairLengths[state.hairLength]} ${englishHairTextures[state.hairTexture]} ${englishHairStyles[state.hairStyle]} hair; lighting is ${englishLightingIntensities[state.lightingIntensity]} ${lightingSource}, ${englishLightingDirections[state.lightingDirection]}, with a ${englishColorTemperatures[state.colorTemperature]} color temperature.${identityNotesDescription}`;
 }
 
 export function buildNegativePrompt(state: SceneState): string {
