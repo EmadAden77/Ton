@@ -65,7 +65,10 @@ export default function Home() {
           </label>
         </div>
 
-        <section aria-live="polite" className="mt-8 rounded-xl bg-slate-900 p-5">
+        <section
+          aria-live="polite"
+          className="mt-8 rounded-xl bg-slate-900 p-5"
+        >
           <h2 className="font-semibold">معاينة النص</h2>
           <p className="mt-3 leading-8 text-slate-200">
             {buildPromptArabic(state)}
