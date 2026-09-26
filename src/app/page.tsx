@@ -5,7 +5,7 @@ export default function Home() {
     <main className="min-h-screen bg-slate-950 px-4 py-10 text-slate-100 sm:px-6 lg:px-8">
       <section className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-5xl items-center">
         <div className="w-full rounded-3xl border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/20 backdrop-blur sm:p-10">
-          <div className="mb-6 inline-flex rounded-full border border-emerald-400/20 bg-emerald-400/10 px-4 py-2 text-sm font-medium text-emerald-300">
+          <div className="mb-6 inline-flex rounded-full border border-amber-300/20 bg-amber-300/10 px-4 py-2 text-sm font-medium text-amber-200">
             {getProjectStatus()}
           </div>
 
@@ -14,7 +14,7 @@ export default function Home() {
           </h1>
 
           <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300 sm:text-xl">
-            أساس تقني نظيف لتطبيق عربي يبني Prompts لسيلفي واقعي مع احترام الهوية،
+            مسودة الأساس التقني لتطبيق عربي يبني Prompts لسيلفي واقعي مع احترام الهوية،
             الفيزياء، التشريح، الإضاءة وسلوك كاميرا الهاتف.
           </p>
 
@@ -34,8 +34,8 @@ export default function Home() {
           </div>
 
           <div className="mt-10 rounded-2xl border border-amber-300/15 bg-amber-300/[0.06] p-5 text-sm leading-7 text-amber-100/90">
-            Phase 1A لا تحتوي بعد على محرر Prompt أو رفع صور أو ربط API. هذه الصفحة تؤكد أن
-            أساس المشروع يعمل قبل بناء الخصائص فوقه.
+            هذه نسخة Draft غير مختبرة بعد. لا تعتبر Phase 1A مكتملة حتى ينجح npm install ثم lint و
+            typecheck وtest والتشغيل المحلي.
           </div>
         </div>
       </section>
