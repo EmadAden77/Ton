@@ -314,9 +314,10 @@ const handVisibilityLabels: Record<SceneState["handVisibility"], string> = {
 };
 
 export function buildPromptArabic(state: SceneState): string {
-  const modestDescription = state.scenario === "adjusting-clothing"
-    ? " الشخص بملابس كاملة محتشمة ويرتب شعره أمام المرآة."
-    : "";
+  const modestDescription =
+    state.scenario === "adjusting-clothing"
+      ? " الشخص بملابس كاملة محتشمة ويرتب شعره أمام المرآة."
+      : "";
   const identityDescription = state.referenceProvided
     ? `${arabicIdentityPriorities[state.identityPriority]}. `
     : "";
@@ -580,9 +581,10 @@ const englishHandVisibilities: Record<SceneState["handVisibility"], string> = {
 };
 
 export function buildPromptEnglish(state: SceneState): string {
-  const modestDescription = state.scenario === "adjusting-clothing"
-    ? " Fully dressed, the subject adjusts their hair in front of the mirror."
-    : "";
+  const modestDescription =
+    state.scenario === "adjusting-clothing"
+      ? " Fully dressed, the subject adjusts their hair in front of the mirror."
+      : "";
   const identityDescription = state.referenceProvided
     ? `${englishIdentityPriorities[state.identityPriority]}. `
     : "";
@@ -667,7 +669,9 @@ export function buildNegativePrompt(state: SceneState): string {
   }
 
   if (state.scenario === "adjusting-clothing") {
-    constraints.push("no nudity; no partially undressed subject; no suggestive pose; no exposed skin beyond face and hands");
+    constraints.push(
+      "no nudity; no partially undressed subject; no suggestive pose; no exposed skin beyond face and hands",
+    );
   }
 
   return constraints.join(", ");
