@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { buildNegativePrompt, buildPromptArabic, buildPromptEnglish } from "./promptBuilder";
+import {
+  buildNegativePrompt,
+  buildPromptArabic,
+  buildPromptEnglish,
+} from "./promptBuilder";
 import type { SceneState } from "./types";
 
 const baseState: SceneState = {
@@ -202,7 +206,9 @@ describe("buildPromptEnglish", () => {
   });
 
   it("describes lighting intensity and source in English", () => {
-    expect(buildPromptEnglish(baseState)).toContain("bright daylight from the window");
+    expect(buildPromptEnglish(baseState)).toContain(
+      "bright daylight from the window",
+    );
     expect(
       buildPromptEnglish({
         ...baseState,

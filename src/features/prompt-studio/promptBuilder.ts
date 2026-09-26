@@ -219,13 +219,14 @@ const englishClothingBottoms: Record<SceneState["clothingBottom"], string> = {
   "none-visible": "not visible in the frame",
 };
 
-const englishClothingMaterials: Record<SceneState["clothingMaterial"], string> = {
-  cotton: "cotton",
-  denim: "denim",
-  wool: "wool",
-  polyester: "polyester",
-  linen: "linen",
-};
+const englishClothingMaterials: Record<SceneState["clothingMaterial"], string> =
+  {
+    cotton: "cotton",
+    denim: "denim",
+    wool: "wool",
+    polyester: "polyester",
+    linen: "linen",
+  };
 
 const englishClothingColors: Record<SceneState["clothingColor"], string> = {
   neutral: "neutral",
@@ -242,25 +243,32 @@ const englishLightingSources: Record<SceneState["lightingSource"], string> = {
   "bedside-lamp": "bedside lamp light",
 };
 
-const englishLightingIntensities: Record<SceneState["lightingIntensity"], string> = {
+const englishLightingIntensities: Record<
+  SceneState["lightingIntensity"],
+  string
+> = {
   dim: "dim",
   soft: "soft",
   medium: "moderate",
   bright: "bright",
 };
 
-const englishLightingDirections: Record<SceneState["lightingDirection"], string> = {
+const englishLightingDirections: Record<
+  SceneState["lightingDirection"],
+  string
+> = {
   front: "from the front",
   side: "from the side",
   top: "from above",
   "back-soft": "softly from behind",
 };
 
-const englishColorTemperatures: Record<SceneState["colorTemperature"], string> = {
-  warm: "warm",
-  neutral: "neutral",
-  cool: "cool",
-};
+const englishColorTemperatures: Record<SceneState["colorTemperature"], string> =
+  {
+    warm: "warm",
+    neutral: "neutral",
+    cool: "cool",
+  };
 
 export function buildPromptEnglish(state: SceneState): string {
   const windowDescription = englishRoomWindows[state.roomWindow];
