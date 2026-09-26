@@ -156,10 +156,182 @@ const colorTemperatures: Record<SceneState["colorTemperature"], string> = {
 
 export function buildPromptArabic(state: SceneState): string {
   const bedDescription = state.roomHasBed ? "، مع سرير مرتب في الخلفية" : "";
-  const lightingSourceDescription =
-    !state.roomHasBed && state.lightingSource === "bedside-lamp"
-      ? "مصباح جانبي"
-      : lightingSources[state.lightingSource];
+  let lightingSourceDescription = lightingSources[state.lightingSource];
+  if (!state.roomHasBed && state.lightingSource === "bedside-lamp") {
+    lightingSourceDescription = "مصباح جانبي";
+  } else if (
+    state.roomWindow === "none" &&
+    state.lightingSource === "window-day"
+  ) {
+    lightingSourceDescription = "ضوء النهار";
+  } else if (
+    state.roomWindow === "none" &&
+    state.lightingSource === "window-sunset"
+  ) {
+    lightingSourceDescription = "ضوء الغروب";
+  }
 
   return `لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}، ${roomCleanlinessLabels[state.roomCleanliness]}، ${roomWindowLabels[state.roomWindow]}${bedDescription}. الملابس: القطعة العلوية ${clothingTopLabels[state.clothingTop]}، والقطعة السفلية ${clothingBottomLabels[state.clothingBottom]}، ومادة القماش ${clothingMaterialLabels[state.clothingMaterial]}، وفئة اللون ${clothingColorLabels[state.clothingColor]}. مصدر الإضاءة ${lightingSourceDescription} وشدتها ${lightingIntensities[state.lightingIntensity]}، واتجاه الضوء ${lightingDirections[state.lightingDirection]}، وحرارة اللون ${colorTemperatures[state.colorTemperature]}.`;
+}
+
+const englishShotTypes: Record<SceneState["shotType"], string> = {
+  "front-selfie": "front-camera selfie",
+  "mirror-selfie": "mirror selfie",
+};
+
+const englishCameraDistances: Record<SceneState["cameraDistance"], string> = {
+  close: "close to the face",
+  "arm-length": "at arm's length",
+  extended: "with an extended arm",
+};
+
+const englishCameraAngles: Record<SceneState["cameraAngle"], string> = {
+  "eye-level": "eye level",
+  "slightly-above": "slightly above eye level",
+  "slightly-below": "slightly below eye level",
+};
+
+const englishRoomTypes: Record<SceneState["roomType"], string> = {
+  simple: "simple",
+  modern: "modern",
+  small: "small",
+  medium: "medium-sized",
+};
+
+const englishRoomCleanliness: Record<SceneState["roomCleanliness"], string> = {
+  "very-tidy": "very tidy",
+  natural: "naturally lived-in",
+  "light-mess": "slightly messy",
+  "moderate-mess": "moderately messy",
+};
+
+const englishRoomWindows: Record<SceneState["roomWindow"], string> = {
+  none: "no window",
+  small: "a small window",
+  medium: "a medium-sized window",
+  large: "a large window",
+};
+
+const englishClothingTops: Record<SceneState["clothingTop"], string> = {
+  "t-shirt": "T-shirt",
+  shirt: "shirt",
+  hoodie: "hoodie",
+  "pajama-top": "pajama top",
+  sweater: "sweater",
+  "tank-top": "tank top",
+};
+
+const englishClothingBottoms: Record<SceneState["clothingBottom"], string> = {
+  jeans: "jeans",
+  shorts: "shorts",
+  "pajama-pants": "pajama pants",
+  sweatpants: "sweatpants",
+  "none-visible": "not visible in the frame",
+};
+
+const englishClothingMaterials: Record<SceneState["clothingMaterial"], string> =
+  {
+    cotton: "cotton",
+    denim: "denim",
+    wool: "wool",
+    polyester: "polyester",
+    linen: "linen",
+  };
+
+const englishClothingColors: Record<SceneState["clothingColor"], string> = {
+  neutral: "neutral",
+  dark: "dark",
+  light: "light",
+  "earth-tone": "earth",
+  pastel: "pastel",
+};
+
+const englishLightingSources: Record<SceneState["lightingSource"], string> = {
+  "window-day": "daylight from the window",
+  "window-sunset": "sunset light from the window",
+  ceiling: "ceiling light",
+  "bedside-lamp": "bedside lamp light",
+};
+
+const englishLightingIntensities: Record<
+  SceneState["lightingIntensity"],
+  string
+> = {
+  dim: "dim",
+  soft: "soft",
+  medium: "moderate",
+  bright: "bright",
+};
+
+const englishLightingDirections: Record<
+  SceneState["lightingDirection"],
+  string
+> = {
+  front: "from the front",
+  side: "from the side",
+  top: "from above",
+  "back-soft": "softly from behind",
+};
+
+const englishColorTemperatures: Record<SceneState["colorTemperature"], string> =
+  {
+    warm: "warm",
+    neutral: "neutral",
+    cool: "cool",
+  };
+
+export function buildPromptEnglish(state: SceneState): string {
+  const windowDescription = englishRoomWindows[state.roomWindow];
+  const bedDescription = state.roomHasBed
+    ? ", with a neatly made bed in the background"
+    : "";
+  const bottomDescription =
+    state.clothingBottom === "none-visible"
+      ? ", with the lower garment outside the frame"
+      : ` and ${englishClothingBottoms[state.clothingBottom]}`;
+  let lightingSource = englishLightingSources[state.lightingSource];
+  if (!state.roomHasBed && state.lightingSource === "bedside-lamp") {
+    lightingSource = "side lamp light";
+  } else if (
+    state.roomWindow === "none" &&
+    state.lightingSource === "window-day"
+  ) {
+    lightingSource = "daylight";
+  } else if (
+    state.roomWindow === "none" &&
+    state.lightingSource === "window-sunset"
+  ) {
+    lightingSource = "sunset light";
+  }
+
+  return `A ${englishShotTypes[state.shotType]} taken ${englishCameraDistances[state.cameraDistance]} from ${englishCameraAngles[state.cameraAngle]} in a ${englishRoomTypes[state.roomType]} bedroom that is ${englishRoomCleanliness[state.roomCleanliness]}, with ${windowDescription}${bedDescription}; the subject wears a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]}${bottomDescription} in ${englishClothingColors[state.clothingColor]} tones; lighting is ${englishLightingIntensities[state.lightingIntensity]} ${lightingSource}, ${englishLightingDirections[state.lightingDirection]}, with a ${englishColorTemperatures[state.colorTemperature]} color temperature.`;
+}
+
+export function buildNegativePrompt(state: SceneState): string {
+  const constraints = [
+    "no AI-looking artifacts",
+    "no watermark",
+    "no text artifacts",
+    "no distorted face; no waxy skin; no plastic skin",
+    "no extra fingers; no malformed hands",
+    "no unrealistic lighting; no excessive HDR",
+  ];
+
+  if (state.shotType === "mirror-selfie") {
+    constraints.push("no incorrect reflections; no mirrored text");
+  }
+
+  if (state.roomHasBed) {
+    constraints.push("no warped furniture");
+  }
+
+  if (state.lightingIntensity === "bright") {
+    constraints.push("no blown highlights");
+  }
+
+  if (state.lightingIntensity === "dim") {
+    constraints.push("no excessive noise reduction");
+  }
+
+  return constraints.join(", ");
 }
