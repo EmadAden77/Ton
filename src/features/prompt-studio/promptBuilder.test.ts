@@ -674,3 +674,21 @@ describe("free hand control precedence", () => {
     expect(prompt).not.toContain("free hand is touching the hair");
   });
 });
+
+describe("phone in free hand", () => {
+  it("mentions holding a phone in English", () => {
+    const prompt = buildPromptEnglish({
+      ...baseState,
+      freeHandPosition: "holding-phone",
+    });
+    expect(prompt).toContain("holding a phone");
+  });
+
+  it("mentions holding the phone in Arabic", () => {
+    const prompt = buildPromptArabic({
+      ...baseState,
+      freeHandPosition: "holding-phone",
+    });
+    expect(prompt).toContain("تحمل الهاتف");
+  });
+});
