@@ -20,6 +20,34 @@ const lightingModeLabelsAr: Record<SceneState["lightingMode"], string> = {
   "daylight-open": "ضوء نهار طبيعي ساطع من النافذة الخلفية",
 };
 
+const phonePositionLabels: Record<SceneState["phonePosition"], string> = {
+  "front-of-face": "held directly in front of the face",
+  "chest-level": "held at chest level",
+  "above-chest": "raised above the chest",
+  "side-soft": "held slightly to the side",
+};
+
+const phonePositionLabelsAr: Record<SceneState["phonePosition"], string> = {
+  "front-of-face": "أمام الوجه",
+  "chest-level": "على مستوى الصدر",
+  "above-chest": "فوق الصدر",
+  "side-soft": "جانبي بلطف",
+};
+
+const phoneHoldingArmLabels: Record<SceneState["shotType"], string> = {
+  "front-selfie":
+    "the arm holding the phone is extended forward with a slightly bent elbow",
+  "mirror-selfie":
+    "the arm holding the phone is bent at the elbow, phone at chest height",
+};
+
+const phoneHoldingArmLabelsAr: Record<SceneState["shotType"], string> = {
+  "front-selfie":
+    "الذراع الممسكة بالهاتف ممتدة للأمام مع انحناء بسيط في الكوع",
+  "mirror-selfie":
+    "الذراع الممسكة بالهاتف منحنية عند الكوع، الهاتف على مستوى الصدر",
+};
+
 const shotTypes: Record<SceneState["shotType"], string> = {
   "front-selfie": "سيلفي بالكاميرا الأمامية",
   "mirror-selfie": "سيلفي أمام المرآة",
@@ -74,8 +102,8 @@ const hairStyleLabels: Record<SceneState["hairStyle"], string> = {
   natural: "طبيعي",
   combed: "ممشط",
   "messy-light": "فوضوي قليلاً",
+  "combed-back": "ممشط للخلف بانتظام",
   "side-part": "مفرق جانبياً",
-  "slicked-back": "ممشط للخلف",
 };
 const hairLengthLabels: Record<SceneState["hairLength"], string> = {
   short: "قصير",
@@ -140,6 +168,7 @@ const freeHandPositionLabels: Record<SceneState["freeHandPosition"], string> = {
   "touching-chin": "تلمس الذقن",
   "in-pocket": "في الجيب",
   "on-bed": "على السرير",
+  "on-chest": "على الصدر",
   "on-keyboard": "على لوحة المفاتيح",
   "holding-cloth": "تحمل قطعة قماش",
   "holding-phone": "تحمل الهاتف",
@@ -197,16 +226,12 @@ export function buildPromptArabic(state: SceneState): string {
   const identityNotesDescription = notes
     ? ` ملاحظات إضافية عن الهوية: ${notes}.`
     : "";
-  const handDescription =
-    state.poseType === "lying-bed" && state.freeHandPosition === "in-pocket"
-      ? freeHandPositionLabels["at-side"]
-      : freeHandPositionLabels[state.freeHandPosition];
   const handSummary =
     state.handVisibility === "off-frame"
       ? "اليد الحرة خارج الإطار"
-      : `اليد الحرة ${handDescription}، والأصابع ${handFingersStateLabels[state.handFingersState]}، واليد ${handVisibilityLabels[state.handVisibility]}`;
+      : `اليد الحرة ${freeHandPositionLabels[state.freeHandPosition]}، والأصابع ${handFingersStateLabels[state.handFingersState]}، واليد ${handVisibilityLabels[state.handVisibility]}`;
 
-  return `${identityDescription}لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. ${FIXED_ROOM_DESCRIPTION_AR}. الملابس: القطعة العلوية ${clothingTopLabels[state.clothingTop]}، والقطعة السفلية ${clothingBottomLabels[state.clothingBottom]}، ومادة القماش ${clothingMaterialLabels[state.clothingMaterial]}، وفئة اللون ${clothingColorLabels[state.clothingColor]}. مع شعر ${hairLengthLabels[state.hairLength]} ${hairTextureLabels[state.hairTexture]} ${hairStyleLabels[state.hairStyle]}. الشخص ${poseTypeLabels[state.poseType]}، رأسه ${headDirectionLabels[state.headDirection]}، وكتفاه ${shoulderPositionLabels[state.shoulderPosition]}، وظهره ${backPostureLabels[state.backPosture]}. تعبير الوجه ${faceExpressionLabels[state.faceExpression]}، والنظر ${eyeDirectionLabels[effectiveEyeDirection(state)]}، والفم ${mouthStateLabels[effectiveMouthState(state)]}. ${handSummary}. الإضاءة: ${lightingModeLabelsAr[state.lightingMode]}.${arabicScenarioDescription(state)}${identityNotesDescription}`;
+  return `${identityDescription}لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. ${FIXED_ROOM_DESCRIPTION_AR}. الملابس: القطعة العلوية ${clothingTopLabels[state.clothingTop]}، والقطعة السفلية ${clothingBottomLabels[state.clothingBottom]}، ومادة القماش ${clothingMaterialLabels[state.clothingMaterial]}، وفئة اللون ${clothingColorLabels[state.clothingColor]}. مع شعر ${hairLengthLabels[state.hairLength]} ${hairTextureLabels[state.hairTexture]} ${hairStyleLabels[state.hairStyle]}. الشخص ${poseTypeLabels[state.poseType]}، رأسه ${headDirectionLabels[state.headDirection]}، وكتفاه ${shoulderPositionLabels[state.shoulderPosition]}، وظهره ${backPostureLabels[state.backPosture]}. تعبير الوجه ${faceExpressionLabels[state.faceExpression]}، والنظر ${eyeDirectionLabels[effectiveEyeDirection(state)]}، والفم ${mouthStateLabels[effectiveMouthState(state)]}. ${phoneHoldingArmLabelsAr[state.shotType]}. الهاتف ${phonePositionLabelsAr[state.phonePosition]}. ${handSummary}. الإضاءة: ${lightingModeLabelsAr[state.lightingMode]}.${arabicScenarioDescription(state)}${identityNotesDescription}`;
 }
 
 const englishShotTypes: Record<SceneState["shotType"], string> = {
@@ -268,8 +293,8 @@ const englishHairStyles: Record<SceneState["hairStyle"], string> = {
   natural: "natural",
   combed: "combed",
   "messy-light": "slightly tousled",
+  "combed-back": "combed back neatly",
   "side-part": "side-parted",
-  "slicked-back": "slicked-back",
 };
 const englishHairLengths: Record<SceneState["hairLength"], string> = {
   short: "short",
@@ -336,6 +361,7 @@ const englishFreeHandPositions: Record<SceneState["freeHandPosition"], string> =
     "touching-chin": "touching the chin",
     "in-pocket": "in a pocket",
     "on-bed": "on the bed",
+    "on-chest": "on the chest",
     "on-keyboard": "on the keyboard",
     "holding-cloth": "holding a piece of cloth",
     "holding-phone": "holding a phone",
@@ -351,6 +377,13 @@ const englishHandVisibilities: Record<SceneState["handVisibility"], string> = {
   "partially-visible": "partially visible in frame",
   "off-frame": "off-frame",
 };
+
+function englishHairDescription(state: SceneState): string {
+  if (state.hairStyle === "combed-back") {
+    return `${englishHairLengths[state.hairLength]} ${englishHairTextures[state.hairTexture]} hair ${englishHairStyles[state.hairStyle]}`;
+  }
+  return `${englishHairLengths[state.hairLength]} ${englishHairTextures[state.hairTexture]} ${englishHairStyles[state.hairStyle]} hair`;
+}
 
 function englishScenarioDescription(state: SceneState): string {
   if (state.scenario === "adjusting-clothing") {
@@ -374,16 +407,12 @@ export function buildPromptEnglish(state: SceneState): string {
     state.clothingBottom === "none-visible"
       ? ", with the lower garment outside the frame"
       : ` and ${englishClothingBottoms[state.clothingBottom]}`;
-  const handDescription =
-    state.poseType === "lying-bed" && state.freeHandPosition === "in-pocket"
-      ? englishFreeHandPositions["at-side"]
-      : englishFreeHandPositions[state.freeHandPosition];
   const handSummary =
     state.handVisibility === "off-frame"
       ? "the free hand is off-frame"
-      : `the free hand is ${handDescription}, fingers ${englishHandFingersStates[state.handFingersState]}, ${englishHandVisibilities[state.handVisibility]}`;
+      : `the free hand is ${englishFreeHandPositions[state.freeHandPosition]}, fingers ${englishHandFingersStates[state.handFingersState]}, ${englishHandVisibilities[state.handVisibility]}`;
 
-  return `${identityDescription}A ${englishShotTypes[state.shotType]} taken ${englishCameraDistances[state.cameraDistance]} from ${englishCameraAngles[state.cameraAngle]} ${FIXED_ROOM_DESCRIPTION_EN}; the subject wears a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]}${bottomDescription} in ${englishClothingColors[state.clothingColor]} tones, with ${englishHairLengths[state.hairLength]} ${englishHairTextures[state.hairTexture]} ${englishHairStyles[state.hairStyle]} hair; the subject is ${englishPoseTypes[state.poseType]}, head ${englishHeadDirections[state.headDirection]}, shoulders ${englishShoulderPositions[state.shoulderPosition]}, back posture ${englishBackPostures[state.backPosture]}; facial expression is ${englishFaceExpressions[state.faceExpression]}, eyes directed ${englishEyeDirections[effectiveEyeDirection(state)]}, mouth ${englishMouthStates[effectiveMouthState(state)]}; ${handSummary}; lighting is ${lightingModeLabels[state.lightingMode]}.${englishScenarioDescription(state)}${identityNotesDescription}`;
+  return `${identityDescription}A ${englishShotTypes[state.shotType]} taken ${englishCameraDistances[state.cameraDistance]} from ${englishCameraAngles[state.cameraAngle]} ${FIXED_ROOM_DESCRIPTION_EN}; the subject wears a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]}${bottomDescription} in ${englishClothingColors[state.clothingColor]} tones, with ${englishHairDescription(state)}; the subject is ${englishPoseTypes[state.poseType]}, head ${englishHeadDirections[state.headDirection]}, shoulders ${englishShoulderPositions[state.shoulderPosition]}, back posture ${englishBackPostures[state.backPosture]}; facial expression is ${englishFaceExpressions[state.faceExpression]}, eyes directed ${englishEyeDirections[effectiveEyeDirection(state)]}, mouth ${englishMouthStates[effectiveMouthState(state)]}; ${phoneHoldingArmLabels[state.shotType]}. The phone is ${phonePositionLabels[state.phonePosition]}. ${handSummary}; lighting is ${lightingModeLabels[state.lightingMode]}.${englishScenarioDescription(state)}${identityNotesDescription}`;
 }
 
 export function buildNegativePrompt(state: SceneState): string {
@@ -404,6 +433,10 @@ export function buildNegativePrompt(state: SceneState): string {
 
   if (state.shotType === "mirror-selfie") {
     constraints.push("no incorrect reflections; no mirrored text");
+  }
+
+  if (state.poseType === "lying-bed") {
+    constraints.push("no elongated arms", "no distorted shoulders");
   }
 
   if (state.scenario === "adjusting-clothing") {
