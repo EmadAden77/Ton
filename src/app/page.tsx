@@ -710,7 +710,8 @@ export default function Home() {
                 onChange={(event) =>
                   setState((current) => ({
                     ...current,
-                    freeHandPosition: event.target.value as SceneState["freeHandPosition"],
+                    freeHandPosition: event.target
+                      .value as SceneState["freeHandPosition"],
                   }))
                 }
                 className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
@@ -718,11 +719,17 @@ export default function Home() {
                 <option value="at-side">بجانب الجسم (At side)</option>
                 <option value="on-hair">على الشعر (On hair)</option>
                 <option value="holding-cup">تحمل كوباً (Holding cup)</option>
-                <option value="touching-chin">تلمس الذقن (Touching chin)</option>
+                <option value="touching-chin">
+                  تلمس الذقن (Touching chin)
+                </option>
                 <option value="in-pocket">في الجيب (In pocket)</option>
                 <option value="on-bed">على السرير (On bed)</option>
-                <option value="on-keyboard">على لوحة المفاتيح (On keyboard)</option>
-                <option value="holding-cloth">تحمل قطعة قماش (Holding cloth)</option>
+                <option value="on-keyboard">
+                  على لوحة المفاتيح (On keyboard)
+                </option>
+                <option value="holding-cloth">
+                  تحمل قطعة قماش (Holding cloth)
+                </option>
               </select>
             </label>
 
@@ -734,13 +741,16 @@ export default function Home() {
                 onChange={(event) =>
                   setState((current) => ({
                     ...current,
-                    handFingersState: event.target.value as SceneState["handFingersState"],
+                    handFingersState: event.target
+                      .value as SceneState["handFingersState"],
                   }))
                 }
                 className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
               >
                 <option value="relaxed">مسترخية (Relaxed)</option>
-                <option value="slightly-curled">ملتفة قليلاً (Slightly curled)</option>
+                <option value="slightly-curled">
+                  ملتفة قليلاً (Slightly curled)
+                </option>
                 <option value="gripping-soft">قابضة برفق (Soft grip)</option>
               </select>
             </label>
@@ -753,13 +763,18 @@ export default function Home() {
                 onChange={(event) =>
                   setState((current) => ({
                     ...current,
-                    handVisibility: event.target.value as SceneState["handVisibility"],
+                    handVisibility: event.target
+                      .value as SceneState["handVisibility"],
                   }))
                 }
                 className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
               >
-                <option value="fully-visible">ظاهرة بالكامل (Fully visible)</option>
-                <option value="partially-visible">ظاهرة جزئياً (Partially)</option>
+                <option value="fully-visible">
+                  ظاهرة بالكامل (Fully visible)
+                </option>
+                <option value="partially-visible">
+                  ظاهرة جزئياً (Partially)
+                </option>
                 <option value="off-frame">خارج الإطار (Off-frame)</option>
               </select>
             </label>
