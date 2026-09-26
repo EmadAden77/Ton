@@ -114,15 +114,15 @@ describe("buildPromptArabic", () => {
 
   it("describes the selected window size", () => {
     expect(buildPromptArabic(baseState)).toContain("بنافذة متوسطة");
-    expect(
-      buildPromptArabic({ ...baseState, roomWindow: "small" }),
-    ).toContain("بنافذة صغيرة");
-    expect(
-      buildPromptArabic({ ...baseState, roomWindow: "large" }),
-    ).toContain("بنافذة كبيرة");
-    expect(
-      buildPromptArabic({ ...baseState, roomWindow: "none" }),
-    ).toContain("بلا نافذة");
+    expect(buildPromptArabic({ ...baseState, roomWindow: "small" })).toContain(
+      "بنافذة صغيرة",
+    );
+    expect(buildPromptArabic({ ...baseState, roomWindow: "large" })).toContain(
+      "بنافذة كبيرة",
+    );
+    expect(buildPromptArabic({ ...baseState, roomWindow: "none" })).toContain(
+      "بلا نافذة",
+    );
   });
 
   it("includes a tidy bed when the room has a bed", () => {
