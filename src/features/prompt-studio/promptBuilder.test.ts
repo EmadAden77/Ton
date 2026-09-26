@@ -606,24 +606,30 @@ describe("facial expression descriptions", () => {
 
 describe("free hand visibility and position", () => {
   it("describes the selected free hand position in English", () => {
-    expect(buildPromptEnglish({
-      ...baseState,
-      freeHandPosition: "holding-cup",
-    })).toContain("the free hand is holding a cup");
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        freeHandPosition: "holding-cup",
+      }),
+    ).toContain("the free hand is holding a cup");
   });
 
   it("describes the selected finger state in English", () => {
-    expect(buildPromptEnglish({
-      ...baseState,
-      handFingersState: "slightly-curled",
-    })).toContain("fingers slightly curled");
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        handFingersState: "slightly-curled",
+      }),
+    ).toContain("fingers slightly curled");
   });
 
   it("describes hand visibility in Arabic", () => {
-    expect(buildPromptArabic({
-      ...baseState,
-      handVisibility: "partially-visible",
-    })).toContain("اليد ظاهرة جزئياً في الإطار");
+    expect(
+      buildPromptArabic({
+        ...baseState,
+        handVisibility: "partially-visible",
+      }),
+    ).toContain("اليد ظاهرة جزئياً في الإطار");
   });
 
   it("includes three hand constraints when fully visible", () => {
