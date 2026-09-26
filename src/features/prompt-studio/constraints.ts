@@ -132,9 +132,7 @@ const rules: Record<ConstrainedField, (state: SceneState) => Rule> = {
     }
     const disabled = [
       ...(state.roomHasBed ? [] : ["bedside-lamp"]),
-      ...(state.roomWindow === "none"
-        ? ["window-day", "window-sunset"]
-        : []),
+      ...(state.roomWindow === "none" ? ["window-day", "window-sunset"] : []),
     ];
     return { disabled };
   },
@@ -187,7 +185,10 @@ const rules: Record<ConstrainedField, (state: SceneState) => Rule> = {
   }),
   eyeDirection: (state) =>
     state.shotType === "mirror-selfie"
-      ? { lockedTo: "mirror", lockReason: "سيلفي المرآة يتطلب النظر إلى المرآة" }
+      ? {
+          lockedTo: "mirror",
+          lockReason: "سيلفي المرآة يتطلب النظر إلى المرآة",
+        }
       : state.poseType === "lying-bed"
         ? {
             allowed: ["down-soft", "camera", "away-soft"],
@@ -241,7 +242,11 @@ export function getFieldConstraints(
       (rule.allowed !== undefined && !rule.allowed.includes(value)) ||
       (rule.disabled?.includes(value) ?? false);
     return disabled
-      ? { value, disabled: true, reason: optionReason(name, value, state, rule) }
+      ? {
+          value,
+          disabled: true,
+          reason: optionReason(name, value, state, rule),
+        }
       : { value, disabled: false };
   });
 
@@ -260,7 +265,11 @@ export function getConflicts(state: SceneState): string[] {
     if (constraints?.lockedTo && value !== constraints.lockedTo) {
       conflicts.push(constraints.lockReason ?? "قيمة مقفلة غير متوافقة");
     } else if (option?.disabled) {
-      if (field === "lightingSource" && value === "bedside-lamp" && !state.roomHasBed) {
+      if (
+        field === "lightingSource" &&
+        value === "bedside-lamp" &&
+        !state.roomHasBed
+      ) {
         conflicts.push("اختيار مصباح سرير بدون سرير غير ممكن");
       } else {
         conflicts.push(option.reason ?? "اختيار غير متوافق مع المشهد");
@@ -269,8 +278,11 @@ export function getConflicts(state: SceneState): string[] {
   }
 
   // كشف تناقض السرير حتى عندما يأخذ قفل الاستلقاء أولوية المصدر.
-  if (!state.roomHasBed && state.lightingSource === "bedside-lamp" &&
-      !conflicts.includes("اختيار مصباح سرير بدون سرير غير ممكن")) {
+  if (
+    !state.roomHasBed &&
+    state.lightingSource === "bedside-lamp" &&
+    !conflicts.includes("اختيار مصباح سرير بدون سرير غير ممكن")
+  ) {
     conflicts.push("اختيار مصباح سرير بدون سرير غير ممكن");
   }
 
