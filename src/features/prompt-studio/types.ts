@@ -110,4 +110,29 @@ export interface SceneState {
     | "flexible";
   // ملاحظات اختيارية عن الملامح المراد الحفاظ عليها.
   identityNotes: string;
+  hairStyle:
+    // تصفيف طبيعي.
+    | "natural"
+    // شعر ممشط.
+    | "combed"
+    // فوضى خفيفة.
+    | "messy-light"
+    // فرق جانبي.
+    | "side-part"
+    // ممشط إلى الخلف.
+    | "slicked-back";
+  hairLength:
+    // شعر قصير.
+    | "short"
+    // شعر متوسط الطول.
+    | "medium"
+    // شعر طويل.
+    | "long";
+  hairTexture:
+    // شعر أملس.
+    | "straight"
+    // شعر مموج.
+    | "wavy"
+    // شعر مجعد.
+    | "curly";
 }
