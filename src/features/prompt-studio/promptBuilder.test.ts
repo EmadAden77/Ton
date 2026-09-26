@@ -524,31 +524,39 @@ describe("pose descriptions", () => {
 
 describe("facial expression descriptions", () => {
   it("describes the selected expression in English", () => {
-    expect(buildPromptEnglish({
-      ...baseState,
-      faceExpression: "soft-smile",
-    })).toContain("facial expression is a soft smile");
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        faceExpression: "soft-smile",
+      }),
+    ).toContain("facial expression is a soft smile");
   });
 
   it("describes eye direction in English", () => {
-    expect(buildPromptEnglish({
-      ...baseState,
-      eyeDirection: "down-soft",
-    })).toContain("eyes directed softly down");
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        eyeDirection: "down-soft",
+      }),
+    ).toContain("eyes directed softly down");
   });
 
   it("describes mouth state in English", () => {
-    expect(buildPromptEnglish({
-      ...baseState,
-      mouthState: "slightly-open",
-    })).toContain("mouth slightly open");
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        mouthState: "slightly-open",
+      }),
+    ).toContain("mouth slightly open");
   });
 
   it("describes the selected expression in Arabic", () => {
-    expect(buildPromptArabic({
-      ...baseState,
-      faceExpression: "calm-focus",
-    })).toContain("تعبير الوجه تركيز هادئ");
+    expect(
+      buildPromptArabic({
+        ...baseState,
+        faceExpression: "calm-focus",
+      }),
+    ).toContain("تعبير الوجه تركيز هادئ");
   });
 
   it("avoids an open smile when the expression is sleepy", () => {
@@ -557,7 +565,9 @@ describe("facial expression descriptions", () => {
       faceExpression: "sleepy" as const,
       mouthState: "smile-open-light" as const,
     };
-    expect(buildPromptEnglish(state)).toContain("facial expression is slightly sleepy");
+    expect(buildPromptEnglish(state)).toContain(
+      "facial expression is slightly sleepy",
+    );
     expect(buildPromptEnglish(state)).toContain("mouth closed");
     expect(buildPromptEnglish(state)).not.toContain("open smile");
     expect(buildPromptArabic(state)).toContain("الفم مغلق");

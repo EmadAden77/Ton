@@ -252,7 +252,10 @@ const backPostureLabels: Record<SceneState["backPosture"], string> = {
 
 // يُبقي وصف الفم متسقاً مع التعبير عند اختيار تركيبة متعارضة.
 function effectiveMouthState(state: SceneState): SceneState["mouthState"] {
-  if (state.faceExpression === "sleepy" && state.mouthState === "smile-open-light") {
+  if (
+    state.faceExpression === "sleepy" &&
+    state.mouthState === "smile-open-light"
+  ) {
     return "closed";
   }
   if (state.faceExpression === "closed-smile") {
@@ -265,7 +268,8 @@ function effectiveMouthState(state: SceneState): SceneState["mouthState"] {
 }
 
 function effectiveEyeDirection(state: SceneState): SceneState["eyeDirection"] {
-  return state.faceExpression === "side-glance" && state.eyeDirection === "camera"
+  return state.faceExpression === "side-glance" &&
+    state.eyeDirection === "camera"
     ? "away-soft"
     : state.eyeDirection;
 }

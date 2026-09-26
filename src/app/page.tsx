@@ -631,14 +631,17 @@ export default function Home() {
                 onChange={(event) =>
                   setState((current) => ({
                     ...current,
-                    faceExpression: event.target.value as SceneState["faceExpression"],
+                    faceExpression: event.target
+                      .value as SceneState["faceExpression"],
                   }))
                 }
                 className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
               >
                 <option value="neutral">محايد طبيعي (Neutral)</option>
                 <option value="soft-smile">ابتسامة خفيفة (Soft smile)</option>
-                <option value="closed-smile">ابتسامة مغلقة (Closed smile)</option>
+                <option value="closed-smile">
+                  ابتسامة مغلقة (Closed smile)
+                </option>
                 <option value="calm-focus">تركيز هادئ (Calm focus)</option>
                 <option value="side-glance">نظرة جانبية (Side glance)</option>
                 <option value="thinking">تفكير (Thinking)</option>
@@ -655,7 +658,8 @@ export default function Home() {
                 onChange={(event) =>
                   setState((current) => ({
                     ...current,
-                    eyeDirection: event.target.value as SceneState["eyeDirection"],
+                    eyeDirection: event.target
+                      .value as SceneState["eyeDirection"],
                   }))
                 }
                 className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
@@ -681,9 +685,15 @@ export default function Home() {
                 className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
               >
                 <option value="closed">مغلق (Closed)</option>
-                <option value="slightly-open">مفتوح قليلاً (Slightly open)</option>
-                <option value="smile-closed">ابتسامة مغلقة (Smile closed)</option>
-                <option value="smile-open-light">ابتسامة مفتوحة خفيفة (Light open smile)</option>
+                <option value="slightly-open">
+                  مفتوح قليلاً (Slightly open)
+                </option>
+                <option value="smile-closed">
+                  ابتسامة مغلقة (Smile closed)
+                </option>
+                <option value="smile-open-light">
+                  ابتسامة مفتوحة خفيفة (Light open smile)
+                </option>
               </select>
             </label>
           </CollapsibleSection>
