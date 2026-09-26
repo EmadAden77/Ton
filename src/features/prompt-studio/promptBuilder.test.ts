@@ -478,9 +478,9 @@ describe("pose descriptions", () => {
     expect(
       buildPromptEnglish({
         ...baseState,
-        handPlacement: "touching-hair",
+        freeHandPosition: "on-hair",
       }),
-    ).toContain("free hand is touching the hair");
+    ).toContain("free hand is on the hair");
   });
 
   it("includes the selected pose type in Arabic", () => {
@@ -492,16 +492,16 @@ describe("pose descriptions", () => {
     ).toContain("الشخص مستلقٍ على السرير");
   });
 
-  it("keeps sitting on the bed and a hand on the lap coherent", () => {
+  it("keeps sitting on the bed and a hand on the bed coherent", () => {
     const scene = {
       ...baseState,
       poseType: "sitting-bed" as const,
-      handPlacement: "on-lap" as const,
+      freeHandPosition: "on-bed" as const,
     };
     expect(buildPromptEnglish(scene)).toContain("sitting on the bed");
-    expect(buildPromptEnglish(scene)).toContain("free hand is on the lap");
+    expect(buildPromptEnglish(scene)).toContain("free hand is on the bed");
     expect(buildPromptArabic(scene)).toContain("جالس على السرير");
-    expect(buildPromptArabic(scene)).toContain("اليد الحرة على الحضن");
+    expect(buildPromptArabic(scene)).toContain("اليد الحرة على السرير");
   });
 
   it("avoids a bed pose when the room has no bed", () => {
@@ -660,5 +660,17 @@ describe("free hand visibility and position", () => {
     expect(prompt).not.toContain("no malformed visible fingers");
     expect(buildPromptEnglish(state)).toContain("free hand is off-frame");
     expect(buildPromptEnglish(state)).not.toContain("fingers relaxed");
+  });
+});
+
+describe("free hand control precedence", () => {
+  it("respects an explicit at-side selection despite an older pose hand value", () => {
+    const prompt = buildPromptEnglish({
+      ...baseState,
+      handPlacement: "touching-hair",
+      freeHandPosition: "at-side",
+    });
+    expect(prompt).toContain("the free hand is at the side");
+    expect(prompt).not.toContain("free hand is touching the hair");
   });
 });
