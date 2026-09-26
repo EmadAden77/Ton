@@ -400,33 +400,41 @@ describe("reference image preferences", () => {
 
 describe("hair descriptions", () => {
   it("includes the selected hair style in English", () => {
-    expect(buildPromptEnglish({
-      ...baseState,
-      hairStyle: "slicked-back",
-    })).toContain("slicked-back hair");
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        hairStyle: "slicked-back",
+      }),
+    ).toContain("slicked-back hair");
   });
 
   it("describes the hair length and texture in English", () => {
-    expect(buildPromptEnglish({
-      ...baseState,
-      hairLength: "short",
-      hairTexture: "curly",
-    })).toContain("short curly natural hair");
+    expect(
+      buildPromptEnglish({
+        ...baseState,
+        hairLength: "short",
+        hairTexture: "curly",
+      }),
+    ).toContain("short curly natural hair");
   });
 
   it("includes the selected hair style in Arabic", () => {
-    expect(buildPromptArabic({
-      ...baseState,
-      hairStyle: "side-part",
-    })).toContain("مفرق جانبياً");
+    expect(
+      buildPromptArabic({
+        ...baseState,
+        hairStyle: "side-part",
+      }),
+    ).toContain("مفرق جانبياً");
   });
 
   it("describes the hair length and texture in Arabic", () => {
-    expect(buildPromptArabic({
-      ...baseState,
-      hairLength: "long",
-      hairTexture: "straight",
-    })).toContain("شعر طويل أملس طبيعي");
+    expect(
+      buildPromptArabic({
+        ...baseState,
+        hairLength: "long",
+        hairTexture: "straight",
+      }),
+    ).toContain("شعر طويل أملس طبيعي");
   });
 
   it("keeps the hair description after clothing and before lighting", () => {
