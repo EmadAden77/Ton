@@ -139,4 +139,24 @@ describe("buildPromptArabic", () => {
     expect(prompt).not.toContain("سرير");
     expect(prompt).toContain("إنارة السقف");
   });
+
+  it("does not mention a bed for a bedside lamp in a room without a bed", () => {
+    const prompt = buildPromptArabic({
+      ...baseState,
+      roomHasBed: false,
+      lightingSource: "bedside-lamp",
+    });
+
+    expect(prompt).not.toContain("سرير");
+  });
+
+  it("uses an appropriate side lamp description without a bed", () => {
+    const prompt = buildPromptArabic({
+      ...baseState,
+      roomHasBed: false,
+      lightingSource: "bedside-lamp",
+    });
+
+    expect(prompt).toContain("مصدر الإضاءة مصباح جانبي");
+  });
 });
