@@ -53,4 +53,50 @@ export interface SceneState {
     | "large";
   // وجود سرير في الغرفة: نعم أو لا.
   roomHasBed: boolean;
+  clothingTop:
+    // تي شيرت.
+    | "t-shirt"
+    // قميص بأزرار.
+    | "shirt"
+    // كنزة بغطاء رأس.
+    | "hoodie"
+    // بلوزة نوم.
+    | "pajama-top"
+    // كنزة.
+    | "sweater"
+    // قميص بلا أكمام.
+    | "tank-top";
+  clothingBottom:
+    // بنطال جينز.
+    | "jeans"
+    // شورت.
+    | "shorts"
+    // بنطال نوم.
+    | "pajama-pants"
+    // بنطال رياضي.
+    | "sweatpants"
+    // القطعة السفلية غير ظاهرة.
+    | "none-visible";
+  clothingMaterial:
+    // قطن.
+    | "cotton"
+    // دنيم.
+    | "denim"
+    // صوف.
+    | "wool"
+    // بوليستر.
+    | "polyester"
+    // كتان.
+    | "linen";
+  clothingColor:
+    // لون محايد.
+    | "neutral"
+    // لون داكن.
+    | "dark"
+    // لون فاتح.
+    | "light"
+    // لون ترابي.
+    | "earth-tone"
+    // لون باستيل.
+    | "pastel";
 }

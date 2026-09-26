@@ -15,6 +15,10 @@ const baseState: SceneState = {
   roomCleanliness: "natural",
   roomWindow: "medium",
   roomHasBed: true,
+  clothingTop: "t-shirt",
+  clothingBottom: "shorts",
+  clothingMaterial: "cotton",
+  clothingColor: "neutral",
 };
 
 describe("buildPromptArabic", () => {
@@ -158,5 +162,33 @@ describe("buildPromptArabic", () => {
     });
 
     expect(prompt).toContain("مصدر الإضاءة مصباح جانبي");
+  });
+
+  it("describes the selected clothing top", () => {
+    expect(buildPromptArabic(baseState)).toContain("القطعة العلوية تي شيرت");
+    expect(
+      buildPromptArabic({ ...baseState, clothingTop: "hoodie" }),
+    ).toContain("القطعة العلوية هودي");
+  });
+
+  it("describes the selected clothing bottom without inventing a garment", () => {
+    expect(buildPromptArabic(baseState)).toContain("القطعة السفلية شورت");
+    expect(
+      buildPromptArabic({ ...baseState, clothingBottom: "none-visible" }),
+    ).toContain("القطعة السفلية غير ظاهرة في الإطار");
+  });
+
+  it("describes the selected clothing material", () => {
+    expect(buildPromptArabic(baseState)).toContain("مادة القماش قطن");
+    expect(
+      buildPromptArabic({ ...baseState, clothingMaterial: "linen" }),
+    ).toContain("مادة القماش كتان");
+  });
+
+  it("describes the selected clothing color category", () => {
+    expect(buildPromptArabic(baseState)).toContain("فئة اللون محايدة");
+    expect(
+      buildPromptArabic({ ...baseState, clothingColor: "earth-tone" }),
+    ).toContain("فئة اللون ترابية");
   });
 });

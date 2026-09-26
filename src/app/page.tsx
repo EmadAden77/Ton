@@ -61,6 +61,10 @@ export default function Home() {
     roomCleanliness: "natural",
     roomWindow: "medium",
     roomHasBed: true,
+    clothingTop: "t-shirt",
+    clothingBottom: "shorts",
+    clothingMaterial: "cotton",
+    clothingColor: "neutral",
   });
 
   return (
@@ -72,7 +76,8 @@ export default function Home() {
         <header className="px-1 pb-6">
           <h1 className="text-4xl font-bold">Ton</h1>
           <p className="mt-4 text-slate-300">
-            اختر إعدادات اللقطة والكاميرا والغرفة والإضاءة لمعاينة وصف المشهد.
+            اختر إعدادات اللقطة والكاميرا والغرفة والملابس والإضاءة لمعاينة وصف
+            المشهد.
           </p>
         </header>
 
@@ -237,6 +242,97 @@ export default function Home() {
                 className="h-4 w-4 accent-amber-300"
               />
               يوجد سرير (Bed)
+            </label>
+          </CollapsibleSection>
+
+          <CollapsibleSection title="الملابس" badge="4 حقول">
+            <label className="grid gap-2" htmlFor="clothing-top">
+              القطعة العلوية
+              <select
+                id="clothing-top"
+                value={state.clothingTop}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    clothingTop: event.target
+                      .value as SceneState["clothingTop"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="t-shirt">تي شيرت (T-shirt)</option>
+                <option value="shirt">قميص (Shirt)</option>
+                <option value="hoodie">هودي (Hoodie)</option>
+                <option value="pajama-top">بلوزة نوم (Pajama top)</option>
+                <option value="sweater">كنزة (Sweater)</option>
+                <option value="tank-top">قميص بلا أكمام (Tank top)</option>
+              </select>
+            </label>
+
+            <label className="grid gap-2" htmlFor="clothing-bottom">
+              القطعة السفلية
+              <select
+                id="clothing-bottom"
+                value={state.clothingBottom}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    clothingBottom: event.target
+                      .value as SceneState["clothingBottom"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="jeans">بنطال جينز (Jeans)</option>
+                <option value="shorts">شورت (Shorts)</option>
+                <option value="pajama-pants">بنطال نوم (Pajama pants)</option>
+                <option value="sweatpants">بنطال رياضي (Sweatpants)</option>
+                <option value="none-visible">غير ظاهرة (Not visible)</option>
+              </select>
+            </label>
+
+            <label className="grid gap-2" htmlFor="clothing-material">
+              المادة
+              <select
+                id="clothing-material"
+                value={state.clothingMaterial}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    clothingMaterial: event.target
+                      .value as SceneState["clothingMaterial"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="cotton">قطن (Cotton)</option>
+                <option value="denim">دنيم (Denim)</option>
+                <option value="wool">صوف (Wool)</option>
+                <option value="polyester">بوليستر (Polyester)</option>
+                <option value="linen">كتان (Linen)</option>
+              </select>
+            </label>
+
+            <label className="grid gap-2" htmlFor="clothing-color">
+              اللون
+              <select
+                id="clothing-color"
+                value={state.clothingColor}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    clothingColor: event.target
+                      .value as SceneState["clothingColor"],
+                  }))
+                }
+                className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+              >
+                <option value="neutral">محايد (Neutral)</option>
+                <option value="dark">داكن (Dark)</option>
+                <option value="light">فاتح (Light)</option>
+                <option value="earth-tone">ترابي (Earth tone)</option>
+                <option value="pastel">باستيل (Pastel)</option>
+              </select>
             </label>
           </CollapsibleSection>
 
