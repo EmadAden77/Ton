@@ -201,7 +201,7 @@ const poseTypeLabels: Record<SceneState["poseType"], string> = {
   // جلوس على الكرسي.
   "sitting-chair": "جالس على كرسي",
   // استلقاء على السرير.
-  "lying-bed": "مستلْقٍ على السرير",
+  "lying-bed": "مستلقٍ على السرير",
   // وقوف قرب النافذة.
   "standing-window": "واقف قرب النافذة",
 };
