@@ -7,6 +7,24 @@ const shotTypes: Record<SceneState["shotType"], string> = {
   "mirror-selfie": "سيلفي أمام المرآة",
 };
 
+const cameraDistances: Record<SceneState["cameraDistance"], string> = {
+  // الكاميرا قريبة من الوجه.
+  close: "قريبة من الوجه",
+  // الكاميرا عند طول الذراع.
+  "arm-length": "عند طول الذراع",
+  // الكاميرا عند امتداد الذراع.
+  extended: "عند امتداد الذراع",
+};
+
+const cameraAngles: Record<SceneState["cameraAngle"], string> = {
+  // الكاميرا بمستوى العين.
+  "eye-level": "بمستوى العين",
+  // الكاميرا أعلى من العين قليلاً.
+  "slightly-above": "أعلى من مستوى العين قليلاً",
+  // الكاميرا أسفل العين قليلاً.
+  "slightly-below": "أسفل من مستوى العين قليلاً",
+};
+
 const roomTypes: Record<SceneState["roomType"], string> = {
   // غرفة بسيطة.
   simple: "بسيطة",
@@ -41,5 +59,5 @@ const lightingIntensities: Record<SceneState["lightingIntensity"], string> = {
 };
 
 export function buildPromptArabic(state: SceneState): string {
-  return `لقطة ${shotTypes[state.shotType]}. الغرفة ${roomTypes[state.roomType]}. مصدر الإضاءة ${lightingSources[state.lightingSource]} وشدتها ${lightingIntensities[state.lightingIntensity]}.`;
+  return `لقطة ${shotTypes[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، وزاويتها ${cameraAngles[state.cameraAngle]}. الغرفة ${roomTypes[state.roomType]}. مصدر الإضاءة ${lightingSources[state.lightingSource]} وشدتها ${lightingIntensities[state.lightingIntensity]}.`;
 }
