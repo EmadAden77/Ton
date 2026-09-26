@@ -54,7 +54,7 @@ export interface SceneState {
   // وجود سرير في الغرفة: نعم أو لا.
   roomHasBed: boolean;
   clothingTop:
-    // قميص قطني قصير الأكمام.
+    // تي شيرت.
     | "t-shirt"
     // قميص بأزرار.
     | "shirt"
