@@ -2,7 +2,11 @@
 
 import { useState, type ReactNode } from "react";
 
-import { buildPromptArabic } from "@/features/prompt-studio/promptBuilder";
+import {
+  buildNegativePrompt,
+  buildPromptArabic,
+  buildPromptEnglish,
+} from "@/features/prompt-studio/promptBuilder";
 import type { SceneState } from "@/features/prompt-studio/types";
 
 type CollapsibleSectionProps = {
@@ -67,6 +71,10 @@ export default function Home() {
     clothingColor: "neutral",
   });
 
+  const englishPrompt = buildPromptEnglish(state);
+  const arabicPrompt = buildPromptArabic(state);
+  const negativePrompt = buildNegativePrompt(state);
+
   return (
     <main
       dir="rtl"
@@ -83,12 +91,55 @@ export default function Home() {
 
         <section
           aria-live="polite"
-          className="sticky top-0 z-10 rounded-xl border border-amber-300/20 bg-slate-900/95 p-5 shadow-lg backdrop-blur"
+          className="sticky top-0 z-10 max-h-[65vh] space-y-3 overflow-y-auto rounded-xl border border-amber-300/20 bg-slate-900/95 p-4 shadow-lg backdrop-blur sm:p-5"
         >
-          <h2 className="font-semibold">المعاينة الحية</h2>
-          <p className="mt-3 leading-8 text-slate-200">
-            {buildPromptArabic(state)}
-          </p>
+          <div className="rounded-lg border border-white/10 bg-slate-950/80 p-4">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="font-semibold">Prompt (English)</h2>
+              <button
+                type="button"
+                onClick={() => void navigator.clipboard.writeText(englishPrompt)}
+                className="rounded-lg border border-white/20 px-3 py-1 text-sm hover:bg-white/10"
+              >
+                نسخ
+              </button>
+            </div>
+            <p dir="ltr" className="mt-3 text-left leading-7 text-slate-200">
+              {englishPrompt}
+            </p>
+          </div>
+
+          <div className="rounded-lg border border-white/10 bg-slate-950/80 p-4">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="font-semibold">Prompt (العربية)</h2>
+              <button
+                type="button"
+                onClick={() => void navigator.clipboard.writeText(arabicPrompt)}
+                className="rounded-lg border border-white/20 px-3 py-1 text-sm hover:bg-white/10"
+              >
+                نسخ
+              </button>
+            </div>
+            <p className="mt-3 leading-7 text-slate-200">
+              {arabicPrompt}
+            </p>
+          </div>
+
+          <div className="rounded-lg border border-white/10 bg-slate-950/80 p-4">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="font-semibold">Negative Prompt</h2>
+              <button
+                type="button"
+                onClick={() => void navigator.clipboard.writeText(negativePrompt)}
+                className="rounded-lg border border-white/20 px-3 py-1 text-sm hover:bg-white/10"
+              >
+                نسخ
+              </button>
+            </div>
+            <p dir="ltr" className="mt-3 text-left leading-7 text-slate-200">
+              {negativePrompt}
+            </p>
+          </div>
         </section>
 
         <div className="mt-6 grid gap-4">
