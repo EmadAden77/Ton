@@ -1,118 +1,39 @@
 # Ton
 
-تطبيق ويب عربي لبناء Prompts منظمة لسيلفي واقعي داخل غرفة نوم، مع إعطاء الأولوية للهوية المرجعية، الفيزياء، التشريح، الإضاءة وسلوك تصوير الهاتف.
+تطبيق عربي لبناء وصف نصي لمشهد سيلفي داخل غرفة نوم. يركز التطوير على فصل حالة المشهد عن صياغة النص والواجهة.
 
-## الحالة الحالية
+## الحالة
 
-**Phase 1A: Draft / غير مختبرة بعد**
+دُمجت Phase 1A (أساس المشروع) وPhase 1C (إثبات بنية توليد النص) في `main`. تُبنى Phase 1B على شكل أقسام صغيرة؛ قسم الكاميرا هو الشريحة الحالية.
 
-هذه النسخة موجودة في الفرع `phase/1a-foundation` ولم يتم اعتبارها مكتملة بعد، لأن `npm install` وفحوص الجودة لم تُشغّل في بيئة التنفيذ الحالية.
+الواجهة عربية باتجاه RTL وبخلفية داكنة. تعرض اختيارات اللقطة والإضاءة والكاميرا، مع معاينة نصية تتغير عند تغييرها. لا يوجد رفع صورة أو توليد صورة أو اتصال بمزوّد خارجي.
 
-الموجود حالياً:
+## البنية
 
-- Next.js App Router
-- TypeScript
-- Tailwind CSS
-- ESLint
-- Prettier
-- Vitest
-- واجهة عربية RTL أولية ومتجاوبة
-- ملف `.env.example` لتوضيح مكان أسرار الخادم مستقبلاً
+- `src/features/prompt-studio/types.ts`: تعريف `SceneState` لخيارات المشهد.
+- `src/features/prompt-studio/promptBuilder.ts`: دالة `buildPromptArabic` النقية والخرائط العربية.
+- `src/features/prompt-studio/promptBuilder.test.ts`: اختبارات نص اللقطة والإضاءة والكاميرا.
+- `src/app/page.tsx`: عناصر الاختيار والمعاينة الحية.
 
-لا توجد في هذه المرحلة أي API خارجية، قاعدة بيانات، تسجيل دخول، Zustand أو Prompt Engine.
+السلسلة المستخدمة: `SceneState → buildPromptArabic → نص عربي`. لا توجد طبقة تحقق من المشهد في هذه الشريحة.
 
-## تثبيت الاعتماديات
+## المتطلبات والتشغيل
 
-تمت إزالة أرقام الإصدارات غير المتحقق منها. يستخدم `package.json` حالياً وسم `latest` بدلاً من اختراع أرقام إصدارات.
-
-عند التثبيت المحلي، نفّذ:
+يتطلب المشروع Node.js 22+ وnpm. ثبّت الاعتماديات الموجودة في ملف القفل:
 
 ```bash
-npm install
-```
-
-وسيُنشئ npm ملف `package-lock.json` الذي يثبت الإصدارات الفعلية التي تم حلها وقت التثبيت.
-
-إذا أردت إنشاء الأساس من الصفر بدلاً من استخدام الفرع الحالي، استخدم:
-
-```bash
-npx create-next-app@latest ton --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --use-npm
-cd ton
-npm install --save-dev vitest prettier eslint-config-prettier
-```
-
-## التشغيل
-
-```bash
+npm ci
 npm run dev
 ```
 
-ثم افتح:
-
-```text
-http://localhost:3000
-```
-
-## فحوص الجودة المطلوبة قبل اعتماد Phase 1A
+افتح `http://localhost:3000`. على Android/Termux استخدم Webpack لأن Turbopack غير مدعوم على ARM64:
 
 ```bash
-npm run lint
-npm run typecheck
-npm run test
-npm run format:check
+npm run dev -- --webpack
 ```
 
-ولتنسيق الملفات تلقائياً:
+## الفحوص
 
-```bash
-npm run format
-```
+يشغّل CI خمسة فحوص/خطوات جودة: `npm ci`، `npm run lint`، `npm run typecheck`، `npm run test`، `npm run format:check`.
 
-## ما المتوقع رؤيته؟
-
-صفحة داكنة عربية باتجاه RTL تحمل اسم **Ton** وشارة **Phase 1A draft** وثلاث بطاقات توضح الأساس التقني.
-
-كما يجب أن تظهر ملاحظة صريحة بأن النسخة Draft وغير مختبرة بعد.
-
-لا يفترض أن ترى محرر Prompt أو رفع صورة في هذه المرحلة.
-
-## متى تعتبر Phase 1A مكتملة؟
-
-فقط بعد نجاح:
-
-1. `npm install`
-2. `npm run lint`
-3. `npm run typecheck`
-4. `npm run test`
-5. `npm run dev` وفتح الصفحة بنجاح
-
-حتى ذلك الوقت لا نستخدم كلمة Ready ولا ننتقل إلى Phase 1B.
-
-## العمارة المستهدفة
-
-```text
-UI
-  ↓
-Structured SceneState
-  ↓
-Scene Validator
-  ↓
-Prompt Builder
-  ↓
-Arabic Prompt / English Prompt / Negative Constraints
-```
-
-سيتم إثبات هذه السلسلة عملياً في **Phase 1C** بعد بناء الهيكل البصري في Phase 1B.
-
-## الأمن والخصوصية
-
-- لا تضع أي مفتاح API أو كلمة مرور في المستودع.
-- الأسرار المستقبلية توضع محلياً في `.env.local` أو في Secret Store على منصة النشر.
-- أي مفتاح لمزود صور يجب أن يبقى في الخادم، وفق المسار: `Browser → Next.js Server → Provider API`.
-- المشروع لا يضمن ثبات الهوية 100%، لأن النتيجة النهائية تعتمد على قدرات وسياسات نموذج الصور الخارجي.
-
-## المراحل القادمة
-
-- Phase 1B: الهيكل البصري لأقسام الاستوديو فقط، بعد موافقة المستخدم على Phase 1A.
-- Phase 1C: SceneState مبسط + Validator بسيط + PromptBuilder + اختبار + Live Preview.
-- Phase 2 وما بعدها: إضافة الأقسام بالتدرج مع قواعد التوافق والاختبارات.
+لا تضع مفاتيح API أو كلمات مرور في المستودع. أي تكامل مستقبلي مع مزوّد صور يحتاج إبقاء المفتاح في الخادم.
