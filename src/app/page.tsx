@@ -59,10 +59,7 @@ export default function Home() {
           </p>
         </header>
 
-        <section
-          aria-label="إعدادات Ton"
-          className="grid gap-4"
-        >
+        <section aria-label="إعدادات Ton" className="grid gap-4">
           <label className="grid gap-2" htmlFor="scenario">
             <span className="font-medium text-slate-200">سيناريو جاهز</span>
             <select
