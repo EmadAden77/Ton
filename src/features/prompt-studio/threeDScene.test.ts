@@ -103,7 +103,10 @@ describe("3D SceneState adapter", () => {
   it("offsets side-soft laterally while preserving the capture target", () => {
     const state = createDefaultSceneState();
     const centered = getThreeDSelfieCamera(state);
-    const side = getThreeDSelfieCamera({ ...state, phonePosition: "side-soft" });
+    const side = getThreeDSelfieCamera({
+      ...state,
+      phonePosition: "side-soft",
+    });
 
     expect(side.target).toEqual(centered.target);
     expect(side.position).not.toEqual(centered.position);

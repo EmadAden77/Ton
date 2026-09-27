@@ -178,7 +178,10 @@ export function getThreeDSelfieCamera(
 ): ThreeDSelfieCameraConfig {
   const pose = getThreeDPose(state.poseType);
   const baseVector = subtract(pose.phonePosition, pose.selfieTarget);
-  const distanceScaled = scale(baseVector, CAMERA_DISTANCE_SCALE[state.cameraDistance]);
+  const distanceScaled = scale(
+    baseVector,
+    CAMERA_DISTANCE_SCALE[state.cameraDistance],
+  );
   let position = add(pose.selfieTarget, distanceScaled);
 
   const angleOffset = CAMERA_ANGLE_OFFSET[state.cameraAngle];
@@ -188,7 +191,10 @@ export function getThreeDSelfieCamera(
     position = add(position, scale(horizontalRight(baseVector), 0.22));
   } else if (state.phonePosition === "chest-level") {
     position = add(position, [0, -0.32, 0]);
-  } else if (state.phonePosition === "above-chest" && state.poseType !== "lying-bed") {
+  } else if (
+    state.phonePosition === "above-chest" &&
+    state.poseType !== "lying-bed"
+  ) {
     position = add(position, [0, 0.18, 0]);
   }
 
