@@ -47,6 +47,12 @@ const CAMERA_ANGLE_OFFSET: Record<SceneState["cameraAngle"], number> = {
   "slightly-below": -0.14,
 };
 
+const FREE_STANDING_MICRO_POSE: readonly SceneState["poseType"][] = [
+  "standing",
+  "standing-window",
+  "standing-wardrobe",
+];
+
 export const THREE_D_POSES: readonly ThreeDPoseConfig[] = [
   {
     id: "standing",
@@ -268,11 +274,24 @@ export function getThreeDPose(
   return THREE_D_POSES.find((pose) => pose.id === poseType) ?? THREE_D_POSES[0];
 }
 
+export function canApplyWholeBodyMicroPoseApproximation(
+  poseType: SceneState["poseType"],
+): boolean {
+  return FREE_STANDING_MICRO_POSE.includes(poseType);
+}
+
 export function getThreeDPoseForState(state: SceneState): ThreeDPoseConfig {
   const base = getThreeDPose(state.poseType);
   const micro = getThreeDMicroPoseTransform(state);
-  const positionOffset = micro.positionOffset as Vec3;
-  const rotationOffset = micro.rotationOffset as Vec3;
+  const canApproximate = canApplyWholeBodyMicroPoseApproximation(
+    state.poseType,
+  );
+  const positionOffset = (
+    canApproximate ? micro.positionOffset : [0, 0, 0]
+  ) as Vec3;
+  const rotationOffset = (
+    canApproximate ? micro.rotationOffset : [0, 0, 0]
+  ) as Vec3;
 
   return {
     ...base,
@@ -335,5 +354,5 @@ export function selectThreeDLighting(
   state: SceneState,
   lightingMode: SceneState["lightingMode"],
 ): SceneState {
-  return { ...state, lightingMode };
+  return resolveLockedState({ ...state, lightingMode });
 }

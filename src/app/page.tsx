@@ -25,12 +25,16 @@ export default function Home() {
     field: K,
     value: SceneState[K],
   ) {
-    setState((current) => ({ ...current, [field]: value }));
+    setState((current) =>
+      resolveLockedState({ ...current, [field]: value } as SceneState),
+    );
   }
 
   function handleScenarioChange(id: NonNullable<SceneState["scenario"]>) {
     setState((current) => {
-      if (id === "none") return { ...current, scenario: "none" };
+      if (id === "none") {
+        return resolveLockedState({ ...current, scenario: "none" });
+      }
       const preset = SCENARIOS.find((item) => item.id === id);
       return preset ? preset.apply(current) : current;
     });

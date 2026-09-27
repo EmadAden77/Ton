@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  pelvisOrientationOptions,
   legConfigurationOptions,
+  pelvisOrientationOptions,
   torsoLeanOptions,
   weightDistributionOptions,
 } from "../microPose";
@@ -123,13 +123,18 @@ export function PromptControls({
           <textarea
             id="identity-notes"
             value={state.identityNotes}
+            disabled={!state.referenceProvided}
             onChange={(event) =>
               updateField("identityNotes", event.target.value)
             }
-            placeholder="مثال: شعر قصير، حاجب رقيق، عيون واسعة"
+            placeholder={
+              state.referenceProvided
+                ? "مثال: شعر قصير، حاجب رقيق، عيون واسعة"
+                : "فعّل الصورة المرجعية أولاً"
+            }
             rows={3}
             maxLength={200}
-            className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100"
+            className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
           />
         </label>
 
@@ -178,7 +183,7 @@ export function PromptControls({
           id="clothing-material"
           field="clothingMaterial"
           state={resolvedState}
-          label="المادة"
+          label="خامة القطعة العلوية"
           options={clothingMaterialOptions}
           onChange={(value) =>
             updateField(

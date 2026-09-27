@@ -46,10 +46,8 @@ export default function RoomScene({ sceneState }: RoomSceneProps) {
       : sceneState.pelvisOrientation === "slightly-right"
         ? 8
         : 0;
-  const rotation =
-    position.rotation +
-    HEAD_ROTATIONS[sceneState.headDirection] +
-    pelvisRotation;
+  const bodyRotation = position.rotation + pelvisRotation;
+  const headRotation = HEAD_ROTATIONS[sceneState.headDirection];
   const weightShift =
     sceneState.weightDistribution === "left-biased"
       ? -6
@@ -75,6 +73,8 @@ export default function RoomScene({ sceneState }: RoomSceneProps) {
         ? "#60a5fa"
         : "#7dd3fc";
   const [leftLeg, rightLeg] = LEG_PATHS[sceneState.legConfiguration];
+  const headX = torsoShift;
+  const headY = -7 + torsoDepthShift;
 
   return (
     <svg
@@ -88,8 +88,8 @@ export default function RoomScene({ sceneState }: RoomSceneProps) {
     >
       <title id="room-scene-title">عرض الغرفة من الأعلى</title>
       <desc id="room-scene-description">
-        مخطط مبسط للغرفة يوضح الأثاث وموقع الشخص واتجاهه وتفاصيل الوضعية الدقيقة
-        المختارة.
+        مخطط مبسط للغرفة يوضح الأثاث وموقع الشخص واتجاه الجذع والرأس وتفاصيل
+        الوضعية الدقيقة المختارة.
       </desc>
 
       <rect width="400" height="300" rx="12" fill="#6b6b6b" />
@@ -123,7 +123,7 @@ export default function RoomScene({ sceneState }: RoomSceneProps) {
       </text>
 
       <g
-        transform={`translate(${position.x + weightShift} ${position.y}) rotate(${rotation})`}
+        transform={`translate(${position.x + weightShift} ${position.y}) rotate(${bodyRotation})`}
       >
         <circle
           r="20"
@@ -133,12 +133,6 @@ export default function RoomScene({ sceneState }: RoomSceneProps) {
           opacity="0.95"
         />
 
-        <circle
-          cx={torsoShift}
-          cy={-7 + torsoDepthShift}
-          r="4"
-          fill="#0f172a"
-        />
         <line
           x1="0"
           y1="-2"
@@ -172,12 +166,15 @@ export default function RoomScene({ sceneState }: RoomSceneProps) {
           strokeLinecap="round"
         />
 
-        <path d="M0 -28 L-6 -20 L6 -20 Z" fill="#bae6fd" />
+        <g transform={`translate(${headX} ${headY}) rotate(${headRotation})`}>
+          <circle cx="0" cy="0" r="4" fill="#0f172a" />
+          <path d="M0 -21 L-6 -13 L6 -13 Z" fill="#bae6fd" />
+        </g>
       </g>
 
       <text x="18" y="282" fill="#e2e8f0" fontSize="10">
         الساقان: {sceneState.legConfiguration} · الوزن:{" "}
-        {sceneState.weightDistribution}
+        {sceneState.weightDistribution} · الرأس: {sceneState.headDirection}
       </text>
     </svg>
   );
