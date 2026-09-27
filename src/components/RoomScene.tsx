@@ -88,8 +88,8 @@ export default function RoomScene({ sceneState }: RoomSceneProps) {
     >
       <title id="room-scene-title">عرض الغرفة من الأعلى</title>
       <desc id="room-scene-description">
-        مخطط مبسط للغرفة يوضح الأثاث وموقع الشخص واتجاهه وتفاصيل الوضعية
-        الدقيقة المختارة.
+        مخطط مبسط للغرفة يوضح الأثاث وموقع الشخص واتجاهه وتفاصيل الوضعية الدقيقة
+        المختارة.
       </desc>
 
       <rect width="400" height="300" rx="12" fill="#6b6b6b" />
@@ -176,7 +176,8 @@ export default function RoomScene({ sceneState }: RoomSceneProps) {
       </g>
 
       <text x="18" y="282" fill="#e2e8f0" fontSize="10">
-        الساقان: {sceneState.legConfiguration} · الوزن: {sceneState.weightDistribution}
+        الساقان: {sceneState.legConfiguration} · الوزن:{" "}
+        {sceneState.weightDistribution}
       </text>
     </svg>
   );

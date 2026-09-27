@@ -65,9 +65,12 @@ export function resolveLockedState(state: SceneState): SceneState {
       const currentOption = constraints.options.find(
         (option) => option.value === currentValue,
       );
-      const fallback = constraints.options.find((option) => !option.disabled)?.value;
+      const fallback = constraints.options.find(
+        (option) => !option.disabled,
+      )?.value;
       const nextValue =
-        constraints.lockedTo ?? (currentOption?.disabled ? fallback : undefined);
+        constraints.lockedTo ??
+        (currentOption?.disabled ? fallback : undefined);
 
       if (nextValue !== undefined && currentValue !== nextValue) {
         resolved = {

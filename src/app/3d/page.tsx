@@ -78,11 +78,12 @@ export default function Page() {
     );
   };
 
-  const selectMicroPose = <K extends
-    | "legConfiguration"
-    | "torsoLean"
-    | "pelvisOrientation"
-    | "weightDistribution"
+  const selectMicroPose = <
+    K extends
+      | "legConfiguration"
+      | "torsoLean"
+      | "pelvisOrientation"
+      | "weightDistribution",
   >(
     field: K,
     value: SceneState[K],
