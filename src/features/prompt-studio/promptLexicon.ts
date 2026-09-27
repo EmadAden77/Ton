@@ -17,16 +17,17 @@ export const lightingModeLabels: Record<SceneState["lightingMode"], string> = {
     "natural daylight entering through the open back-window curtains; indoor practical lights are off, with realistic window-to-room contrast",
 };
 
-export const lightingModeLabelsAr: Record<SceneState["lightingMode"], string> = {
-  "as-in-photo":
-    "سبوتات سقف غائرة وخافتة مع مصباح سرير دافئ، بتناقص ضوئي طبيعي وظلال ناتجة عن مصادر الإضاءة العملية المختلطة",
-  "phone-screen":
-    "شاشة الهاتف هي مصدر الضوء النشط الوحيد على الوجه؛ سبوتات السقف ومصباح السرير مطفأة، والغرفة شديدة العتمة مع تناقص سريع للضوء وضجيج طبيعي في الظلال",
-  "daylight-closed":
-    "ضوء نهار ناعم ومنتشر يمر عبر الستائر الداكنة المغلقة، مع إطفاء الإضاءة الداخلية العملية",
-  "daylight-open":
-    "ضوء نهار طبيعي يدخل عبر ستائر النافذة الخلفية المفتوحة، مع إطفاء الإضاءة الداخلية والحفاظ على تباين واقعي بين النافذة والغرفة",
-};
+export const lightingModeLabelsAr: Record<SceneState["lightingMode"], string> =
+  {
+    "as-in-photo":
+      "سبوتات سقف غائرة وخافتة مع مصباح سرير دافئ، بتناقص ضوئي طبيعي وظلال ناتجة عن مصادر الإضاءة العملية المختلطة",
+    "phone-screen":
+      "شاشة الهاتف هي مصدر الضوء النشط الوحيد على الوجه؛ سبوتات السقف ومصباح السرير مطفأة، والغرفة شديدة العتمة مع تناقص سريع للضوء وضجيج طبيعي في الظلال",
+    "daylight-closed":
+      "ضوء نهار ناعم ومنتشر يمر عبر الستائر الداكنة المغلقة، مع إطفاء الإضاءة الداخلية العملية",
+    "daylight-open":
+      "ضوء نهار طبيعي يدخل عبر ستائر النافذة الخلفية المفتوحة، مع إطفاء الإضاءة الداخلية والحفاظ على تباين واقعي بين النافذة والغرفة",
+  };
 
 export const identityPriorityLabels: Record<
   SceneState["identityPriority"],
@@ -46,12 +47,13 @@ export const identityPriorityLabelsAr: Record<
   flexible: "مرنة",
 };
 
-export const phonePositionLabels: Record<SceneState["phonePosition"], string> = {
-  "front-of-face": "held directly in front of the face",
-  "chest-level": "held at chest level",
-  "above-chest": "raised above the chest",
-  "side-soft": "held slightly to the side",
-};
+export const phonePositionLabels: Record<SceneState["phonePosition"], string> =
+  {
+    "front-of-face": "held directly in front of the face",
+    "chest-level": "held at chest level",
+    "above-chest": "raised above the chest",
+    "side-soft": "held slightly to the side",
+  };
 
 export const phonePositionLabelsAr: Record<
   SceneState["phonePosition"],
@@ -162,16 +164,14 @@ export const englishClothingMaterials: Record<
   linen: "linen",
 };
 
-export const clothingColorLabels: Record<
-  SceneState["clothingColor"],
-  string
-> = {
-  neutral: "محايدة",
-  dark: "داكنة",
-  light: "فاتحة",
-  "earth-tone": "ترابية",
-  pastel: "باستيل",
-};
+export const clothingColorLabels: Record<SceneState["clothingColor"], string> =
+  {
+    neutral: "محايدة",
+    dark: "داكنة",
+    light: "فاتحة",
+    "earth-tone": "ترابية",
+    pastel: "باستيل",
+  };
 
 export const englishClothingColors: Record<
   SceneState["clothingColor"],
@@ -240,16 +240,14 @@ export const englishPoseTypes: Record<SceneState["poseType"], string> = {
   "standing-window": "standing near the window",
 };
 
-export const headDirectionLabels: Record<
-  SceneState["headDirection"],
-  string
-> = {
-  forward: "للأمام",
-  "slightly-left": "لليسار قليلاً",
-  "slightly-right": "لليمين قليلاً",
-  down: "للأسفل",
-  "up-soft": "للأعلى قليلاً",
-};
+export const headDirectionLabels: Record<SceneState["headDirection"], string> =
+  {
+    forward: "للأمام",
+    "slightly-left": "لليسار قليلاً",
+    "slightly-right": "لليمين قليلاً",
+    down: "للأسفل",
+    "up-soft": "للأعلى قليلاً",
+  };
 
 export const englishHeadDirections: Record<
   SceneState["headDirection"],
@@ -327,12 +325,13 @@ export const eyeDirectionLabels: Record<SceneState["eyeDirection"], string> = {
   "down-soft": "للأسفل بلطف",
 };
 
-export const englishEyeDirections: Record<SceneState["eyeDirection"], string> = {
-  camera: "at the camera",
-  mirror: "at the mirror",
-  "away-soft": "softly away",
-  "down-soft": "softly down",
-};
+export const englishEyeDirections: Record<SceneState["eyeDirection"], string> =
+  {
+    camera: "at the camera",
+    mirror: "at the mirror",
+    "away-soft": "softly away",
+    "down-soft": "softly down",
+  };
 
 export const mouthStateLabels: Record<SceneState["mouthState"], string> = {
   closed: "مغلق",
