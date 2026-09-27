@@ -187,9 +187,9 @@ describe("conflicts", () => {
     ).toContain("سيلفي المرآة يتطلب مسافة طول الذراع");
   });
 
-  it("returns null for fields without rules", () => {
+  it("returns null only for fields that still have no compatibility rules", () => {
     expect(getFieldConstraints("lightingMode", baseState)).toBeNull();
     expect(getFieldConstraints("clothingTop", baseState)).toBeNull();
-    expect(getFieldConstraints("hairStyle", baseState)).toBeNull();
+    expect(getFieldConstraints("hairStyle", baseState)).not.toBeNull();
   });
 });
