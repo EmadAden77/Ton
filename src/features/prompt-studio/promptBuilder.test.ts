@@ -75,9 +75,9 @@ describe("person-first prompt structure", () => {
   it("places the room after the subject description", () => {
     const prompt = buildPromptEnglish(baseState);
     expect(prompt.indexOf("the subject is standing")).toBeGreaterThanOrEqual(0);
-    expect(prompt.indexOf("in the fixed realistic modern bedroom")).toBeGreaterThan(
-      prompt.indexOf("the subject is standing"),
-    );
+    expect(
+      prompt.indexOf("in the fixed realistic modern bedroom"),
+    ).toBeGreaterThan(prompt.indexOf("the subject is standing"));
   });
 
   it("starts the Arabic prompt with the identity directive when a reference exists", () => {
@@ -93,9 +93,9 @@ describe("person-first prompt structure", () => {
   it("places the Arabic room after the subject description", () => {
     const prompt = buildPromptArabic(baseState);
     expect(prompt.indexOf("الشخص واقف")).toBeGreaterThanOrEqual(0);
-    expect(prompt.indexOf("في غرفة النوم الحديثة الواقعية الثابتة")).toBeGreaterThan(
-      prompt.indexOf("الشخص واقف"),
-    );
+    expect(
+      prompt.indexOf("في غرفة النوم الحديثة الواقعية الثابتة"),
+    ).toBeGreaterThan(prompt.indexOf("الشخص واقف"));
   });
 
   it("adds trimmed identity notes directly after the identity directive", () => {
@@ -135,7 +135,9 @@ describe("lighting modes", () => {
   it("describes open-curtain daylight in English", () => {
     expect(
       buildPromptEnglish({ ...baseState, lightingMode: "daylight-open" }),
-    ).toContain("natural daylight entering through the open back-window curtains");
+    ).toContain(
+      "natural daylight entering through the open back-window curtains",
+    );
   });
 
   it("describes as-in-photo lighting in English", () => {

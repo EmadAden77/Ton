@@ -398,9 +398,7 @@ function arabicIdentityDescription(state: SceneState): string {
   if (!state.referenceProvided) return "";
 
   const notes = state.identityNotes.trim();
-  const notesDescription = notes
-    ? ` ملاحظات إضافية عن الهوية: ${notes}.`
-    : "";
+  const notesDescription = notes ? ` ملاحظات إضافية عن الهوية: ${notes}.` : "";
   return `حافظ على هوية الشخص من الصورة المرجعية بأولوية ${identityPriorityLabelsAr[state.identityPriority]}.${notesDescription} `;
 }
 
