@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  arabicCaptureGeometry,
   effectiveEyeDirection,
   effectiveMouthState,
   englishCaptureGeometry,
@@ -44,6 +45,26 @@ describe("prompt fragments", () => {
     expect(englishCaptureGeometry(state)).toContain(
       "phone body itself remains outside the captured frame",
     );
+  });
+
+  it("uses stronger elbow extension for extended front selfies", () => {
+    const state = {
+      ...createDefaultSceneState(),
+      cameraDistance: "extended" as const,
+    };
+
+    expect(englishCaptureGeometry(state)).toContain("near full extension");
+    expect(englishCaptureGeometry(state)).toContain("minimal elbow flexion");
+    expect(arabicCaptureGeometry(state)).toContain("قرب الامتداد الكامل");
+  });
+
+  it("uses more elbow flexion for close front selfies", () => {
+    const state = {
+      ...createDefaultSceneState(),
+      cameraDistance: "close" as const,
+    };
+
+    expect(englishCaptureGeometry(state)).toContain("more flexed at the elbow");
   });
 
   it("keeps mirror-selfie phone visible in the reflection", () => {
