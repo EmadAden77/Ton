@@ -10,7 +10,7 @@ import { createDefaultSceneState } from "./state";
 
 describe("prompt fragments", () => {
   it("keeps identity text conditional on a reference image", () => {
-    const state = createDefaultSceneState();
+    const state = { ...createDefaultSceneState(), referenceProvided: true };
     expect(englishIdentityDescription(state)).toContain("reference image");
     expect(
       englishIdentityDescription({ ...state, referenceProvided: false }),
