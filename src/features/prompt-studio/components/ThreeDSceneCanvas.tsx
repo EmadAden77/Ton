@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
 import * as THREE from "three";
@@ -8,12 +8,16 @@ import * as THREE from "three";
 import {
   getThreeDLighting,
   getThreeDPose,
+  getThreeDSelfieCamera,
   type ThreeDPoseConfig,
+  type ThreeDSelfieCameraConfig,
   type Vec3,
 } from "../threeDScene";
 import type { SceneState } from "../types";
 
 const XBOT_URL = "https://threejs.org/examples/models/gltf/Xbot.glb";
+
+export type ThreeDViewMode = "viewer" | "selfie";
 
 function Character({ pose }: { pose: ThreeDPoseConfig }) {
   const { scene } = useGLTF(XBOT_URL);
@@ -37,9 +41,15 @@ function Character({ pose }: { pose: ThreeDPoseConfig }) {
   );
 }
 
-function Phone({ position }: { position: Vec3 }) {
+function Phone({ position, target }: { position: Vec3; target: Vec3 }) {
+  const groupRef = useRef<THREE.Group>(null);
+
+  useEffect(() => {
+    groupRef.current?.lookAt(...target);
+  }, [target]);
+
   return (
-    <group position={position}>
+    <group ref={groupRef} position={position}>
       <mesh castShadow>
         <boxGeometry args={[0.12, 0.24, 0.025]} />
         <meshStandardMaterial
@@ -56,14 +66,36 @@ function Phone({ position }: { position: Vec3 }) {
   );
 }
 
-function CameraController({ pose }: { pose: ThreeDPoseConfig }) {
+function CameraController({
+  pose,
+  selfieCamera,
+  viewMode,
+}: {
+  pose: ThreeDPoseConfig;
+  selfieCamera: ThreeDSelfieCameraConfig;
+  viewMode: ThreeDViewMode;
+}) {
   const { camera } = useThree();
 
   useEffect(() => {
-    camera.position.set(...pose.viewerPosition);
-    camera.lookAt(...pose.viewerTarget);
+    if (!(camera instanceof THREE.PerspectiveCamera)) return;
+
+    if (viewMode === "selfie") {
+      camera.position.set(...selfieCamera.position);
+      camera.lookAt(...selfieCamera.target);
+      camera.fov = selfieCamera.fov;
+      camera.near = selfieCamera.near;
+      camera.far = selfieCamera.far;
+    } else {
+      camera.position.set(...pose.viewerPosition);
+      camera.lookAt(...pose.viewerTarget);
+      camera.fov = 45;
+      camera.near = 0.1;
+      camera.far = 50;
+    }
+
     camera.updateProjectionMatrix();
-  }, [camera, pose]);
+  }, [camera, pose, selfieCamera, viewMode]);
 
   return null;
 }
@@ -311,8 +343,15 @@ function BedroomEnvironment({
   );
 }
 
-function Scene({ sceneState }: { sceneState: SceneState }) {
+function Scene({
+  sceneState,
+  viewMode,
+}: {
+  sceneState: SceneState;
+  viewMode: ThreeDViewMode;
+}) {
   const pose = getThreeDPose(sceneState.poseType);
+  const selfieCamera = getThreeDSelfieCamera(sceneState);
   const light = getThreeDLighting(sceneState.lightingMode);
 
   return (
@@ -322,27 +361,41 @@ function Scene({ sceneState }: { sceneState: SceneState }) {
       <Suspense fallback={null}>
         <Character pose={pose} />
       </Suspense>
-      <Phone position={pose.phonePosition} />
+      {viewMode === "viewer" ? (
+        <Phone position={selfieCamera.position} target={selfieCamera.target} />
+      ) : null}
       <pointLight
-        position={pose.phonePosition}
+        position={selfieCamera.position}
         color="#b9ddff"
         intensity={light.phoneIntensity}
         distance={2.2}
       />
-      <CameraController pose={pose} />
-      <OrbitControls
-        target={pose.viewerTarget}
-        enableDamping
-        dampingFactor={0.08}
-        minDistance={1.5}
-        maxDistance={9}
-        maxPolarAngle={Math.PI / 2 - 0.02}
+      <CameraController
+        pose={pose}
+        selfieCamera={selfieCamera}
+        viewMode={viewMode}
       />
+      {viewMode === "viewer" ? (
+        <OrbitControls
+          target={pose.viewerTarget}
+          enableDamping
+          dampingFactor={0.08}
+          minDistance={1.5}
+          maxDistance={9}
+          maxPolarAngle={Math.PI / 2 - 0.02}
+        />
+      ) : null}
     </>
   );
 }
 
-export function ThreeDSceneCanvas({ sceneState }: { sceneState: SceneState }) {
+export function ThreeDSceneCanvas({
+  sceneState,
+  viewMode,
+}: {
+  sceneState: SceneState;
+  viewMode: ThreeDViewMode;
+}) {
   const pose = getThreeDPose(sceneState.poseType);
 
   return (
@@ -356,7 +409,7 @@ export function ThreeDSceneCanvas({ sceneState }: { sceneState: SceneState }) {
         far: 50,
       }}
     >
-      <Scene sceneState={sceneState} />
+      <Scene sceneState={sceneState} viewMode={viewMode} />
     </Canvas>
   );
 }
