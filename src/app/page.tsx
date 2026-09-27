@@ -1,9 +1,36 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 
 import RoomScene from "@/components/RoomScene";
-import { getFieldConstraints } from "@/features/prompt-studio/constraints";
+import { CollapsibleSection } from "@/features/prompt-studio/components/CollapsibleSection";
+import { PromptPreview } from "@/features/prompt-studio/components/PromptPreview";
+import { SmartSelect } from "@/features/prompt-studio/components/SmartSelect";
+import {
+  backPostureOptions,
+  cameraAngleOptions,
+  cameraDistanceOptions,
+  clothingBottomOptions,
+  clothingColorOptions,
+  clothingMaterialOptions,
+  clothingTopOptions,
+  eyeDirectionOptions,
+  faceExpressionOptions,
+  freeHandPositionOptions,
+  hairLengthOptions,
+  hairStyleOptions,
+  hairTextureOptions,
+  handFingersStateOptions,
+  handVisibilityOptions,
+  headDirectionOptions,
+  identityPriorityOptions,
+  lightingModeOptions,
+  mouthStateOptions,
+  phonePositionOptions,
+  poseTypeOptions,
+  shoulderPositionOptions,
+  shotTypeOptions,
+} from "@/features/prompt-studio/options";
 import {
   buildNegativePrompt,
   buildPromptArabic,
@@ -16,271 +43,8 @@ import {
 } from "@/features/prompt-studio/state";
 import type { SceneState } from "@/features/prompt-studio/types";
 
-type SelectOption = { value: string; label: string };
-
-type CollapsibleSectionProps = {
-  title: string;
-  badge: string;
-  defaultOpen?: boolean;
-  children: ReactNode;
-};
-
-interface SmartSelectProps {
-  id: string;
-  field: keyof SceneState;
-  state: SceneState;
-  onChange: (value: string) => void;
-  label: string;
-  options: SelectOption[];
-  className?: string;
-}
-
-const shotTypeOptions: SelectOption[] = [
-  { value: "front-selfie", label: "سيلفي أمامي (Front selfie)" },
-  { value: "mirror-selfie", label: "سيلفي مرآة (Mirror selfie)" },
-];
-const cameraDistanceOptions: SelectOption[] = [
-  { value: "close", label: "قريبة (Close)" },
-  { value: "arm-length", label: "طول الذراع (Arm length)" },
-  { value: "extended", label: "ذراع ممدودة (Extended)" },
-];
-const cameraAngleOptions: SelectOption[] = [
-  { value: "eye-level", label: "بمستوى العين (Eye level)" },
-  { value: "slightly-above", label: "أعلى قليلاً (Slightly above)" },
-  { value: "slightly-below", label: "أسفل قليلاً (Slightly below)" },
-];
-const lightingModeOptions: SelectOption[] = [
-  { value: "as-in-photo", label: "كما في الصورة (As in photo)" },
-  { value: "phone-screen", label: "ضوء شاشة الهاتف (Phone screen)" },
-  {
-    value: "daylight-closed",
-    label: "ضوء نهار — ستائر مغلقة (Daylight, closed curtains)",
-  },
-  {
-    value: "daylight-open",
-    label: "ضوء نهار — ستائر مفتوحة (Daylight, open curtains)",
-  },
-];
-const identityPriorityOptions: SelectOption[] = [
-  { value: "strict", label: "قصوى (Strict)" },
-  { value: "balanced", label: "متوازنة (Balanced)" },
-  { value: "flexible", label: "مرنة (Flexible)" },
-];
-const clothingTopOptions: SelectOption[] = [
-  { value: "t-shirt", label: "تي شيرت (T-shirt)" },
-  { value: "shirt", label: "قميص (Shirt)" },
-  { value: "hoodie", label: "هودي (Hoodie)" },
-  { value: "pajama-top", label: "بلوزة نوم (Pajama top)" },
-  { value: "sweater", label: "كنزة (Sweater)" },
-  { value: "tank-top", label: "قميص بلا أكمام (Tank top)" },
-];
-const clothingBottomOptions: SelectOption[] = [
-  { value: "jeans", label: "بنطال جينز (Jeans)" },
-  { value: "shorts", label: "شورت (Shorts)" },
-  { value: "pajama-pants", label: "بنطال نوم (Pajama pants)" },
-  { value: "sweatpants", label: "بنطال رياضي (Sweatpants)" },
-  { value: "none-visible", label: "غير ظاهرة (Not visible)" },
-];
-const clothingMaterialOptions: SelectOption[] = [
-  { value: "cotton", label: "قطن (Cotton)" },
-  { value: "denim", label: "دنيم (Denim)" },
-  { value: "wool", label: "صوف (Wool)" },
-  { value: "polyester", label: "بوليستر (Polyester)" },
-  { value: "linen", label: "كتان (Linen)" },
-];
-const clothingColorOptions: SelectOption[] = [
-  { value: "neutral", label: "محايد (Neutral)" },
-  { value: "dark", label: "داكن (Dark)" },
-  { value: "light", label: "فاتح (Light)" },
-  { value: "earth-tone", label: "ترابي (Earth tone)" },
-  { value: "pastel", label: "باستيل (Pastel)" },
-];
-const hairStyleOptions: SelectOption[] = [
-  { value: "natural", label: "طبيعي (Natural)" },
-  { value: "combed", label: "ممشط (Combed)" },
-  { value: "messy-light", label: "فوضوي خفيف (Light messy)" },
-  { value: "combed-back", label: "ممشط للخلف (Combed back)" },
-  { value: "side-part", label: "مفرق جانبي (Side part)" },
-];
-const hairLengthOptions: SelectOption[] = [
-  { value: "short", label: "قصير (Short)" },
-  { value: "medium", label: "متوسط (Medium)" },
-  { value: "long", label: "طويل (Long)" },
-];
-const hairTextureOptions: SelectOption[] = [
-  { value: "straight", label: "أملس (Straight)" },
-  { value: "wavy", label: "مموج (Wavy)" },
-  { value: "curly", label: "مجعد (Curly)" },
-];
-const poseTypeOptions: SelectOption[] = [
-  { value: "standing", label: "وقوف (Standing)" },
-  { value: "sitting-bed", label: "جلوس على السرير (Sitting on bed)" },
-  { value: "sitting-chair", label: "جلوس على كرسي (Sitting on chair)" },
-  { value: "lying-bed", label: "استلقاء على السرير (Lying on bed)" },
-  { value: "standing-window", label: "وقوف قرب النافذة (Standing by window)" },
-];
-const headDirectionOptions: SelectOption[] = [
-  { value: "forward", label: "للأمام (Forward)" },
-  { value: "slightly-left", label: "يساراً قليلاً (Slightly left)" },
-  { value: "slightly-right", label: "يميناً قليلاً (Slightly right)" },
-  { value: "down", label: "للأسفل (Down)" },
-  { value: "up-soft", label: "لأعلى برفق (Gently up)" },
-];
-const shoulderPositionOptions: SelectOption[] = [
-  { value: "relaxed", label: "مسترخيان (Relaxed)" },
-  { value: "one-raised", label: "كتف مرتفع قليلاً (One raised)" },
-  { value: "both-back", label: "للخلف (Both back)" },
-];
-const backPostureOptions: SelectOption[] = [
-  { value: "straight", label: "مستقيم (Straight)" },
-  { value: "relaxed", label: "مسترخٍ (Relaxed)" },
-  { value: "slightly-leaning", label: "مائل قليلاً (Slightly leaning)" },
-];
-const faceExpressionOptions: SelectOption[] = [
-  { value: "neutral", label: "محايد طبيعي (Neutral)" },
-  { value: "soft-smile", label: "ابتسامة خفيفة (Soft smile)" },
-  { value: "closed-smile", label: "ابتسامة مغلقة (Closed smile)" },
-  { value: "calm-focus", label: "تركيز هادئ (Calm focus)" },
-  { value: "side-glance", label: "نظرة جانبية (Side glance)" },
-  { value: "thinking", label: "تفكير (Thinking)" },
-  { value: "sleepy", label: "نعاس خفيف (Sleepy)" },
-  { value: "light-laugh", label: "ضحكة خفيفة (Light laugh)" },
-];
-const eyeDirectionOptions: SelectOption[] = [
-  { value: "camera", label: "نحو الكاميرا (Camera)" },
-  { value: "mirror", label: "نحو المرآة (Mirror)" },
-  { value: "away-soft", label: "بعيداً بلطف (Away)" },
-  { value: "down-soft", label: "للأسفل بلطف (Down)" },
-];
-const mouthStateOptions: SelectOption[] = [
-  { value: "closed", label: "مغلق (Closed)" },
-  { value: "slightly-open", label: "مفتوح قليلاً (Slightly open)" },
-  { value: "smile-closed", label: "ابتسامة مغلقة (Smile closed)" },
-  {
-    value: "smile-open-light",
-    label: "ابتسامة مفتوحة خفيفة (Light open smile)",
-  },
-];
-const freeHandPositionOptions: SelectOption[] = [
-  { value: "at-side", label: "بجانب الجسم (At side)" },
-  { value: "on-hair", label: "على الشعر (On hair)" },
-  { value: "holding-cup", label: "تحمل كوباً (Holding cup)" },
-  { value: "holding-phone", label: "تحمل الهاتف (Holding phone)" },
-  { value: "touching-chin", label: "تلمس الذقن (Touching chin)" },
-  { value: "in-pocket", label: "في الجيب (In pocket)" },
-  { value: "on-bed", label: "على السرير (On bed)" },
-  { value: "on-chest", label: "على الصدر (On chest)" },
-  { value: "on-keyboard", label: "على لوحة المفاتيح (On keyboard)" },
-  { value: "holding-cloth", label: "تحمل قطعة قماش (Holding cloth)" },
-];
-const phonePositionOptions: SelectOption[] = [
-  { value: "front-of-face", label: "أمام الوجه (Front of face)" },
-  { value: "chest-level", label: "على مستوى الصدر (Chest level)" },
-  { value: "above-chest", label: "فوق الصدر (Above chest)" },
-  { value: "side-soft", label: "جانبي بلطف (Slightly to the side)" },
-];
-const handFingersStateOptions: SelectOption[] = [
-  { value: "relaxed", label: "مسترخية (Relaxed)" },
-  { value: "slightly-curled", label: "ملتفة قليلاً (Slightly curled)" },
-  { value: "gripping-soft", label: "قابضة برفق (Soft grip)" },
-];
-const handVisibilityOptions: SelectOption[] = [
-  { value: "fully-visible", label: "ظاهرة بالكامل (Fully visible)" },
-  { value: "partially-visible", label: "ظاهرة جزئياً (Partially visible)" },
-  { value: "off-frame", label: "خارج الإطار (Off-frame)" },
-];
-
-function CollapsibleSection({
-  title,
-  badge,
-  defaultOpen = false,
-  children,
-}: CollapsibleSectionProps) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
-
-  return (
-    <section className="overflow-hidden rounded-xl border border-white/10 bg-slate-900/70">
-      <button
-        type="button"
-        aria-expanded={isOpen}
-        onClick={() => setIsOpen((open) => !open)}
-        className="flex w-full items-center justify-between gap-3 p-5 text-right"
-      >
-        <span className="flex items-center gap-3">
-          <span
-            aria-hidden="true"
-            className={isOpen ? "inline-block rotate-180" : "inline-block"}
-          >
-            ⌄
-          </span>
-          <span className="font-semibold">{title}</span>
-        </span>
-        <span className="text-sm text-slate-400">{badge}</span>
-      </button>
-
-      {isOpen && (
-        <div className="grid gap-5 border-t border-white/10 p-5 sm:grid-cols-2">
-          {children}
-        </div>
-      )}
-    </section>
-  );
-}
-
-function SmartSelect({
-  id,
-  field,
-  state,
-  onChange,
-  label,
-  options,
-  className = "",
-}: SmartSelectProps) {
-  const constraints = getFieldConstraints(field, state);
-  const lockedTo = constraints?.lockedTo;
-  const value = lockedTo ?? String(state[field] ?? "");
-
-  return (
-    <label className={`grid gap-2 ${className}`} htmlFor={id}>
-      <span className="flex items-center gap-2">
-        {lockedTo !== undefined && <span aria-hidden="true">🔒</span>}
-        <span>{label}</span>
-      </span>
-      <select
-        id={id}
-        value={value}
-        disabled={lockedTo !== undefined}
-        onChange={(event) => onChange(event.target.value)}
-        className="rounded-lg border border-white/20 bg-slate-900 p-3 text-slate-100 disabled:cursor-not-allowed disabled:opacity-70"
-      >
-        {options.map((option) => {
-          const constraint = constraints?.options.find(
-            (item) => item.value === option.value,
-          );
-          const disabled = constraint?.disabled ?? false;
-          return (
-            <option key={option.value} value={option.value} disabled={disabled}>
-              {option.label}
-              {disabled && constraint?.reason ? ` (${constraint.reason})` : ""}
-            </option>
-          );
-        })}
-      </select>
-      {lockedTo !== undefined && constraints?.lockReason && (
-        <span className="text-xs leading-5 text-amber-300">
-          ↳ {constraints.lockReason}
-        </span>
-      )}
-    </label>
-  );
-}
-
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"english" | "arabic" | "negative">(
-    "english",
-  );
   const [state, setState] = useState<SceneState>(createDefaultSceneState);
-
   const resolvedState = resolveLockedState(state);
 
   function updateField<K extends keyof SceneState>(
@@ -303,11 +67,6 @@ export default function Home() {
     arabic: buildPromptArabic(resolvedState),
     negative: buildNegativePrompt(resolvedState),
   };
-  const previewTabs = [
-    { id: "english", label: "English" },
-    { id: "arabic", label: "العربية" },
-    { id: "negative", label: "Negative" },
-  ] as const;
 
   return (
     <main
@@ -696,57 +455,7 @@ export default function Home() {
           </CollapsibleSection>
         </div>
 
-        <section
-          aria-label="المعاينة"
-          className="mt-6 rounded-xl border border-white/10 bg-slate-900 p-5 sm:sticky sm:bottom-0 sm:z-20 sm:shadow-2xl"
-        >
-          <div
-            role="tablist"
-            aria-label="نوع المعاينة"
-            className="flex flex-wrap gap-2"
-          >
-            {previewTabs.map(({ id, label }) => (
-              <button
-                key={id}
-                id={`tab-${id}`}
-                type="button"
-                role="tab"
-                aria-selected={activeTab === id}
-                aria-controls="prompt-panel"
-                tabIndex={activeTab === id ? 0 : -1}
-                onClick={() => setActiveTab(id)}
-                className={
-                  activeTab === id
-                    ? "rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white"
-                    : "rounded-lg border border-white/20 px-4 py-2 text-sm text-slate-300 hover:bg-white/10"
-                }
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-
-          <div
-            id="prompt-panel"
-            role="tabpanel"
-            aria-labelledby={`tab-${activeTab}`}
-            aria-live="polite"
-            dir={activeTab === "arabic" ? "rtl" : "ltr"}
-            className="mt-4 min-h-[150px] max-h-72 overflow-y-auto rounded-lg border border-white/10 bg-slate-950/80 p-4 leading-7 text-slate-200"
-          >
-            {prompts[activeTab]}
-          </div>
-
-          <button
-            type="button"
-            onClick={() =>
-              void navigator.clipboard.writeText(prompts[activeTab])
-            }
-            className="mt-4 rounded-lg border border-white/20 px-4 py-2 text-sm hover:bg-white/10"
-          >
-            نسخ
-          </button>
-        </section>
+        <PromptPreview prompts={prompts} />
       </div>
     </main>
   );
