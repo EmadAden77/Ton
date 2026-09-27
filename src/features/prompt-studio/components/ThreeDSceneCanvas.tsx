@@ -1,8 +1,8 @@
 "use client";
 
 import { Suspense, useEffect, useRef } from "react";
-import { OrbitControls, useGLTF } from "@react-three/drei";
-import { Canvas, useThree } from "@react-three/fiber";
+import { OrbitControls, PerspectiveCamera, useGLTF } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
 
 import {
@@ -66,7 +66,7 @@ function Phone({ position, target }: { position: Vec3; target: Vec3 }) {
   );
 }
 
-function CameraController({
+function ActiveCamera({
   pose,
   selfieCamera,
   viewMode,
@@ -75,29 +75,25 @@ function CameraController({
   selfieCamera: ThreeDSelfieCameraConfig;
   viewMode: ThreeDViewMode;
 }) {
-  const { camera } = useThree();
+  const cameraRef = useRef<THREE.PerspectiveCamera>(null);
+  const isSelfie = viewMode === "selfie";
+  const position = isSelfie ? selfieCamera.position : pose.viewerPosition;
+  const target = isSelfie ? selfieCamera.target : pose.viewerTarget;
 
   useEffect(() => {
-    if (!(camera instanceof THREE.PerspectiveCamera)) return;
+    cameraRef.current?.lookAt(...target);
+  }, [position, target]);
 
-    if (viewMode === "selfie") {
-      camera.position.set(...selfieCamera.position);
-      camera.lookAt(...selfieCamera.target);
-      camera.fov = selfieCamera.fov;
-      camera.near = selfieCamera.near;
-      camera.far = selfieCamera.far;
-    } else {
-      camera.position.set(...pose.viewerPosition);
-      camera.lookAt(...pose.viewerTarget);
-      camera.fov = 45;
-      camera.near = 0.1;
-      camera.far = 50;
-    }
-
-    camera.updateProjectionMatrix();
-  }, [camera, pose, selfieCamera, viewMode]);
-
-  return null;
+  return (
+    <PerspectiveCamera
+      ref={cameraRef}
+      makeDefault
+      position={position}
+      fov={isSelfie ? selfieCamera.fov : 45}
+      near={isSelfie ? selfieCamera.near : 0.1}
+      far={isSelfie ? selfieCamera.far : 50}
+    />
+  );
 }
 
 function BedroomEnvironment({
@@ -370,7 +366,7 @@ function Scene({
         intensity={light.phoneIntensity}
         distance={2.2}
       />
-      <CameraController
+      <ActiveCamera
         pose={pose}
         selfieCamera={selfieCamera}
         viewMode={viewMode}
@@ -396,19 +392,8 @@ export function ThreeDSceneCanvas({
   sceneState: SceneState;
   viewMode: ThreeDViewMode;
 }) {
-  const pose = getThreeDPose(sceneState.poseType);
-
   return (
-    <Canvas
-      shadows
-      dpr={[1, 2]}
-      camera={{
-        position: pose.viewerPosition,
-        fov: 45,
-        near: 0.1,
-        far: 50,
-      }}
-    >
+    <Canvas shadows dpr={[1, 2]}>
       <Scene sceneState={sceneState} viewMode={viewMode} />
     </Canvas>
   );
