@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { getConflicts } from "./constraints";
 import { SCENARIOS } from "./scenarios";
 import type { SceneState } from "./types";
 
@@ -90,9 +91,34 @@ describe("ready-made scenarios", () => {
     }
   });
 
-  it("switches the shot type for mirror selfie", () => {
+  it("produces constraint-safe states from the default scene", () => {
+    for (const preset of SCENARIOS) {
+      expect(getConflicts(preset.apply(baseState))).toEqual([]);
+    }
+  });
+
+  it("switches the shot type and pose for mirror selfie", () => {
     const preset = SCENARIOS.find((item) => item.id === "mirror-selfie");
-    expect(preset?.apply(baseState).shotType).toBe("mirror-selfie");
+    const scene = preset?.apply({
+      ...baseState,
+      poseType: "lying-bed",
+      shotType: "front-selfie",
+    });
+    expect(scene?.shotType).toBe("mirror-selfie");
+    expect(scene?.poseType).toBe("standing");
+    expect(scene?.phonePosition).toBe("chest-level");
+  });
+
+  it("resets non-mirror presets to a front selfie", () => {
+    const preset = SCENARIOS.find((item) => item.id === "working-laptop");
+    const scene = preset?.apply({
+      ...baseState,
+      shotType: "mirror-selfie",
+      phonePosition: "chest-level",
+      eyeDirection: "mirror",
+    });
+    expect(scene?.shotType).toBe("front-selfie");
+    expect(scene?.phonePosition).toBe("side-soft");
   });
 
   it("uses the keyboard for laptop work", () => {
@@ -100,10 +126,11 @@ describe("ready-made scenarios", () => {
     expect(preset?.apply(baseState).freeHandPosition).toBe("on-keyboard");
   });
 
-  it("uses the phone-screen mode for lying with phone", () => {
+  it("uses the selfie phone itself while lying on the bed", () => {
     const preset = SCENARIOS.find((item) => item.id === "lying-with-phone");
     const scene = preset?.apply(baseState);
-    expect(scene?.freeHandPosition).toBe("holding-phone");
+    expect(scene?.freeHandPosition).toBe("on-chest");
+    expect(scene?.phonePosition).toBe("above-chest");
     expect(scene?.lightingMode).toBe("phone-screen");
   });
 

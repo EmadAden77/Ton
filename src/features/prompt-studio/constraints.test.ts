@@ -106,9 +106,15 @@ describe("phone and lying constraints", () => {
     );
   });
 
-  it("locks front selfie phone position in front of the face", () => {
+  it("keeps regular front-selfie phone placement flexible", () => {
     expect(getFieldConstraints("phonePosition", baseState)?.lockedTo).toBe(
-      "front-of-face",
+      undefined,
+    );
+    expect(option("phonePosition", baseState, "front-of-face")?.disabled).toBe(
+      false,
+    );
+    expect(option("phonePosition", baseState, "side-soft")?.disabled).toBe(
+      false,
     );
   });
 
@@ -117,6 +123,18 @@ describe("phone and lying constraints", () => {
       ...baseState,
       shotType: "mirror-selfie" as const,
       phonePosition: "chest-level" as const,
+    };
+    expect(getFieldConstraints("phonePosition", state)?.lockedTo).toBe(
+      "chest-level",
+    );
+  });
+
+  it("prioritizes mirror phone geometry if a stale lying pose remains", () => {
+    const state = {
+      ...baseState,
+      shotType: "mirror-selfie" as const,
+      poseType: "lying-bed" as const,
+      phonePosition: "above-chest" as const,
     };
     expect(getFieldConstraints("phonePosition", state)?.lockedTo).toBe(
       "chest-level",
