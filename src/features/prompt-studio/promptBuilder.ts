@@ -436,44 +436,64 @@ function arabicHandDescription(state: SceneState): string {
   return `اليد الحرة ${freeHandPositionLabels[state.freeHandPosition]}، والأصابع ${handFingersStateLabels[state.handFingersState]}، واليد ${handVisibilityLabels[state.handVisibility]}.`;
 }
 
-function englishPhoneArmDescription(state: SceneState): string {
+function englishCaptureGeometry(state: SceneState): string {
   if (state.shotType === "mirror-selfie") {
-    return "The arm holding the phone is bent naturally at the elbow, keeping the phone at chest height.";
+    return `The phone is ${phonePositionLabels[state.phonePosition]} and is naturally visible in the mirror reflection. The phone-holding arm is bent naturally at the elbow.`;
   }
 
   if (state.poseType === "lying-bed" || state.phonePosition === "above-chest") {
-    return "The arm holding the phone is raised above the torso with a natural bend at the elbow, keeping the phone within a reachable selfie distance.";
+    return "The front-camera viewpoint is held above the torso and aimed back toward the face. The phone body itself remains outside the captured frame. The selfie arm is raised with a natural bend at the elbow and remains physically connected and reachable.";
   }
 
   if (state.phonePosition === "side-soft") {
-    return "The arm holding the phone is extended forward and slightly to the side with a natural bend at the elbow.";
+    return "The front-camera viewpoint is offset slightly to the side. The phone body itself remains outside the captured frame. The selfie arm extends forward and slightly sideways with a natural bend at the elbow.";
   }
 
-  return "The arm holding the phone is extended forward with a slightly bent elbow.";
+  if (state.phonePosition === "chest-level") {
+    return "The front-camera viewpoint is held from a lower chest-to-face line and aimed back toward the face. The phone body itself remains outside the captured frame. The selfie arm stays naturally bent and physically reachable.";
+  }
+
+  return "The front-camera viewpoint is directly in front of the face. The phone body itself remains outside the captured frame. The selfie arm extends forward with a slight natural bend at the elbow.";
 }
 
-function arabicPhoneArmDescription(state: SceneState): string {
+function arabicCaptureGeometry(state: SceneState): string {
   if (state.shotType === "mirror-selfie") {
-    return "الذراع الممسكة بالهاتف منحنية بشكل طبيعي عند الكوع مع إبقاء الهاتف على مستوى الصدر.";
+    return `الهاتف ${phonePositionLabelsAr[state.phonePosition]} ويظهر بصورة طبيعية داخل انعكاس المرآة، والذراع الممسكة به منحنية بشكل طبيعي عند الكوع.`;
   }
 
   if (state.poseType === "lying-bed" || state.phonePosition === "above-chest") {
-    return "الذراع الممسكة بالهاتف مرفوعة فوق الجذع مع انحناء طبيعي عند الكوع، والهاتف ضمن مسافة سيلفي يمكن الوصول إليها فعلياً.";
+    return "منظور الكاميرا الأمامية مرفوع فوق الجذع وموجه نحو الوجه، بينما يبقى جسم الهاتف نفسه خارج الإطار الملتقط. ذراع السيلفي مرفوعة بانحناء طبيعي عند الكوع ومتصلة بالجسم ضمن مدى وصول واقعي.";
   }
 
   if (state.phonePosition === "side-soft") {
-    return "الذراع الممسكة بالهاتف ممتدة للأمام وإلى الجانب قليلاً مع انحناء طبيعي عند الكوع.";
+    return "منظور الكاميرا الأمامية مزاح قليلاً إلى الجانب، بينما يبقى جسم الهاتف نفسه خارج الإطار الملتقط. ذراع السيلفي ممتدة للأمام وإلى الجانب قليلاً مع انحناء طبيعي عند الكوع.";
   }
 
-  return "الذراع الممسكة بالهاتف ممتدة للأمام مع انحناء بسيط في الكوع.";
+  if (state.phonePosition === "chest-level") {
+    return "منظور الكاميرا الأمامية يأتي من خط منخفض بين الصدر والوجه وموجه نحو الوجه، بينما يبقى جسم الهاتف نفسه خارج الإطار الملتقط. ذراع السيلفي منحنية بشكل طبيعي وضمن مدى وصول واقعي.";
+  }
+
+  return "منظور الكاميرا الأمامية أمام الوجه مباشرة، بينما يبقى جسم الهاتف نفسه خارج الإطار الملتقط. ذراع السيلفي ممتدة للأمام مع انحناء طبيعي بسيط عند الكوع.";
+}
+
+function englishCaptureRealism(state: SceneState): string {
+  return state.shotType === "front-selfie"
+    ? "Authentic front-camera smartphone photography, mild wide-angle proximity, natural deep depth of field, restrained HDR, natural skin texture, slight edge softness, and realistic shadow noise."
+    : "Authentic handheld smartphone mirror photography, natural wide-angle perspective, natural deep depth of field, restrained HDR, natural skin texture, slight edge softness, and realistic shadow noise.";
+}
+
+function arabicCaptureRealism(state: SceneState): string {
+  return state.shotType === "front-selfie"
+    ? "تصوير واقعي بالكاميرا الأمامية لهاتف ذكي، بمنظور قريب واسع قليلاً، وعمق ميدان طبيعي وعميق، وHDR محدود، وملمس بشرة طبيعي، وليونة طفيفة عند الحواف، وضجيج واقعي في الظلال."
+    : "تصوير مرآة واقعي بهاتف محمول باليد، بمنظور واسع طبيعي، وعمق ميدان طبيعي وعميق، وHDR محدود، وملمس بشرة طبيعي، وليونة طفيفة عند الحواف، وضجيج واقعي في الظلال.";
 }
 
 export function buildPromptEnglish(state: SceneState): string {
-  return `${englishIdentityDescription(state)}${englishShotTypes[state.shotType]}, the subject is ${englishPoseTypes[state.poseType]}, head ${englishHeadDirections[state.headDirection]}, shoulders ${englishShoulderPositions[state.shoulderPosition]}, back ${englishBackPostures[state.backPosture]}.${englishScenarioDescription(state)} Facial expression: ${englishFaceExpressions[state.faceExpression]}, eyes ${englishEyeDirections[effectiveEyeDirection(state)]}, mouth ${englishMouthStates[effectiveMouthState(state)]}. Hair: ${englishHairDescription(state)}. Wearing: a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]} in ${englishClothingColors[state.clothingColor]} tones, and ${englishClothingBottoms[state.clothingBottom]}. ${englishHandDescription(state)} The phone is ${phonePositionLabels[state.phonePosition]}. ${englishPhoneArmDescription(state)} ${englishCameraDistances[state.cameraDistance]}, camera at ${englishCameraAngles[state.cameraAngle]}. ${FIXED_ROOM_DESCRIPTION_EN}. Lighting: ${lightingModeLabels[state.lightingMode]}. Realistic smartphone photography, natural skin texture, balanced dynamic range.`;
+  return `${englishIdentityDescription(state)}${englishShotTypes[state.shotType]}, the subject is ${englishPoseTypes[state.poseType]}, head ${englishHeadDirections[state.headDirection]}, shoulders ${englishShoulderPositions[state.shoulderPosition]}, back ${englishBackPostures[state.backPosture]}.${englishScenarioDescription(state)} Facial expression: ${englishFaceExpressions[state.faceExpression]}, eyes ${englishEyeDirections[effectiveEyeDirection(state)]}, mouth ${englishMouthStates[effectiveMouthState(state)]}. Hair: ${englishHairDescription(state)}. Wearing: a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]} in ${englishClothingColors[state.clothingColor]} tones, and ${englishClothingBottoms[state.clothingBottom]}. ${englishHandDescription(state)} ${englishCaptureGeometry(state)} ${englishCameraDistances[state.cameraDistance]}, camera at ${englishCameraAngles[state.cameraAngle]}. ${FIXED_ROOM_DESCRIPTION_EN}. Lighting: ${lightingModeLabels[state.lightingMode]}. ${englishCaptureRealism(state)}`;
 }
 
 export function buildPromptArabic(state: SceneState): string {
-  return `${arabicIdentityDescription(state)}${shotTypes[state.shotType]}، الشخص ${poseTypeLabels[state.poseType]}، رأسه ${headDirectionLabels[state.headDirection]}، وكتفاه ${shoulderPositionLabels[state.shoulderPosition]}، وظهره ${backPostureLabels[state.backPosture]}.${arabicScenarioDescription(state)} تعبير الوجه: ${faceExpressionLabels[state.faceExpression]}، والعينان ${eyeDirectionLabels[effectiveEyeDirection(state)]}، والفم ${mouthStateLabels[effectiveMouthState(state)]}. الشعر: ${hairLengthLabels[state.hairLength]} ${hairTextureLabels[state.hairTexture]} ${hairStyleLabels[state.hairStyle]}. الملابس: ${clothingTopLabels[state.clothingTop]} من ${clothingMaterialLabels[state.clothingMaterial]} بدرجات ${clothingColorLabels[state.clothingColor]}، و${clothingBottomLabels[state.clothingBottom]}. ${arabicHandDescription(state)} الهاتف ${phonePositionLabelsAr[state.phonePosition]}. ${arabicPhoneArmDescription(state)} الكاميرا ${cameraDistances[state.cameraDistance]}، عند ${cameraAngles[state.cameraAngle]}. ${FIXED_ROOM_DESCRIPTION_AR}. الإضاءة: ${lightingModeLabelsAr[state.lightingMode]}. تصوير هاتف ذكي واقعي، ملمس بشرة طبيعي، ونطاق ديناميكي متوازن.`;
+  return `${arabicIdentityDescription(state)}${shotTypes[state.shotType]}، الشخص ${poseTypeLabels[state.poseType]}، رأسه ${headDirectionLabels[state.headDirection]}، وكتفاه ${shoulderPositionLabels[state.shoulderPosition]}، وظهره ${backPostureLabels[state.backPosture]}.${arabicScenarioDescription(state)} تعبير الوجه: ${faceExpressionLabels[state.faceExpression]}، والعينان ${eyeDirectionLabels[effectiveEyeDirection(state)]}، والفم ${mouthStateLabels[effectiveMouthState(state)]}. الشعر: ${hairLengthLabels[state.hairLength]} ${hairTextureLabels[state.hairTexture]} ${hairStyleLabels[state.hairStyle]}. الملابس: ${clothingTopLabels[state.clothingTop]} من ${clothingMaterialLabels[state.clothingMaterial]} بدرجات ${clothingColorLabels[state.clothingColor]}، و${clothingBottomLabels[state.clothingBottom]}. ${arabicHandDescription(state)} ${arabicCaptureGeometry(state)} الكاميرا ${cameraDistances[state.cameraDistance]}، عند ${cameraAngles[state.cameraAngle]}. ${FIXED_ROOM_DESCRIPTION_AR}. الإضاءة: ${lightingModeLabelsAr[state.lightingMode]}. ${arabicCaptureRealism(state)}`;
 }
 
 export function buildNegativePrompt(state: SceneState): string {
@@ -483,6 +503,8 @@ export function buildNegativePrompt(state: SceneState): string {
     "no text artifacts",
     "no distorted face; no waxy skin; no plastic skin",
     "no unrealistic lighting; no excessive HDR",
+    "no cinematic grading; no portrait-mode bokeh",
+    "no studio lighting; no ring light; no softbox",
     "no warped furniture",
   ];
 
@@ -496,8 +518,14 @@ export function buildNegativePrompt(state: SceneState): string {
     constraints.push("no malformed visible fingers");
   }
 
-  if (state.shotType === "mirror-selfie") {
-    constraints.push("no incorrect reflections; no mirrored text");
+  if (state.shotType === "front-selfie") {
+    constraints.push(
+      "no visible selfie phone body; no third-person camera viewpoint; no floating camera; no detached selfie arm",
+    );
+  } else {
+    constraints.push(
+      "no incorrect reflections; no mirrored text; no duplicated phone; no duplicated arms",
+    );
   }
 
   if (state.poseType === "lying-bed") {
