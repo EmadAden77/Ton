@@ -18,7 +18,7 @@ function englishCurtainState(state: SceneState): string {
     state.lightingMode === "daylight-closed" ||
     state.lightingMode === "blue-hour-closed"
   ) {
-    return "The single back-wall window is fully covered by floor-length dark blackout curtains. Ambient light may diffuse weakly through the curtain fabric as required by the selected mode, but there is no visible exterior, center-seam slit, bottom gap, hard beam, or direct light leak.";
+    return "The single back-wall window is fully covered by floor-length dark blackout curtains. Ambient light may diffuse weakly through the curtain fabric as required by the selected mode, but with no visible exterior, no center-seam slit, no bottom gap, no hard beam, and no direct light leak.";
   }
 
   return "The single back-wall window is fully covered by floor-length dark blackout curtains with no visible exterior, no center-seam slit, no bottom gap, and no daylight leak.";
@@ -33,7 +33,7 @@ function arabicCurtainState(state: SceneState): string {
     state.lightingMode === "daylight-closed" ||
     state.lightingMode === "blue-hour-closed"
   ) {
-    return "النافذة الوحيدة في الجدار الخلفي مغطاة بالكامل بستائر blackout داكنة بطول الأرض. يمكن للضوء المحيط أن ينتشر بخفة عبر نسيج الستارة حسب النمط المختار، لكن من دون إظهار الخارج أو شق في المنتصف أو فراغ أسفل الستارة أو حزمة ضوء مباشرة أو تسريب واضح.";
+    return "النافذة الوحيدة في الجدار الخلفي مغطاة بالكامل بستائر blackout داكنة بطول الأرض. يمكن للضوء المحيط أن ينتشر بخفة عبر نسيج الستارة حسب النمط المختار، لكن من دون إظهار الخارج، ومن دون شق في المنتصف، ومن دون فراغ أسفل الستارة، ومن دون حزمة ضوء مباشرة أو تسريب واضح.";
   }
 
   return "النافذة الوحيدة في الجدار الخلفي مغطاة بالكامل بستائر blackout داكنة بطول الأرض، من دون إظهار الخارج أو شق في المنتصف أو فراغ أسفل الستارة أو أي تسريب لضوء النهار.";
@@ -41,8 +41,8 @@ function arabicCurtainState(state: SceneState): string {
 
 export function englishFixedRoomDescription(state: SceneState): string {
   return [
-    "ROOM GEOMETRY LOCK — fixed bedroom architecture and furniture layout; do not redesign or reinterpret it.",
-    "Exactly one bed occupies the LEFT side of the room, aligned straight with the room geometry and never diagonal, with one tall dark-charcoal tufted headboard and grey bedding.",
+    "ROOM GEOMETRY LOCK — in the fixed realistic modern bedroom, the architecture and furniture layout are fixed; do not redesign or reinterpret them.",
+    "Exactly one dark tufted-headboard bed on the left occupies the LEFT side of the room, aligned straight with the room geometry and never diagonal, with one tall dark-charcoal tufted headboard and grey bedding.",
     "Exactly one bedside table sits beside the bed with exactly one warm bedside lamp; do not add a second nightstand, extra lamp, plant, books, or invented bedside decor.",
     "Exactly one white wall-mounted split-AC indoor unit is installed high on the UPPER-LEFT wall near the ceiling beside the bed area; no second AC, stacked AC, duplicated vent unit, or ceiling AC.",
     englishCurtainState(state),
@@ -56,7 +56,7 @@ export function englishFixedRoomDescription(state: SceneState): string {
 
 export function arabicFixedRoomDescription(state: SceneState): string {
   return [
-    "قفل هندسة الغرفة — بنية غرفة النوم وتوزيع الأثاث ثابتان ولا يجوز إعادة تصميمهما أو تفسيرهما من جديد.",
+    "قفل هندسة الغرفة — في غرفة النوم الحديثة الواقعية الثابتة، بنية الغرفة وتوزيع الأثاث ثابتان ولا يجوز إعادة تصميمهما أو تفسيرهما من جديد.",
     "يوجد سرير واحد فقط على الجهة اليسرى، بمحور مستقيم ومتوافق مع هندسة الغرفة وليس قطرياً، مع لوح رأس واحد طويل داكن فحمي ومبطن وتنجيد سرير رمادي.",
     "يوجد كومود واحد فقط بجانب السرير وعليه مصباح سرير دافئ واحد فقط؛ لا كومود ثانٍ ولا مصباح إضافي ولا نباتات ولا كتب ولا ديكور جانبي مخترع.",
     "يوجد مكيف سبليت جداري أبيض واحد فقط، مثبت عالياً على الجدار العلوي الأيسر قرب السقف بجوار منطقة السرير؛ لا مكيف ثانٍ ولا وحدات متراكبة ولا فتحة مكررة ولا مكيف سقفي.",
