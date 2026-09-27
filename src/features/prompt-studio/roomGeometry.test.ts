@@ -33,7 +33,9 @@ describe("strict fixed bedroom geometry", () => {
     expect(room).toContain("Exactly one bed occupies the LEFT side");
     expect(room).toContain("Exactly one bedside table");
     expect(room).toContain("exactly one warm bedside lamp");
-    expect(room).toContain("Exactly one white wall-mounted split-AC indoor unit");
+    expect(room).toContain(
+      "Exactly one white wall-mounted split-AC indoor unit",
+    );
     expect(room).toContain("UPPER-LEFT wall near the ceiling");
     expect(room).toContain("full-height sliding MIRRORED wardrobe");
     expect(room).toContain("all doors fully closed");
@@ -41,7 +43,9 @@ describe("strict fixed bedroom geometry", () => {
     expect(room).toContain("Exactly one separate dark-wood chest of drawers");
     expect(room).toContain("grey tile");
     expect(room).toContain("Exactly one beige rug");
-    expect(room).toContain("Recessed ceiling spotlights are the only ceiling fixtures");
+    expect(room).toContain(
+      "Recessed ceiling spotlights are the only ceiling fixtures",
+    );
     expect(room).toContain("clear walking aisle between bed and wardrobe");
   });
 
@@ -50,12 +54,19 @@ describe("strict fixed bedroom geometry", () => {
       const state = { ...createDefaultSceneState(), lightingMode };
       const room = englishFixedRoomDescription(state);
 
-      if (lightingMode === "daylight-open" || lightingMode === "overcast-open") {
+      if (
+        lightingMode === "daylight-open" ||
+        lightingMode === "overcast-open"
+      ) {
         expect(curtainsAreOpen(state)).toBe(true);
-        expect(room).toContain("selected daylight mode requires the dark blackout curtains to be open");
+        expect(room).toContain(
+          "selected daylight mode requires the dark blackout curtains to be open",
+        );
       } else {
         expect(curtainsAreOpen(state)).toBe(false);
-        expect(room).toContain("fully covered by floor-length dark blackout curtains");
+        expect(room).toContain(
+          "fully covered by floor-length dark blackout curtains",
+        );
         expect(room).toContain("no center-seam slit");
         expect(room).toContain("no bottom gap");
       }
@@ -82,7 +93,9 @@ describe("strict fixed bedroom geometry", () => {
     expect(guards).toContain("no duplicated AC units");
     expect(guards).toContain("no stacked air conditioners");
     expect(guards).toContain("no transparent wardrobe");
-    expect(guards).toContain("no visible hanging clothes through closed wardrobe doors");
+    expect(guards).toContain(
+      "no visible hanging clothes through closed wardrobe doors",
+    );
     expect(guards).toContain("no wardrobe interior lighting");
     expect(guards).toContain("no extra plants");
     expect(guards).toContain("no invented decor");
