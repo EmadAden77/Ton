@@ -46,12 +46,13 @@ describe("camera constraints", () => {
       "arm-length",
     );
     expect(option("cameraDistance", state, "close")?.disabled).toBe(true);
+    expect(option("cameraDistance", state, "extended")?.disabled).toBe(true);
   });
 
-  it("disables extended distance for front selfie", () => {
-    expect(option("cameraDistance", baseState, "extended")?.disabled).toBe(
-      true,
-    );
+  it("allows close, arm-length, and extended distance for front selfie", () => {
+    for (const value of ["close", "arm-length", "extended"] as const) {
+      expect(option("cameraDistance", baseState, value)?.disabled).toBe(false);
+    }
   });
 
   it("leaves camera angle unconstrained", () => {
@@ -162,6 +163,12 @@ describe("face and gaze constraints", () => {
 describe("conflicts", () => {
   it("returns no conflicts for the default scene", () => {
     expect(getConflicts(baseState)).toEqual([]);
+  });
+
+  it("accepts extended distance for a front selfie", () => {
+    expect(
+      getConflicts({ ...baseState, cameraDistance: "extended" }),
+    ).toEqual([]);
   });
 
   it("reports a stale mirror selfie distance", () => {
