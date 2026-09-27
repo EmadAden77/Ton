@@ -1,6 +1,12 @@
 "use client";
 
 import {
+  pelvisOrientationOptions,
+  legConfigurationOptions,
+  torsoLeanOptions,
+  weightDistributionOptions,
+} from "../microPose";
+import {
   backPostureOptions,
   cameraAngleOptions,
   cameraDistanceOptions,
@@ -268,6 +274,58 @@ export function PromptControls({
           options={backPostureOptions}
           onChange={(value) =>
             updateField("backPosture", value as SceneState["backPosture"])
+          }
+        />
+      </CollapsibleSection>
+
+      <CollapsibleSection title="تفاصيل الوضعية" badge="4 حقول" defaultOpen>
+        <SmartSelect
+          id="leg-configuration"
+          field="legConfiguration"
+          state={resolvedState}
+          label="تكوين الساقين"
+          options={legConfigurationOptions}
+          onChange={(value) =>
+            updateField(
+              "legConfiguration",
+              value as SceneState["legConfiguration"],
+            )
+          }
+        />
+        <SmartSelect
+          id="torso-lean"
+          field="torsoLean"
+          state={resolvedState}
+          label="ميل الجذع"
+          options={torsoLeanOptions}
+          onChange={(value) =>
+            updateField("torsoLean", value as SceneState["torsoLean"])
+          }
+        />
+        <SmartSelect
+          id="pelvis-orientation"
+          field="pelvisOrientation"
+          state={resolvedState}
+          label="اتجاه الحوض"
+          options={pelvisOrientationOptions}
+          onChange={(value) =>
+            updateField(
+              "pelvisOrientation",
+              value as SceneState["pelvisOrientation"],
+            )
+          }
+        />
+        <SmartSelect
+          id="weight-distribution"
+          field="weightDistribution"
+          state={resolvedState}
+          label="توزيع الوزن"
+          options={weightDistributionOptions}
+          onChange={(value) =>
+            updateField(
+              "weightDistribution",
+              value as SceneState["weightDistribution"],
+            )
           }
         />
       </CollapsibleSection>

@@ -1,8 +1,7 @@
 import type { SceneState } from "@/features/prompt-studio/types";
 
 interface RoomSceneProps {
-  poseType: SceneState["poseType"];
-  headDirection: SceneState["headDirection"];
+  sceneState: SceneState;
 }
 
 const POSE_POSITIONS: Record<
@@ -10,14 +9,14 @@ const POSE_POSITIONS: Record<
   { x: number; y: number; rotation: number }
 > = {
   standing: { x: 215, y: 160, rotation: 0 },
-  "standing-window": { x: 200, y: 70, rotation: 180 },
-  "standing-wardrobe": { x: 315, y: 125, rotation: 90 },
-  "leaning-dresser": { x: 350, y: 230, rotation: 65 },
+  "standing-window": { x: 200, y: 70, rotation: 0 },
+  "standing-wardrobe": { x: 305, y: 135, rotation: -70 },
+  "leaning-dresser": { x: 338, y: 218, rotation: -55 },
   "sitting-chair": { x: 320, y: 230, rotation: -90 },
   "sitting-bed": { x: 90, y: 175, rotation: 90 },
-  "sitting-bed-edge": { x: 120, y: 205, rotation: 90 },
-  "sitting-bed-cross-legged": { x: 78, y: 125, rotation: 35 },
-  "reclining-headboard": { x: 72, y: 82, rotation: 0 },
+  "sitting-bed-edge": { x: 128, y: 185, rotation: 70 },
+  "sitting-bed-cross-legged": { x: 88, y: 136, rotation: 82 },
+  "reclining-headboard": { x: 67, y: 92, rotation: 94 },
   "lying-bed": { x: 70, y: 110, rotation: 0 },
 };
 
@@ -29,10 +28,53 @@ const HEAD_ROTATIONS: Record<SceneState["headDirection"], number> = {
   "up-soft": 0,
 };
 
-export default function RoomScene({ poseType, headDirection }: RoomSceneProps) {
-  const position = POSE_POSITIONS[poseType];
-  const rotation = position.rotation + HEAD_ROTATIONS[headDirection];
-  const markerColor = headDirection === "down" ? "#60a5fa" : "#7dd3fc";
+const LEG_PATHS: Record<SceneState["legConfiguration"], [string, string]> = {
+  neutral: ["M0 8 L-6 15", "M0 8 L6 15"],
+  staggered: ["M0 8 L-8 17", "M0 8 L6 12"],
+  "one-knee-bent": ["M0 8 L-5 12 L-9 14", "M0 8 L7 16"],
+  "feet-grounded": ["M0 8 L-7 15", "M0 8 L7 15"],
+  "ankles-crossed": ["M0 8 L5 16", "M0 8 L-5 16"],
+  "legs-extended": ["M0 8 L-5 20", "M0 8 L5 20"],
+  "cross-legged": ["M0 8 Q-8 10 -11 5", "M0 8 Q8 10 11 5"],
+};
+
+export default function RoomScene({ sceneState }: RoomSceneProps) {
+  const position = POSE_POSITIONS[sceneState.poseType];
+  const pelvisRotation =
+    sceneState.pelvisOrientation === "slightly-left"
+      ? -8
+      : sceneState.pelvisOrientation === "slightly-right"
+        ? 8
+        : 0;
+  const rotation =
+    position.rotation +
+    HEAD_ROTATIONS[sceneState.headDirection] +
+    pelvisRotation;
+  const weightShift =
+    sceneState.weightDistribution === "left-biased"
+      ? -6
+      : sceneState.weightDistribution === "right-biased"
+        ? 6
+        : 0;
+  const torsoShift =
+    sceneState.torsoLean === "slight-left"
+      ? -4
+      : sceneState.torsoLean === "slight-right"
+        ? 4
+        : 0;
+  const torsoDepthShift =
+    sceneState.torsoLean === "slight-forward"
+      ? -3
+      : sceneState.torsoLean === "slight-back"
+        ? 3
+        : 0;
+  const markerColor =
+    sceneState.weightDistribution === "supported"
+      ? "#fbbf24"
+      : sceneState.headDirection === "down"
+        ? "#60a5fa"
+        : "#7dd3fc";
+  const [leftLeg, rightLeg] = LEG_PATHS[sceneState.legConfiguration];
 
   return (
     <svg
@@ -46,7 +88,8 @@ export default function RoomScene({ poseType, headDirection }: RoomSceneProps) {
     >
       <title id="room-scene-title">عرض الغرفة من الأعلى</title>
       <desc id="room-scene-description">
-        مخطط مبسط للغرفة يوضح الأثاث وموقع الشخص واتجاهه حسب الوضعية المختارة.
+        مخطط مبسط للغرفة يوضح الأثاث وموقع الشخص واتجاهه وتفاصيل الوضعية الدقيقة
+        المختارة.
       </desc>
 
       <rect width="400" height="300" rx="12" fill="#6b6b6b" />
@@ -80,7 +123,7 @@ export default function RoomScene({ poseType, headDirection }: RoomSceneProps) {
       </text>
 
       <g
-        transform={`translate(${position.x} ${position.y}) rotate(${rotation})`}
+        transform={`translate(${position.x + weightShift} ${position.y}) rotate(${rotation})`}
       >
         <circle
           r="20"
@@ -90,39 +133,40 @@ export default function RoomScene({ poseType, headDirection }: RoomSceneProps) {
           opacity="0.95"
         />
 
-        <circle cx="0" cy="-7" r="4" fill="#0f172a" />
+        <circle
+          cx={torsoShift}
+          cy={-7 + torsoDepthShift}
+          r="4"
+          fill="#0f172a"
+        />
         <line
           x1="0"
           y1="-2"
-          x2="0"
-          y2="8"
+          x2={torsoShift}
+          y2={8 + torsoDepthShift}
           stroke="#0f172a"
           strokeWidth="3"
           strokeLinecap="round"
         />
         <line
-          x1="-7"
-          y1="2"
-          x2="7"
-          y2="2"
+          x1={-7 + torsoShift}
+          y1={2 + torsoDepthShift}
+          x2={7 + torsoShift}
+          y2={2 + torsoDepthShift}
           stroke="#0f172a"
           strokeWidth="3"
           strokeLinecap="round"
         />
-        <line
-          x1="0"
-          y1="8"
-          x2="-6"
-          y2="14"
+        <path
+          d={leftLeg}
+          fill="none"
           stroke="#0f172a"
           strokeWidth="3"
           strokeLinecap="round"
         />
-        <line
-          x1="0"
-          y1="8"
-          x2="6"
-          y2="14"
+        <path
+          d={rightLeg}
+          fill="none"
           stroke="#0f172a"
           strokeWidth="3"
           strokeLinecap="round"
@@ -130,6 +174,11 @@ export default function RoomScene({ poseType, headDirection }: RoomSceneProps) {
 
         <path d="M0 -28 L-6 -20 L6 -20 Z" fill="#bae6fd" />
       </g>
+
+      <text x="18" y="282" fill="#e2e8f0" fontSize="10">
+        الساقان: {sceneState.legConfiguration} · الوزن:{" "}
+        {sceneState.weightDistribution}
+      </text>
     </svg>
   );
 }

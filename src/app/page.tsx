@@ -89,10 +89,7 @@ export default function Home() {
             عرض الغرفة من الأعلى
           </h3>
           <div className="flex justify-center">
-            <RoomScene
-              poseType={state.poseType}
-              headDirection={state.headDirection}
-            />
+            <RoomScene sceneState={resolvedState} />
           </div>
         </section>
 

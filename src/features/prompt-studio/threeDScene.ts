@@ -1,3 +1,4 @@
+import { getThreeDMicroPoseTransform } from "./microPose";
 import { resolveLockedState } from "./state";
 import type { SceneState } from "./types";
 
@@ -267,10 +268,26 @@ export function getThreeDPose(
   return THREE_D_POSES.find((pose) => pose.id === poseType) ?? THREE_D_POSES[0];
 }
 
+export function getThreeDPoseForState(state: SceneState): ThreeDPoseConfig {
+  const base = getThreeDPose(state.poseType);
+  const micro = getThreeDMicroPoseTransform(state);
+  const positionOffset = micro.positionOffset as Vec3;
+  const rotationOffset = micro.rotationOffset as Vec3;
+
+  return {
+    ...base,
+    modelPosition: add(base.modelPosition, positionOffset),
+    modelRotation: add(base.modelRotation, rotationOffset),
+    viewerTarget: add(base.viewerTarget, positionOffset),
+    selfieTarget: add(base.selfieTarget, positionOffset),
+    phonePosition: add(base.phonePosition, positionOffset),
+  };
+}
+
 export function getThreeDSelfieCamera(
   state: SceneState,
 ): ThreeDSelfieCameraConfig {
-  const pose = getThreeDPose(state.poseType);
+  const pose = getThreeDPoseForState(state);
   const baseVector = subtract(pose.phonePosition, pose.selfieTarget);
   const distanceScaled = scale(
     baseVector,

@@ -7,6 +7,10 @@ const constrainedFields: (keyof SceneState)[] = [
   "phonePosition",
   "eyeDirection",
   "faceExpression",
+  "legConfiguration",
+  "torsoLean",
+  "pelvisOrientation",
+  "weightDistribution",
 ];
 
 export const DEFAULT_SCENE_STATE: SceneState = {
@@ -26,6 +30,10 @@ export const DEFAULT_SCENE_STATE: SceneState = {
   hairLength: "medium",
   hairTexture: "wavy",
   poseType: "standing",
+  legConfiguration: "neutral",
+  torsoLean: "neutral",
+  pelvisOrientation: "square",
+  weightDistribution: "balanced",
   headDirection: "forward",
   shoulderPosition: "relaxed",
   handPlacement: "at-side",
@@ -51,12 +59,23 @@ export function resolveLockedState(state: SceneState): SceneState {
 
     for (const field of constrainedFields) {
       const constraints = getFieldConstraints(field, resolved);
-      if (constraints?.lockedTo === undefined) continue;
+      if (!constraints) continue;
 
-      if (String(resolved[field]) !== constraints.lockedTo) {
+      const currentValue = String(resolved[field]);
+      const currentOption = constraints.options.find(
+        (option) => option.value === currentValue,
+      );
+      const fallback = constraints.options.find(
+        (option) => !option.disabled,
+      )?.value;
+      const nextValue =
+        constraints.lockedTo ??
+        (currentOption?.disabled ? fallback : undefined);
+
+      if (nextValue !== undefined && currentValue !== nextValue) {
         resolved = {
           ...resolved,
-          [field]: constraints.lockedTo,
+          [field]: nextValue,
         } as SceneState;
         changed = true;
       }

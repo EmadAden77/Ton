@@ -14,6 +14,10 @@ describe("scene state defaults", () => {
       cameraAngle: "eye-level",
       phonePosition: "front-of-face",
       poseType: "standing",
+      legConfiguration: "neutral",
+      torsoLean: "neutral",
+      pelvisOrientation: "square",
+      weightDistribution: "balanced",
       lightingMode: "as-in-photo",
       referenceProvided: false,
       scenario: "none",
@@ -44,14 +48,40 @@ describe("resolveLockedState", () => {
     expect(resolved.eyeDirection).toBe("mirror");
   });
 
-  it("locks lying selfie phone geometry above the chest", () => {
+  it("locks lying selfie geometry and micro-pose support", () => {
     const resolved = resolveLockedState({
       ...createDefaultSceneState(),
       poseType: "lying-bed",
       phonePosition: "front-of-face",
+      torsoLean: "slight-forward",
+      pelvisOrientation: "slightly-left",
+      weightDistribution: "left-biased",
     });
 
     expect(resolved.phonePosition).toBe("above-chest");
+    expect(resolved.torsoLean).toBe("neutral");
+    expect(resolved.pelvisOrientation).toBe("square");
+    expect(resolved.weightDistribution).toBe("supported");
+  });
+
+  it("falls back from an incompatible leg configuration after a pose change", () => {
+    const resolved = resolveLockedState({
+      ...createDefaultSceneState(),
+      poseType: "sitting-chair",
+      legConfiguration: "staggered",
+    });
+
+    expect(resolved.legConfiguration).toBe("neutral");
+  });
+
+  it("locks the cross-legged pose to the cross-legged leg configuration", () => {
+    const resolved = resolveLockedState({
+      ...createDefaultSceneState(),
+      poseType: "sitting-bed-cross-legged",
+      legConfiguration: "neutral",
+    });
+
+    expect(resolved.legConfiguration).toBe("cross-legged");
   });
 
   it("does not mutate the input state", () => {

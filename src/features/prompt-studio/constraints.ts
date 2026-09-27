@@ -1,3 +1,8 @@
+import {
+  getMicroPoseRule,
+  MICRO_POSE_VALUES,
+  type MicroPoseField,
+} from "./microPose";
 import type { SceneState } from "./types";
 
 export interface ConstraintOption {
@@ -12,12 +17,14 @@ export interface FieldConstraints {
   lockReason?: string;
 }
 
-type ConstrainedField =
+type CoreConstrainedField =
   | "cameraDistance"
   | "freeHandPosition"
   | "phonePosition"
   | "eyeDirection"
   | "faceExpression";
+
+type ConstrainedField = CoreConstrainedField | MicroPoseField;
 
 type Rule = {
   allowed?: readonly string[];
@@ -53,6 +60,10 @@ const values: Record<ConstrainedField, readonly string[]> = {
     "sleepy",
     "light-laugh",
   ],
+  legConfiguration: MICRO_POSE_VALUES.legConfiguration,
+  torsoLean: MICRO_POSE_VALUES.torsoLean,
+  pelvisOrientation: MICRO_POSE_VALUES.pelvisOrientation,
+  weightDistribution: MICRO_POSE_VALUES.weightDistribution,
 };
 
 const BED_SEATED_POSES: readonly SceneState["poseType"][] = [
@@ -160,6 +171,11 @@ const rules: Record<ConstrainedField, (state: SceneState) => Rule> = {
           reason: "الضحك لا يناسب وضعية الاستلقاء",
         }
       : {},
+
+  legConfiguration: (state) => getMicroPoseRule("legConfiguration", state),
+  torsoLean: (state) => getMicroPoseRule("torsoLean", state),
+  pelvisOrientation: (state) => getMicroPoseRule("pelvisOrientation", state),
+  weightDistribution: (state) => getMicroPoseRule("weightDistribution", state),
 };
 
 function optionReason(rule: Rule): string {

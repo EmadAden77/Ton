@@ -1,3 +1,4 @@
+import { resolveLockedState } from "./state";
 import type { SceneState } from "./types";
 
 type ScenarioId = Exclude<NonNullable<SceneState["scenario"]>, "none">;
@@ -9,12 +10,18 @@ export interface ScenarioPreset {
   apply: (current: SceneState) => SceneState;
 }
 
+function resolvedPreset(
+  apply: (current: SceneState) => SceneState,
+): (current: SceneState) => SceneState {
+  return (current) => resolveLockedState(apply(current));
+}
+
 export const SCENARIOS: ScenarioPreset[] = [
   {
     id: "working-laptop",
     labelAr: "أعمل على لابتوب في المكتب",
     labelEn: "Working on laptop at desk",
-    apply: (current) => ({
+    apply: resolvedPreset((current) => ({
       ...current,
       scenario: "working-laptop",
       shotType: "front-selfie",
@@ -27,13 +34,13 @@ export const SCENARIOS: ScenarioPreset[] = [
       eyeDirection: "down-soft",
       faceExpression: "calm-focus",
       lightingMode: "as-in-photo",
-    }),
+    })),
   },
   {
     id: "bed-laptop",
     labelAr: "أجلس على السرير مع اللابتوب",
     labelEn: "Sitting on bed with laptop",
-    apply: (current) => ({
+    apply: resolvedPreset((current) => ({
       ...current,
       scenario: "bed-laptop",
       shotType: "front-selfie",
@@ -46,13 +53,13 @@ export const SCENARIOS: ScenarioPreset[] = [
       eyeDirection: "down-soft",
       faceExpression: "calm-focus",
       lightingMode: "as-in-photo",
-    }),
+    })),
   },
   {
     id: "mirror-selfie",
     labelAr: "سيلفي أمام المرآة",
     labelEn: "Mirror selfie",
-    apply: (current) => ({
+    apply: resolvedPreset((current) => ({
       ...current,
       scenario: "mirror-selfie",
       shotType: "mirror-selfie",
@@ -65,13 +72,13 @@ export const SCENARIOS: ScenarioPreset[] = [
       eyeDirection: "mirror",
       mouthState: "smile-closed",
       lightingMode: "as-in-photo",
-    }),
+    })),
   },
   {
     id: "getting-ready",
     labelAr: "أجهّز نفسي للخروج",
     labelEn: "Getting ready to go out",
-    apply: (current) => ({
+    apply: resolvedPreset((current) => ({
       ...current,
       scenario: "getting-ready",
       shotType: "front-selfie",
@@ -83,13 +90,13 @@ export const SCENARIOS: ScenarioPreset[] = [
       faceExpression: "calm-focus",
       eyeDirection: "mirror",
       lightingMode: "daylight-open",
-    }),
+    })),
   },
   {
     id: "lying-with-phone",
     labelAr: "مستلقٍ على السرير ألتقط سيلفي",
     labelEn: "Lying on bed taking a selfie",
-    apply: (current) => ({
+    apply: resolvedPreset((current) => ({
       ...current,
       scenario: "lying-with-phone",
       shotType: "front-selfie",
@@ -101,13 +108,13 @@ export const SCENARIOS: ScenarioPreset[] = [
       eyeDirection: "down-soft",
       faceExpression: "neutral",
       lightingMode: "phone-screen",
-    }),
+    })),
   },
   {
     id: "standing-window",
     labelAr: "واقف قرب النافذة",
     labelEn: "Standing by the window",
-    apply: (current) => ({
+    apply: resolvedPreset((current) => ({
       ...current,
       scenario: "standing-window",
       shotType: "front-selfie",
@@ -120,13 +127,13 @@ export const SCENARIOS: ScenarioPreset[] = [
       eyeDirection: "away-soft",
       faceExpression: "calm-focus",
       lightingMode: "daylight-open",
-    }),
+    })),
   },
   {
     id: "choosing-clothes",
     labelAr: "أختار ملابس من الخزانة",
     labelEn: "Choosing clothes from the closet",
-    apply: (current) => ({
+    apply: resolvedPreset((current) => ({
       ...current,
       scenario: "choosing-clothes",
       shotType: "front-selfie",
@@ -138,13 +145,13 @@ export const SCENARIOS: ScenarioPreset[] = [
       eyeDirection: "down-soft",
       headDirection: "down",
       lightingMode: "as-in-photo",
-    }),
+    })),
   },
   {
     id: "adjusting-clothing",
     labelAr: "أعدّل ملابسي قبل الخروج",
     labelEn: "Adjusting clothing before going out",
-    apply: (current) => ({
+    apply: resolvedPreset((current) => ({
       ...current,
       scenario: "adjusting-clothing",
       shotType: "front-selfie",
@@ -160,6 +167,6 @@ export const SCENARIOS: ScenarioPreset[] = [
       clothingTop: "sweater",
       clothingBottom: "jeans",
       lightingMode: "daylight-open",
-    }),
+    })),
   },
 ];
