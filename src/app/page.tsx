@@ -2,6 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 
+import RoomScene from "@/components/RoomScene";
 import { getFieldConstraints } from "@/features/prompt-studio/constraints";
 import {
   buildNegativePrompt,
@@ -399,6 +400,18 @@ export default function Home() {
             </select>
           </label>
         </header>
+
+        <section className="rounded-2xl border border-slate-700 bg-slate-900 p-4">
+          <h3 className="mb-3 text-sm font-bold text-slate-300">
+            عرض الغرفة من الأعلى
+          </h3>
+          <div className="flex justify-center">
+            <RoomScene
+              poseType={state.poseType}
+              headDirection={state.headDirection}
+            />
+          </div>
+        </section>
 
         <div className="grid gap-4">
           <CollapsibleSection title="الكاميرا" badge="3 حقول" defaultOpen>
