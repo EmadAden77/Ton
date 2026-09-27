@@ -101,7 +101,7 @@ describe("ready-made scenarios", () => {
     }
   });
 
-  it("switches the shot type and pose for mirror selfie", () => {
+  it("anchors mirror selfie at the real wardrobe mirror", () => {
     const preset = SCENARIOS.find((item) => item.id === "mirror-selfie");
     const scene = preset?.apply({
       ...baseState,
@@ -109,8 +109,9 @@ describe("ready-made scenarios", () => {
       shotType: "front-selfie",
     });
     expect(scene?.shotType).toBe("mirror-selfie");
-    expect(scene?.poseType).toBe("standing");
+    expect(scene?.poseType).toBe("standing-wardrobe");
     expect(scene?.phonePosition).toBe("chest-level");
+    expect(scene?.eyeDirection).toBe("mirror");
   });
 
   it("resets non-mirror presets to a front selfie", () => {
@@ -143,11 +144,23 @@ describe("ready-made scenarios", () => {
     expect(preset?.apply(baseState).lightingMode).toBe("daylight-open");
   });
 
+  it("anchors wardrobe-related scenarios at the wardrobe", () => {
+    for (const id of [
+      "getting-ready",
+      "choosing-clothes",
+      "adjusting-clothing",
+    ] as const) {
+      const preset = SCENARIOS.find((item) => item.id === id);
+      expect(preset?.apply(baseState).poseType).toBe("standing-wardrobe");
+    }
+  });
+
   it("keeps clothing scenario behavior", () => {
     const adjust = SCENARIOS.find((item) => item.id === "adjusting-clothing");
     const choose = SCENARIOS.find((item) => item.id === "choosing-clothes");
     expect(adjust?.apply(baseState).clothingTop).toBe("sweater");
     expect(adjust?.apply(baseState).clothingBottom).toBe("jeans");
+    expect(adjust?.apply(baseState).clothingMaterial).toBe("wool");
     expect(choose?.apply(baseState).freeHandPosition).toBe("holding-cloth");
   });
 });

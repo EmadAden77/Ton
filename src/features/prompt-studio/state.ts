@@ -1,17 +1,5 @@
-import { getFieldConstraints } from "./constraints";
+import { CONSTRAINED_FIELDS, getFieldConstraints } from "./constraints";
 import type { SceneState } from "./types";
-
-const constrainedFields: (keyof SceneState)[] = [
-  "cameraDistance",
-  "freeHandPosition",
-  "phonePosition",
-  "eyeDirection",
-  "faceExpression",
-  "legConfiguration",
-  "torsoLean",
-  "pelvisOrientation",
-  "weightDistribution",
-];
 
 export const DEFAULT_SCENE_STATE: SceneState = {
   shotType: "front-selfie",
@@ -54,10 +42,10 @@ export function createDefaultSceneState(): SceneState {
 export function resolveLockedState(state: SceneState): SceneState {
   let resolved = { ...state };
 
-  for (let pass = 0; pass < constrainedFields.length; pass += 1) {
+  for (let pass = 0; pass < CONSTRAINED_FIELDS.length; pass += 1) {
     let changed = false;
 
-    for (const field of constrainedFields) {
+    for (const field of CONSTRAINED_FIELDS) {
       const constraints = getFieldConstraints(field, resolved);
       if (!constraints) continue;
 
