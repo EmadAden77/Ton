@@ -36,7 +36,9 @@ describe("3D SceneState adapter", () => {
   });
 
   it("derives the default 3D pose from SceneState", () => {
-    expect(getThreeDPose(createDefaultSceneState().poseType).id).toBe("standing");
+    expect(getThreeDPose(createDefaultSceneState().poseType).id).toBe(
+      "standing",
+    );
   });
 
   it("lets domain constraints set the lying phone position", () => {
