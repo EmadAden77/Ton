@@ -65,10 +65,7 @@ export function PromptControls({
           label="مسافة الكاميرا"
           options={cameraDistanceOptions}
           onChange={(value) =>
-            updateField(
-              "cameraDistance",
-              value as SceneState["cameraDistance"],
-            )
+            updateField("cameraDistance", value as SceneState["cameraDistance"])
           }
         />
         <SmartSelect
@@ -115,10 +112,7 @@ export function PromptControls({
           className="sm:col-span-2"
         />
 
-        <label
-          className="grid gap-2 sm:col-span-2"
-          htmlFor="identity-notes"
-        >
+        <label className="grid gap-2 sm:col-span-2" htmlFor="identity-notes">
           ملاحظات عن الملامح (اختياري)
           <textarea
             id="identity-notes"
@@ -134,7 +128,8 @@ export function PromptControls({
         </label>
 
         <p className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-200 sm:col-span-2">
-          الصورة المرجعية هنا إعداد نصي فقط. لا يتم رفع صورة فعلية في هذه المرحلة.
+          الصورة المرجعية هنا إعداد نصي فقط. لا يتم رفع صورة فعلية في هذه
+          المرحلة.
         </p>
       </CollapsibleSection>
 
@@ -170,10 +165,7 @@ export function PromptControls({
           label="القطعة السفلية"
           options={clothingBottomOptions}
           onChange={(value) =>
-            updateField(
-              "clothingBottom",
-              value as SceneState["clothingBottom"],
-            )
+            updateField("clothingBottom", value as SceneState["clothingBottom"])
           }
         />
         <SmartSelect
@@ -288,10 +280,7 @@ export function PromptControls({
           label="تعبير الوجه"
           options={faceExpressionOptions}
           onChange={(value) =>
-            updateField(
-              "faceExpression",
-              value as SceneState["faceExpression"],
-            )
+            updateField("faceExpression", value as SceneState["faceExpression"])
           }
         />
         <SmartSelect
