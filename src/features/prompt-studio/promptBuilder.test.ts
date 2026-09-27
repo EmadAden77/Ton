@@ -196,8 +196,12 @@ describe("selfie capture geometry", () => {
       ...baseState,
       phonePosition: "side-soft",
     });
-    expect(prompt).toContain("front-camera viewpoint is offset slightly to the side");
-    expect(prompt).toContain("phone body itself remains outside the captured frame");
+    expect(prompt).toContain(
+      "front-camera viewpoint is offset slightly to the side",
+    );
+    expect(prompt).toContain(
+      "phone body itself remains outside the captured frame",
+    );
     expect(prompt).toContain("extends forward and slightly sideways");
   });
 
@@ -219,7 +223,9 @@ describe("selfie capture geometry", () => {
       phonePosition: "above-chest",
     });
     expect(prompt).toContain("held above the torso");
-    expect(prompt).toContain("phone body itself remains outside the captured frame");
+    expect(prompt).toContain(
+      "phone body itself remains outside the captured frame",
+    );
     expect(prompt).toContain("physically connected and reachable");
   });
 
