@@ -82,6 +82,24 @@ describe("3D SceneState adapter", () => {
     expect(closeCamera.fov).toBe(armCamera.fov);
   });
 
+  it("orders close, arm-length, and extended by physical capture distance", () => {
+    const base = createDefaultSceneState();
+    const close = getThreeDSelfieCamera({ ...base, cameraDistance: "close" });
+    const armLength = getThreeDSelfieCamera(base);
+    const extended = getThreeDSelfieCamera({
+      ...base,
+      cameraDistance: "extended",
+    });
+
+    const closeDistance = distance(close.position, close.target);
+    const armDistance = distance(armLength.position, armLength.target);
+    const extendedDistance = distance(extended.position, extended.target);
+
+    expect(closeDistance).toBeLessThan(armDistance);
+    expect(armDistance).toBeLessThan(extendedDistance);
+    expect(extended.fov).toBe(armLength.fov);
+  });
+
   it("raises and lowers the capture camera from the same eye target", () => {
     const state = createDefaultSceneState();
     const above = getThreeDSelfieCamera({
