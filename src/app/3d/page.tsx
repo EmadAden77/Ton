@@ -39,9 +39,7 @@ export default function Page() {
   };
 
   const selectLighting = (lightingMode: SceneState["lightingMode"]) => {
-    setSceneState((previous) =>
-      selectThreeDLighting(previous, lightingMode),
-    );
+    setSceneState((previous) => selectThreeDLighting(previous, lightingMode));
   };
 
   const reset = () => {
