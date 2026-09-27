@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -1495,12 +1496,12 @@ export default function App() {
               {negativePrompt}
             </pre>
 
-            <a
+            <Link
               href="/"
               className="mt-4 block w-full rounded-xl bg-amber-500 py-2.5 text-center font-bold text-slate-950 transition hover:bg-amber-600"
             >
               افتح في Ton الرئيسي
-            </a>
+            </Link>
           </section>
 
           {/* FOOTER INSTRUCTIONS */}
