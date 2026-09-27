@@ -14,6 +14,8 @@ import {
   englishScenarioDescription,
 } from "./promptFragments";
 import {
+  arabicClothingMaterialPhysics,
+  arabicPoseMechanics,
   backPostureLabels,
   cameraAngles,
   cameraDistances,
@@ -26,12 +28,14 @@ import {
   englishCameraDistances,
   englishClothingBottoms,
   englishClothingColors,
+  englishClothingMaterialPhysics,
   englishClothingMaterials,
   englishClothingTops,
   englishEyeDirections,
   englishFaceExpressions,
   englishHeadDirections,
   englishMouthStates,
+  englishPoseMechanics,
   englishPoseTypes,
   englishShoulderPositions,
   englishShotTypes,
@@ -53,9 +57,9 @@ import {
 import type { SceneState } from "./types";
 
 export function buildPromptEnglish(state: SceneState): string {
-  return `${englishIdentityDescription(state)}${englishShotTypes[state.shotType]}, the subject is ${englishPoseTypes[state.poseType]}, head ${englishHeadDirections[state.headDirection]}, shoulders ${englishShoulderPositions[state.shoulderPosition]}, back ${englishBackPostures[state.backPosture]}.${englishScenarioDescription(state)} Facial expression: ${englishFaceExpressions[state.faceExpression]}, eyes ${englishEyeDirections[effectiveEyeDirection(state)]}, mouth ${englishMouthStates[effectiveMouthState(state)]}. Hair: ${englishHairDescription(state)}. Wearing: a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]} in ${englishClothingColors[state.clothingColor]} tones, and ${englishClothingBottoms[state.clothingBottom]}. ${englishHandDescription(state)} ${englishCaptureGeometry(state)} ${englishCameraDistances[state.cameraDistance]}, camera at ${englishCameraAngles[state.cameraAngle]}. ${FIXED_ROOM_DESCRIPTION_EN}. Lighting: ${lightingModeLabels[state.lightingMode]}. ${englishCaptureRealism(state)}`;
+  return `${englishIdentityDescription(state)}${englishShotTypes[state.shotType]}, the subject is ${englishPoseTypes[state.poseType]}, head ${englishHeadDirections[state.headDirection]}, shoulders ${englishShoulderPositions[state.shoulderPosition]}, back ${englishBackPostures[state.backPosture]}. ${englishPoseMechanics[state.poseType]}${englishScenarioDescription(state)} Facial expression: ${englishFaceExpressions[state.faceExpression]}, eyes ${englishEyeDirections[effectiveEyeDirection(state)]}, mouth ${englishMouthStates[effectiveMouthState(state)]}. Hair: ${englishHairDescription(state)}. Wearing: a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]} in ${englishClothingColors[state.clothingColor]} tones, and ${englishClothingBottoms[state.clothingBottom]}. ${englishClothingMaterialPhysics[state.clothingMaterial]} ${englishHandDescription(state)} ${englishCaptureGeometry(state)} ${englishCameraDistances[state.cameraDistance]}, camera at ${englishCameraAngles[state.cameraAngle]}. ${FIXED_ROOM_DESCRIPTION_EN}. Lighting: ${lightingModeLabels[state.lightingMode]}. ${englishCaptureRealism(state)}`;
 }
 
 export function buildPromptArabic(state: SceneState): string {
-  return `${arabicIdentityDescription(state)}${shotTypes[state.shotType]}، الشخص ${poseTypeLabels[state.poseType]}، رأسه ${headDirectionLabels[state.headDirection]}، وكتفاه ${shoulderPositionLabels[state.shoulderPosition]}، وظهره ${backPostureLabels[state.backPosture]}.${arabicScenarioDescription(state)} تعبير الوجه: ${faceExpressionLabels[state.faceExpression]}، والعينان ${eyeDirectionLabels[effectiveEyeDirection(state)]}، والفم ${mouthStateLabels[effectiveMouthState(state)]}. الشعر: ${hairLengthLabels[state.hairLength]} ${hairTextureLabels[state.hairTexture]} ${hairStyleLabels[state.hairStyle]}. الملابس: ${clothingTopLabels[state.clothingTop]} من ${clothingMaterialLabels[state.clothingMaterial]} بدرجات ${clothingColorLabels[state.clothingColor]}، و${clothingBottomLabels[state.clothingBottom]}. ${arabicHandDescription(state)} ${arabicCaptureGeometry(state)} الكاميرا ${cameraDistances[state.cameraDistance]}، عند ${cameraAngles[state.cameraAngle]}. ${FIXED_ROOM_DESCRIPTION_AR}. الإضاءة: ${lightingModeLabelsAr[state.lightingMode]}. ${arabicCaptureRealism(state)}`;
+  return `${arabicIdentityDescription(state)}${shotTypes[state.shotType]}، الشخص ${poseTypeLabels[state.poseType]}، رأسه ${headDirectionLabels[state.headDirection]}، وكتفاه ${shoulderPositionLabels[state.shoulderPosition]}، وظهره ${backPostureLabels[state.backPosture]}. ${arabicPoseMechanics[state.poseType]}${arabicScenarioDescription(state)} تعبير الوجه: ${faceExpressionLabels[state.faceExpression]}، والعينان ${eyeDirectionLabels[effectiveEyeDirection(state)]}، والفم ${mouthStateLabels[effectiveMouthState(state)]}. الشعر: ${hairLengthLabels[state.hairLength]} ${hairTextureLabels[state.hairTexture]} ${hairStyleLabels[state.hairStyle]}. الملابس: ${clothingTopLabels[state.clothingTop]} من ${clothingMaterialLabels[state.clothingMaterial]} بدرجات ${clothingColorLabels[state.clothingColor]}، و${clothingBottomLabels[state.clothingBottom]}. ${arabicClothingMaterialPhysics[state.clothingMaterial]} ${arabicHandDescription(state)} ${arabicCaptureGeometry(state)} الكاميرا ${cameraDistances[state.cameraDistance]}، عند ${cameraAngles[state.cameraAngle]}. ${FIXED_ROOM_DESCRIPTION_AR}. الإضاءة: ${lightingModeLabelsAr[state.lightingMode]}. ${arabicCaptureRealism(state)}`;
 }

@@ -15,17 +15,26 @@ import type { SceneState } from "./types";
 
 const poseTypes: SceneState["poseType"][] = [
   "standing",
-  "sitting-bed",
-  "sitting-chair",
-  "lying-bed",
   "standing-window",
+  "standing-wardrobe",
+  "leaning-dresser",
+  "sitting-chair",
+  "sitting-bed",
+  "sitting-bed-edge",
+  "sitting-bed-cross-legged",
+  "reclining-headboard",
+  "lying-bed",
 ];
 
 const lightingModes: SceneState["lightingMode"][] = [
   "as-in-photo",
   "phone-screen",
+  "bedside-lamp-only",
+  "ceiling-only",
+  "blue-hour-closed",
   "daylight-closed",
   "daylight-open",
+  "overcast-open",
 ];
 
 function distance(a: Vec3, b: Vec3): number {
@@ -39,6 +48,13 @@ describe("3D SceneState adapter", () => {
 
   it("covers every domain lighting mode", () => {
     expect(Object.keys(THREE_D_LIGHTING)).toEqual(lightingModes);
+  });
+
+  it("gives every pose a distinct scene anchor", () => {
+    const anchors = THREE_D_POSES.map((pose) =>
+      [...pose.modelPosition, ...pose.modelRotation].join(":"),
+    );
+    expect(new Set(anchors).size).toBe(THREE_D_POSES.length);
   });
 
   it("derives the default 3D pose from SceneState", () => {
@@ -138,6 +154,19 @@ describe("3D SceneState adapter", () => {
     expect(camera.position[1]).toBeGreaterThan(camera.target[1]);
   });
 
+  it("derives usable selfie cameras for every expanded pose", () => {
+    const base = createDefaultSceneState();
+
+    for (const poseType of poseTypes) {
+      const state = selectThreeDPose(base, poseType);
+      const camera = getThreeDSelfieCamera(state);
+      expect(Number.isFinite(distance(camera.position, camera.target))).toBe(
+        true,
+      );
+      expect(distance(camera.position, camera.target)).toBeGreaterThan(0.1);
+    }
+  });
+
   it("does not mutate SceneState while deriving the selfie camera", () => {
     const state = createDefaultSceneState();
     getThreeDSelfieCamera(state);
@@ -152,8 +181,33 @@ describe("3D SceneState adapter", () => {
     expect(lighting.phoneIntensity).toBeGreaterThan(0);
   });
 
-  it("turns practical lights off for both daylight modes", () => {
-    for (const mode of ["daylight-closed", "daylight-open"] as const) {
+  it("uses the bedside lamp as the only practical source in lamp-only mode", () => {
+    const lighting = getThreeDLighting("bedside-lamp-only");
+    expect(lighting.lampIntensity).toBeGreaterThan(0);
+    expect(lighting.ceilingIntensity).toBe(0);
+    expect(lighting.daylightIntensity).toBe(0);
+  });
+
+  it("uses ceiling spots without bedside or daylight contribution in ceiling-only mode", () => {
+    const lighting = getThreeDLighting("ceiling-only");
+    expect(lighting.ceilingIntensity).toBeGreaterThan(0);
+    expect(lighting.lampIntensity).toBe(0);
+    expect(lighting.daylightIntensity).toBe(0);
+  });
+
+  it("keeps blue hour dimmer than open daylight", () => {
+    expect(
+      getThreeDLighting("blue-hour-closed").daylightIntensity,
+    ).toBeLessThan(getThreeDLighting("daylight-open").daylightIntensity);
+  });
+
+  it("turns practical lights off for daylight-driven modes", () => {
+    for (const mode of [
+      "blue-hour-closed",
+      "daylight-closed",
+      "daylight-open",
+      "overcast-open",
+    ] as const) {
       const lighting = getThreeDLighting(mode);
       expect(lighting.ceilingIntensity).toBe(0);
       expect(lighting.lampIntensity).toBe(0);
@@ -161,16 +215,18 @@ describe("3D SceneState adapter", () => {
     }
   });
 
-  it("opens curtains only for daylight-open", () => {
+  it("opens curtains only for the open-curtain daylight modes", () => {
     expect(getThreeDLighting("daylight-open").curtainsOpen).toBe(true);
+    expect(getThreeDLighting("overcast-open").curtainsOpen).toBe(true);
     expect(getThreeDLighting("daylight-closed").curtainsOpen).toBe(false);
+    expect(getThreeDLighting("blue-hour-closed").curtainsOpen).toBe(false);
   });
 
   it("writes the selected lighting mode directly to SceneState", () => {
     const selected = selectThreeDLighting(
       createDefaultSceneState(),
-      "daylight-closed",
+      "overcast-open",
     );
-    expect(selected.lightingMode).toBe("daylight-closed");
+    expect(selected.lightingMode).toBe("overcast-open");
   });
 });

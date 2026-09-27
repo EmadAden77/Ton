@@ -10,10 +10,15 @@ const POSE_POSITIONS: Record<
   { x: number; y: number; rotation: number }
 > = {
   standing: { x: 215, y: 160, rotation: 0 },
-  "sitting-bed": { x: 90, y: 175, rotation: 90 },
+  "standing-window": { x: 200, y: 70, rotation: 180 },
+  "standing-wardrobe": { x: 315, y: 125, rotation: 90 },
+  "leaning-dresser": { x: 350, y: 230, rotation: 65 },
   "sitting-chair": { x: 320, y: 230, rotation: -90 },
+  "sitting-bed": { x: 90, y: 175, rotation: 90 },
+  "sitting-bed-edge": { x: 120, y: 205, rotation: 90 },
+  "sitting-bed-cross-legged": { x: 78, y: 125, rotation: 35 },
+  "reclining-headboard": { x: 72, y: 82, rotation: 0 },
   "lying-bed": { x: 70, y: 110, rotation: 0 },
-  "standing-window": { x: 200, y: 70, rotation: 0 },
 };
 
 const HEAD_ROTATIONS: Record<SceneState["headDirection"], number> = {

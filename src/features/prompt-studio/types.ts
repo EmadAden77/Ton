@@ -8,23 +8,48 @@ export interface SceneState {
     // ضوء نهار — ستائر مغلقة: منتشر، خفيف.
     | "daylight-closed"
     // ضوء نهار — ستائر مفتوحة: ساطع، نافذة خلفية.
-    | "daylight-open";
+    | "daylight-open"
+    // مصباح السرير فقط: مصدر دافئ جانبي واحد.
+    | "bedside-lamp-only"
+    // سبوتات السقف فقط: إضاءة علوية عملية.
+    | "ceiling-only"
+    // الساعة الزرقاء خلف ستائر مغلقة: محيط بارد خافت.
+    | "blue-hour-closed"
+    // نهار غائم عبر ستائر مفتوحة: ضوء واسع ومنتشر.
+    | "overcast-open";
   cameraDistance: "close" | "arm-length" | "extended";
   cameraAngle: "eye-level" | "slightly-above" | "slightly-below";
-  phonePosition:
-    // أمام الوجه (سيلفي أمامي).
-    | "front-of-face"
-    // على مستوى الصدر (سيلفي أمام المرآة).
-    | "chest-level"
-    // فوق الصدر (استلقاء).
-    | "above-chest"
-    // جانبي بلطف.
-    | "side-soft";
+  phonePosition: "front-of-face" | "chest-level" | "above-chest" | "side-soft";
   clothingTop:
-    "t-shirt" | "shirt" | "hoodie" | "pajama-top" | "sweater" | "tank-top";
+    | "t-shirt"
+    | "shirt"
+    | "hoodie"
+    | "pajama-top"
+    | "sweater"
+    | "tank-top"
+    | "polo-shirt"
+    | "henley"
+    | "long-sleeve-tshirt"
+    | "overshirt";
   clothingBottom:
-    "jeans" | "shorts" | "pajama-pants" | "sweatpants" | "none-visible";
-  clothingMaterial: "cotton" | "denim" | "wool" | "polyester" | "linen";
+    | "jeans"
+    | "shorts"
+    | "pajama-pants"
+    | "sweatpants"
+    | "chinos"
+    | "lounge-pants"
+    | "linen-trousers"
+    | "track-shorts"
+    | "none-visible";
+  clothingMaterial:
+    | "cotton"
+    | "denim"
+    | "wool"
+    | "polyester"
+    | "linen"
+    | "jersey"
+    | "fleece"
+    | "poplin";
   clothingColor: "neutral" | "dark" | "light" | "earth-tone" | "pastel";
   referenceProvided: boolean;
   identityPriority: "strict" | "balanced" | "flexible";
@@ -37,7 +62,12 @@ export interface SceneState {
     | "sitting-bed"
     | "sitting-chair"
     | "lying-bed"
-    | "standing-window";
+    | "standing-window"
+    | "sitting-bed-edge"
+    | "sitting-bed-cross-legged"
+    | "reclining-headboard"
+    | "standing-wardrobe"
+    | "leaning-dresser";
   headDirection:
     "forward" | "slightly-left" | "slightly-right" | "down" | "up-soft";
   shoulderPosition: "relaxed" | "one-raised" | "both-back";
