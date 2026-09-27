@@ -379,6 +379,13 @@ export default function Home() {
             فقط.
           </p>
 
+          <a
+            href="/3d"
+            className="mt-4 inline-flex rounded-lg border border-sky-500/30 bg-sky-500/10 px-3 py-2 text-sm font-medium text-sky-300 transition hover:bg-sky-500/20 hover:text-sky-200"
+          >
+            🎮 تجربة المحاكي 3D
+          </a>
+
           <label className="mt-6 grid gap-2" htmlFor="scenario">
             سيناريو جاهز
             <select
