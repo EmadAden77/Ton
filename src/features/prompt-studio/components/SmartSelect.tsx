@@ -8,7 +8,7 @@ type SmartSelectProps = {
   state: SceneState;
   onChange: (value: string) => void;
   label: string;
-  options: SelectOption[];
+  options: readonly SelectOption[];
   className?: string;
 };
 
