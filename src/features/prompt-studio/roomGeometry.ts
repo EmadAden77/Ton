@@ -42,7 +42,7 @@ function arabicCurtainState(state: SceneState): string {
 export function englishFixedRoomDescription(state: SceneState): string {
   return [
     "ROOM GEOMETRY LOCK — in the fixed realistic modern bedroom, the architecture and furniture layout are fixed; do not redesign or reinterpret them.",
-    "Exactly one dark tufted-headboard bed on the left occupies the LEFT side of the room, aligned straight with the room geometry and never diagonal, with one tall dark-charcoal tufted headboard and grey bedding.",
+    "Exactly one bed occupies the LEFT side of the room: a dark tufted-headboard bed on the left, aligned straight with the room geometry and never diagonal, with one tall dark-charcoal tufted headboard and grey bedding.",
     "Exactly one bedside table sits beside the bed with exactly one warm bedside lamp; do not add a second nightstand, extra lamp, plant, books, or invented bedside decor.",
     "Exactly one white wall-mounted split-AC indoor unit is installed high on the UPPER-LEFT wall near the ceiling beside the bed area; no second AC, stacked AC, duplicated vent unit, or ceiling AC.",
     englishCurtainState(state),
