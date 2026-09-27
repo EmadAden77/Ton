@@ -866,8 +866,7 @@ export default function App() {
 
   // State variables
   const [activePoseId, setActivePoseId] = useState<string>("lying_back_bed");
-  const [activeLighting, setActiveLighting] =
-    useState<LightingModeKey>("warm");
+  const [activeLighting, setActiveLighting] = useState<LightingModeKey>("warm");
   const [isPanelVisible, setIsPanelVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
