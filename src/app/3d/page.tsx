@@ -22,12 +22,85 @@ import {
   Palette,
 } from "lucide-react";
 
+interface Vector3Values {
+  x: number;
+  y: number;
+  z: number;
+}
+
+interface JointAngles {
+  rx: number;
+  ry: number;
+  rz: number;
+}
+
+interface PoseJoints {
+  head: JointAngles;
+  spine: JointAngles;
+  leftShoulder: JointAngles;
+  rightShoulder: JointAngles;
+  rightElbow: JointAngles;
+  leftLeg: JointAngles;
+  rightLeg: JointAngles;
+}
+
+interface Pose {
+  id: string;
+  title: string;
+  shortTitle: string;
+  category: "bed" | "sofa";
+  description: string;
+  position: Vector3Values;
+  rotation: Vector3Values;
+  joints: PoseJoints;
+  camera: {
+    position: Vector3Values;
+    target: Vector3Values;
+  };
+}
+
+type LightingModeKey = "warm" | "white" | "night";
+
+interface LightingMode {
+  id: LightingModeKey;
+  name: string;
+  bg: number;
+  ambientColor: number;
+  ambientIntensity: number;
+  keyColor: number;
+  keyIntensity: number;
+  lampColor: number;
+  lampIntensity: number;
+  screenLight: number;
+}
+
+interface CharacterRig {
+  rootGroup: THREE.Group;
+  pelvis: THREE.Group;
+  torso: THREE.Group;
+  headGroup: THREE.Group;
+  leftShoulder: THREE.Group;
+  rightShoulder: THREE.Group;
+  rightForearm: THREE.Group;
+  leftLeg: THREE.Group;
+  rightLeg: THREE.Group;
+  screenLight: THREE.PointLight;
+}
+
+interface AnimationTargets {
+  charPos: THREE.Vector3;
+  charRot: THREE.Euler;
+  joints: PoseJoints;
+  camPos: THREE.Vector3;
+  camTarget: THREE.Vector3;
+}
+
 /**
  * Pose Presets Matrix
  * Each pose defines character transforms, articulated joint angles, smartphone position,
  * and camera target focal points for seamless transitions.
  */
-const SELFIE_POSES = [
+const SELFIE_POSES: Pose[] = [
   {
     id: "lying_back_bed",
     title: "1. الاستلقاء على الظهر فوق السرير",
@@ -212,7 +285,7 @@ const SELFIE_POSES = [
 ];
 
 /* LIGHTING MODES CONFIGURATION */
-const LIGHTING_MODES = {
+const LIGHTING_MODES: Record<LightingModeKey, LightingMode> = {
   warm: {
     id: "warm",
     name: "إضاءة دافئة",
@@ -255,7 +328,7 @@ const LIGHTING_MODES = {
  * Procedurally generates the 3D bedroom environment including Bed,
  * Armchair, Nightstand, Windows, Floor, Rug, Plants, and Decorative Wall.
  */
-function createBedroomEnvironment(scene) {
+function createBedroomEnvironment(scene: THREE.Scene): THREE.Group {
   const roomGroup = new THREE.Group();
 
   // Materials
@@ -544,7 +617,7 @@ function createBedroomEnvironment(scene) {
  * Torso -> Shoulders -> Arms -> Forearms -> Hands (holds Smartphone)
  * Pelvis -> Thighs -> Lower Legs -> Feet
  */
-function createArticulatedCharacter(scene) {
+function createArticulatedCharacter(scene: THREE.Scene): CharacterRig {
   const rootGroup = new THREE.Group();
   rootGroup.name = "CharacterRoot";
 
@@ -789,24 +862,29 @@ function createArticulatedCharacter(scene) {
 }
 
 export default function App() {
-  const mountRef = useRef(null);
+  const mountRef = useRef<HTMLDivElement | null>(null);
 
   // State variables
-  const [activePoseId, setActivePoseId] = useState("lying_back_bed");
-  const [activeLighting, setActiveLighting] = useState("warm");
+  const [activePoseId, setActivePoseId] = useState<string>("lying_back_bed");
+  const [activeLighting, setActiveLighting] =
+    useState<LightingModeKey>("warm");
   const [isPanelVisible, setIsPanelVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
   // Scene references
-  const sceneRef = useRef(null);
-  const cameraRef = useRef(null);
-  const rendererRef = useRef(null);
-  const controlsRef = useRef(null);
-  const characterRef = useRef(null);
-  const lightsRef = useRef({});
+  const sceneRef = useRef<THREE.Scene | null>(null);
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const controlsRef = useRef<OrbitControls | null>(null);
+  const characterRef = useRef<CharacterRig | null>(null);
+  const lightsRef = useRef<{
+    ambientLight?: THREE.AmbientLight;
+    keyLight?: THREE.DirectionalLight;
+    lampLight?: THREE.PointLight;
+  }>({});
 
   // Targets for animation interpolation (Lerp)
-  const animTargetsRef = useRef({
+  const animTargetsRef = useRef<AnimationTargets>({
     charPos: new THREE.Vector3(-1.8, 0.88, -1.2),
     charRot: new THREE.Euler(-Math.PI / 2, 0, 0),
     joints: {
@@ -903,7 +981,7 @@ export default function App() {
     setIsLoading(false);
 
     // 7. ANIMATION LOOP
-    let animationFrameId;
+    let animationFrameId: number;
     const clock = new THREE.Clock();
 
     const animate = () => {
@@ -1048,7 +1126,7 @@ export default function App() {
   }, []);
 
   // Update animation targets when pose changes
-  const selectPose = useCallback((pose) => {
+  const selectPose = useCallback((pose: Pose) => {
     setActivePoseId(pose.id);
     animTargetsRef.current = {
       charPos: new THREE.Vector3(
@@ -1076,7 +1154,7 @@ export default function App() {
   }, []);
 
   // Update light colors/intensities when lighting mode changes
-  const changeLightingMode = useCallback((modeKey) => {
+  const changeLightingMode = useCallback((modeKey: LightingModeKey) => {
     setActiveLighting(modeKey);
     const config = LIGHTING_MODES[modeKey];
     if (!config || !sceneRef.current) return;
