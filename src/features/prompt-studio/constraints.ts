@@ -55,6 +55,19 @@ const values: Record<ConstrainedField, readonly string[]> = {
   ],
 };
 
+const BED_SEATED_POSES: readonly SceneState["poseType"][] = [
+  "sitting-bed",
+  "sitting-bed-edge",
+  "sitting-bed-cross-legged",
+];
+
+const STANDING_POSES: readonly SceneState["poseType"][] = [
+  "standing",
+  "standing-window",
+  "standing-wardrobe",
+  "leaning-dresser",
+];
+
 const rules: Record<ConstrainedField, (state: SceneState) => Rule> = {
   cameraDistance: (state) =>
     state.shotType === "mirror-selfie"
@@ -72,6 +85,19 @@ const rules: Record<ConstrainedField, (state: SceneState) => Rule> = {
       };
     }
 
+    if (state.poseType === "reclining-headboard") {
+      return {
+        allowed: [
+          "on-bed",
+          "on-chest",
+          "holding-phone",
+          "touching-chin",
+          "on-hair",
+        ],
+        reason: "موضع اليد لا يناسب الاتكاء على لوح السرير",
+      };
+    }
+
     if (state.poseType === "sitting-chair") {
       return {
         allowed: ["on-keyboard", "at-side", "holding-cup", "touching-chin"],
@@ -79,14 +105,14 @@ const rules: Record<ConstrainedField, (state: SceneState) => Rule> = {
       };
     }
 
-    if (state.poseType === "standing") {
+    if (STANDING_POSES.includes(state.poseType)) {
       return {
-        disabled: ["on-bed", "on-chest"],
-        reason: "موضع اليد لا يناسب الوقوف",
+        disabled: ["on-bed", "on-chest", "on-keyboard"],
+        reason: "موضع اليد لا يناسب وضعية الوقوف",
       };
     }
 
-    if (state.poseType === "sitting-bed") {
+    if (BED_SEATED_POSES.includes(state.poseType)) {
       return {
         disabled: ["in-pocket"],
         reason: "موضع اليد لا يناسب الجلوس على السرير",
@@ -111,8 +137,6 @@ const rules: Record<ConstrainedField, (state: SceneState) => Rule> = {
       };
     }
 
-    // Front-camera selfies can be centered or held slightly to one side.
-    // Do not over-constrain the phone here; pose-specific rules are stronger.
     return {};
   },
 

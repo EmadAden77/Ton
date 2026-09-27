@@ -21,12 +21,25 @@ export const lightingModeOptions: SelectOption[] = [
   { value: "as-in-photo", label: "كما في الصورة (As in photo)" },
   { value: "phone-screen", label: "ضوء شاشة الهاتف (Phone screen)" },
   {
+    value: "bedside-lamp-only",
+    label: "مصباح السرير فقط (Bedside lamp only)",
+  },
+  { value: "ceiling-only", label: "سبوتات السقف فقط (Ceiling only)" },
+  {
+    value: "blue-hour-closed",
+    label: "الساعة الزرقاء — ستائر مغلقة (Blue hour, closed curtains)",
+  },
+  {
     value: "daylight-closed",
     label: "ضوء نهار — ستائر مغلقة (Daylight, closed curtains)",
   },
   {
     value: "daylight-open",
     label: "ضوء نهار — ستائر مفتوحة (Daylight, open curtains)",
+  },
+  {
+    value: "overcast-open",
+    label: "نهار غائم — ستائر مفتوحة (Overcast, open curtains)",
   },
 ];
 
@@ -38,7 +51,11 @@ export const identityPriorityOptions: SelectOption[] = [
 
 export const clothingTopOptions: SelectOption[] = [
   { value: "t-shirt", label: "تي شيرت (T-shirt)" },
+  { value: "long-sleeve-tshirt", label: "تي شيرت طويل الأكمام (Long-sleeve T-shirt)" },
+  { value: "polo-shirt", label: "بولو (Polo shirt)" },
+  { value: "henley", label: "هنلي (Henley)" },
   { value: "shirt", label: "قميص (Shirt)" },
+  { value: "overshirt", label: "قميص خارجي خفيف (Overshirt)" },
   { value: "hoodie", label: "هودي (Hoodie)" },
   { value: "pajama-top", label: "بلوزة نوم (Pajama top)" },
   { value: "sweater", label: "كنزة (Sweater)" },
@@ -47,18 +64,25 @@ export const clothingTopOptions: SelectOption[] = [
 
 export const clothingBottomOptions: SelectOption[] = [
   { value: "jeans", label: "بنطال جينز (Jeans)" },
+  { value: "chinos", label: "تشينو (Chinos)" },
+  { value: "linen-trousers", label: "بنطال كتان (Linen trousers)" },
   { value: "shorts", label: "شورت (Shorts)" },
+  { value: "track-shorts", label: "شورت رياضي (Track shorts)" },
   { value: "pajama-pants", label: "بنطال نوم (Pajama pants)" },
+  { value: "lounge-pants", label: "بنطال منزلي (Lounge pants)" },
   { value: "sweatpants", label: "بنطال رياضي (Sweatpants)" },
   { value: "none-visible", label: "غير ظاهرة (Not visible)" },
 ];
 
 export const clothingMaterialOptions: SelectOption[] = [
   { value: "cotton", label: "قطن (Cotton)" },
+  { value: "jersey", label: "جيرسي (Jersey)" },
+  { value: "poplin", label: "بوبلين (Poplin)" },
+  { value: "linen", label: "كتان (Linen)" },
   { value: "denim", label: "دنيم (Denim)" },
+  { value: "fleece", label: "فليس (Fleece)" },
   { value: "wool", label: "صوف (Wool)" },
   { value: "polyester", label: "بوليستر (Polyester)" },
-  { value: "linen", label: "كتان (Linen)" },
 ];
 
 export const clothingColorOptions: SelectOption[] = [
@@ -91,10 +115,21 @@ export const hairTextureOptions: SelectOption[] = [
 
 export const poseTypeOptions: SelectOption[] = [
   { value: "standing", label: "وقوف (Standing)" },
-  { value: "sitting-bed", label: "جلوس على السرير (Sitting on bed)" },
-  { value: "sitting-chair", label: "جلوس على كرسي (Sitting on chair)" },
-  { value: "lying-bed", label: "استلقاء على السرير (Lying on bed)" },
   { value: "standing-window", label: "وقوف قرب النافذة (Standing by window)" },
+  { value: "standing-wardrobe", label: "وقوف أمام الخزانة (Standing by wardrobe)" },
+  { value: "leaning-dresser", label: "اتكاء خفيف على خزانة الأدراج (Leaning on dresser)" },
+  { value: "sitting-chair", label: "جلوس على كرسي (Sitting on chair)" },
+  { value: "sitting-bed", label: "جلوس على السرير (Sitting on bed)" },
+  { value: "sitting-bed-edge", label: "جلوس على حافة السرير (Sitting on bed edge)" },
+  {
+    value: "sitting-bed-cross-legged",
+    label: "جلوس متربع على السرير (Cross-legged on bed)",
+  },
+  {
+    value: "reclining-headboard",
+    label: "اتكاء على لوح السرير (Reclining against headboard)",
+  },
+  { value: "lying-bed", label: "استلقاء على السرير (Lying on bed)" },
 ];
 
 export const headDirectionOptions: SelectOption[] = [
