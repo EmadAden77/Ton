@@ -19,12 +19,12 @@ export function PromptPreview({ prompts }: PromptPreviewProps) {
 
   return (
     <section
-      aria-label="المعاينة"
-      className="mt-6 rounded-xl border border-white/10 bg-slate-900 p-5 sm:sticky sm:bottom-0 sm:z-20 sm:shadow-2xl"
+      aria-label="الـPrompt النهائي"
+      className="rounded-2xl border border-white/10 bg-slate-900 p-5"
     >
       <div
         role="tablist"
-        aria-label="نوع المعاينة"
+        aria-label="نوع الـPrompt"
         className="flex flex-wrap gap-2"
       >
         {previewTabs.map(({ id, label }) => (
