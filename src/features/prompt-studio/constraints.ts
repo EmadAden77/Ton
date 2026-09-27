@@ -62,10 +62,7 @@ const rules: Record<ConstrainedField, (state: SceneState) => Rule> = {
           lockedTo: "arm-length",
           lockReason: "سيلفي المرآة يتطلب مسافة طول الذراع",
         }
-      : {
-          disabled: ["extended"],
-          reason: "السيلفي الأمامي يتطلب مسافة قريبة",
-        },
+      : {},
 
   freeHandPosition: (state) => {
     if (state.poseType === "lying-bed") {
