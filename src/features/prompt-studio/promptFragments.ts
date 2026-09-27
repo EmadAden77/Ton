@@ -100,24 +100,50 @@ export function arabicHandDescription(state: SceneState): string {
   return `اليد الحرة ${freeHandPositionLabels[state.freeHandPosition]}، والأصابع ${handFingersStateLabels[state.handFingersState]}، واليد ${handVisibilityLabels[state.handVisibility]}.`;
 }
 
+function englishSelfieArmMechanics(state: SceneState): string {
+  if (state.cameraDistance === "extended") {
+    return "The selfie arm reaches forward near full extension with only minimal elbow flexion, without locking the joint or exceeding natural shoulder reach.";
+  }
+
+  if (state.cameraDistance === "close") {
+    return "The selfie arm stays more flexed at the elbow so the camera remains close while the shoulder and wrist stay relaxed and reachable.";
+  }
+
+  return "The selfie arm extends forward with a slight natural bend at the elbow and stays within realistic shoulder reach.";
+}
+
+function arabicSelfieArmMechanics(state: SceneState): string {
+  if (state.cameraDistance === "extended") {
+    return "ذراع السيلفي ممتدة للأمام إلى قرب الامتداد الكامل مع انثناء طفيف جدًا في الكوع، من دون قفل المفصل أو تجاوز مدى وصول الكتف الطبيعي.";
+  }
+
+  if (state.cameraDistance === "close") {
+    return "ذراع السيلفي أكثر انثناءً عند الكوع لإبقاء الكاميرا قريبة، مع بقاء الكتف والمعصم في وضع طبيعي وضمن مدى الوصول.";
+  }
+
+  return "ذراع السيلفي ممتدة للأمام مع انحناء طبيعي بسيط عند الكوع وضمن مدى وصول واقعي للكتف.";
+}
+
 export function englishCaptureGeometry(state: SceneState): string {
   if (state.shotType === "mirror-selfie") {
     return `The phone is ${phonePositionLabels[state.phonePosition]} and is naturally visible in the mirror reflection. The phone-holding arm is bent naturally at the elbow.`;
   }
 
+  const armMechanics = englishSelfieArmMechanics(state);
+
   if (state.poseType === "lying-bed" || state.phonePosition === "above-chest") {
-    return "The front-camera viewpoint is held above the torso and aimed back toward the face. The phone body itself remains outside the captured frame. The selfie arm is raised with a natural bend at the elbow and remains physically connected and reachable.";
+    return `The front-camera viewpoint is held above the torso and aimed back toward the face. The phone body itself remains outside the captured frame. ${armMechanics}`;
   }
 
   if (state.phonePosition === "side-soft") {
-    return "The front-camera viewpoint is offset slightly to the side. The phone body itself remains outside the captured frame. The selfie arm extends forward and slightly sideways with a natural bend at the elbow.";
+    return `The front-camera viewpoint is offset slightly to the side. The phone body itself remains outside the captured frame. ${armMechanics}`;
   }
 
   if (state.phonePosition === "chest-level") {
-    return "The front-camera viewpoint is held from a lower chest-to-face line and aimed back toward the face. The phone body itself remains outside the captured frame. The selfie arm stays naturally bent and physically reachable.";
+    return `The front-camera viewpoint is held from a lower chest-to-face line and aimed back toward the face. The phone body itself remains outside the captured frame. ${armMechanics}`;
   }
 
-  return "The front-camera viewpoint is directly in front of the face. The phone body itself remains outside the captured frame. The selfie arm extends forward with a slight natural bend at the elbow.";
+  return `The front-camera viewpoint is directly in front of the face. The phone body itself remains outside the captured frame. ${armMechanics}`;
 }
 
 export function arabicCaptureGeometry(state: SceneState): string {
@@ -125,19 +151,21 @@ export function arabicCaptureGeometry(state: SceneState): string {
     return `الهاتف ${phonePositionLabelsAr[state.phonePosition]} ويظهر بصورة طبيعية داخل انعكاس المرآة، والذراع الممسكة به منحنية بشكل طبيعي عند الكوع.`;
   }
 
+  const armMechanics = arabicSelfieArmMechanics(state);
+
   if (state.poseType === "lying-bed" || state.phonePosition === "above-chest") {
-    return "منظور الكاميرا الأمامية مرفوع فوق الجذع وموجه نحو الوجه، بينما يبقى جسم الهاتف نفسه خارج الإطار الملتقط. ذراع السيلفي مرفوعة بانحناء طبيعي عند الكوع ومتصلة بالجسم ضمن مدى وصول واقعي.";
+    return `منظور الكاميرا الأمامية مرفوع فوق الجذع وموجه نحو الوجه، بينما يبقى جسم الهاتف نفسه خارج الإطار الملتقط. ${armMechanics}`;
   }
 
   if (state.phonePosition === "side-soft") {
-    return "منظور الكاميرا الأمامية مزاح قليلاً إلى الجانب، بينما يبقى جسم الهاتف نفسه خارج الإطار الملتقط. ذراع السيلفي ممتدة للأمام وإلى الجانب قليلاً مع انحناء طبيعي عند الكوع.";
+    return `منظور الكاميرا الأمامية مزاح قليلاً إلى الجانب، بينما يبقى جسم الهاتف نفسه خارج الإطار الملتقط. ${armMechanics}`;
   }
 
   if (state.phonePosition === "chest-level") {
-    return "منظور الكاميرا الأمامية يأتي من خط منخفض بين الصدر والوجه وموجه نحو الوجه، بينما يبقى جسم الهاتف نفسه خارج الإطار الملتقط. ذراع السيلفي منحنية بشكل طبيعي وضمن مدى وصول واقعي.";
+    return `منظور الكاميرا الأمامية يأتي من خط منخفض بين الصدر والوجه وموجه نحو الوجه، بينما يبقى جسم الهاتف نفسه خارج الإطار الملتقط. ${armMechanics}`;
   }
 
-  return "منظور الكاميرا الأمامية أمام الوجه مباشرة، بينما يبقى جسم الهاتف نفسه خارج الإطار الملتقط. ذراع السيلفي ممتدة للأمام مع انحناء طبيعي بسيط عند الكوع.";
+  return `منظور الكاميرا الأمامية أمام الوجه مباشرة، بينما يبقى جسم الهاتف نفسه خارج الإطار الملتقط. ${armMechanics}`;
 }
 
 export function englishCaptureRealism(state: SceneState): string {
