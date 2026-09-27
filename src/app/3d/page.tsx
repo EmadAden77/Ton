@@ -1159,7 +1159,7 @@ export default function App() {
     if (!config || !sceneRef.current) return;
 
     sceneRef.current.background = new THREE.Color(config.bg);
-    sceneRef.current.fog.color = new THREE.Color(config.bg);
+    sceneRef.current.fog!.color = new THREE.Color(config.bg);
 
     const { ambientLight, keyLight, lampLight } = lightsRef.current;
     if (ambientLight) {
