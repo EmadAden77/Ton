@@ -32,7 +32,9 @@ export function buildNegativePrompt(state: SceneState): string {
   } else if (state.handVisibility === "partially-visible") {
     constraints.push("no malformed visible fingers; no phantom wrist");
   } else {
-    constraints.push("no phantom off-frame hand entering without a connected forearm");
+    constraints.push(
+      "no phantom off-frame hand entering without a connected forearm",
+    );
   }
 
   if (
@@ -101,7 +103,9 @@ export function buildNegativePrompt(state: SceneState): string {
     state.lightingMode === "daylight-open" ||
     state.lightingMode === "overcast-open"
   ) {
-    constraints.push("no indoor practical lights; no closed-curtain lighting pattern");
+    constraints.push(
+      "no indoor practical lights; no closed-curtain lighting pattern",
+    );
   } else if (
     state.lightingMode === "daylight-closed" ||
     state.lightingMode === "blue-hour-closed"

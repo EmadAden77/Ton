@@ -38,10 +38,7 @@ import type { SceneState } from "./types";
 
 type Option = { value: string };
 
-const optionFields: ReadonlyArray<[
-  keyof SceneState,
-  readonly Option[],
-]> = [
+const optionFields: ReadonlyArray<[keyof SceneState, readonly Option[]]> = [
   ["shotType", shotTypeOptions],
   ["lightingMode", lightingModeOptions],
   ["cameraDistance", cameraDistanceOptions],

@@ -185,7 +185,8 @@ const rules: Record<ConstrainedField, (state: SceneState) => Rule> = {
     state.hairLength === "short"
       ? {
           disabled: ["combed-back"],
-          reason: "التسريح الكامل للخلف يحتاج طول شعر كافياً ولا يجب اختراع طول إضافي",
+          reason:
+            "التسريح الكامل للخلف يحتاج طول شعر كافياً ولا يجب اختراع طول إضافي",
         }
       : {},
 

@@ -283,13 +283,15 @@ export function canApplyWholeBodyMicroPoseApproximation(
 export function getThreeDPoseForState(state: SceneState): ThreeDPoseConfig {
   const base = getThreeDPose(state.poseType);
   const micro = getThreeDMicroPoseTransform(state);
-  const canApproximate = canApplyWholeBodyMicroPoseApproximation(state.poseType);
-  const positionOffset = (canApproximate
-    ? micro.positionOffset
-    : [0, 0, 0]) as Vec3;
-  const rotationOffset = (canApproximate
-    ? micro.rotationOffset
-    : [0, 0, 0]) as Vec3;
+  const canApproximate = canApplyWholeBodyMicroPoseApproximation(
+    state.poseType,
+  );
+  const positionOffset = (
+    canApproximate ? micro.positionOffset : [0, 0, 0]
+  ) as Vec3;
+  const rotationOffset = (
+    canApproximate ? micro.rotationOffset : [0, 0, 0]
+  ) as Vec3;
 
   return {
     ...base,
