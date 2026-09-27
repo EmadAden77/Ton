@@ -15,16 +15,12 @@ import {
   Moon,
   Lightbulb,
   RotateCcw,
-  Eye,
-  EyeOff,
   Smartphone,
-  Sliders,
   Bed,
   Armchair,
   Sparkles,
   Check,
   Info,
-  Layers,
   Palette,
 } from "lucide-react";
 
@@ -890,9 +886,11 @@ export default function App() {
   const mountRef = useRef<HTMLDivElement | null>(null);
 
   // State variables
+  const [activeTab, setActiveTab] = useState<"simulator" | "prompt">(
+    "simulator",
+  );
   const [activePoseId, setActivePoseId] = useState<string>("lying_back_bed");
   const [activeLighting, setActiveLighting] = useState<LightingModeKey>("warm");
-  const [isPanelVisible, setIsPanelVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [copiedTarget, setCopiedTarget] = useState<
     "prompt" | "negative" | null
@@ -1266,254 +1264,256 @@ export default function App() {
 
   return (
     <div
-      className="relative w-full h-screen overflow-hidden bg-slate-950 font-sans text-slate-100 select-none dir-rtl"
+      className="min-h-screen bg-slate-950 pb-20 font-sans text-slate-100 select-none"
       dir="rtl"
     >
-      {/* 3D CANVAS CONTAINER */}
-      <div
-        ref={mountRef}
-        className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing"
-      />
-
-      {/* LOADING OVERLAY */}
-      {isLoading && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/90 backdrop-blur-md z-50 transition-opacity duration-500">
-          <div className="relative flex items-center justify-center mb-4">
-            <div className="w-16 h-16 border-4 border-amber-500/30 border-t-amber-500 rounded-full animate-spin" />
-            <Sparkles className="absolute w-6 h-6 text-amber-400 animate-pulse" />
+      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-slate-800 bg-slate-950/95 px-3 backdrop-blur">
+        <div className="flex min-w-0 items-center gap-2.5">
+          <div className="rounded-lg bg-gradient-to-tr from-amber-500 to-rose-500 p-1.5 text-white">
+            <Camera className="h-4 w-4" />
           </div>
-          <p className="text-lg font-bold text-amber-300">
-            جاري تحميل الغرفة ثلاثية الأبعاد...
-          </p>
-          <p className="text-xs text-slate-400 mt-1">
-            تجهيز الأثاث والإضاءة والنموذج
-          </p>
-        </div>
-      )}
-
-      {/* TOP HEADER & ACTIVE POSE BANNER */}
-      <div className="absolute top-4 inset-x-4 flex flex-col md:flex-row items-center justify-between gap-3 pointer-events-none z-20">
-        {/* App Title */}
-        <div className="pointer-events-auto bg-slate-900/80 backdrop-blur-md border border-slate-800 px-4 py-2.5 rounded-2xl shadow-xl flex items-center gap-3">
-          <div className="p-2 bg-gradient-to-tr from-amber-500 to-rose-500 rounded-xl text-white shadow-md">
-            <Camera className="w-5 h-5" />
-          </div>
-          <div>
-            <h1 className="font-bold text-sm md:text-base text-slate-100 leading-tight">
-              غرفة النوم الحديثة 3D
+          <div className="min-w-0">
+            <h1 className="truncate text-sm font-bold text-slate-100">
+              محاكي السيلفي 3D
             </h1>
-            <p className="text-[11px] text-slate-400">
-              محاكي وضعيات تصوير السيلفي
+            <p className="truncate text-[10px] text-slate-500">
+              وضعيات وإضاءة + Prompt حي
             </p>
           </div>
         </div>
+        <button
+          type="button"
+          onClick={resetToDefault}
+          className="flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-900 px-2.5 py-1.5 text-xs font-bold text-slate-300 transition hover:border-amber-500/60 hover:text-amber-300"
+          title="إعادة التعيين"
+        >
+          <RotateCcw className="h-3.5 w-3.5" />
+          <span>إعادة التعيين</span>
+        </button>
+      </header>
 
-        {/* Active Pose Title Indicator */}
-        <div className="pointer-events-auto bg-slate-900/85 backdrop-blur-md border border-amber-500/30 px-5 py-2.5 rounded-2xl shadow-2xl flex items-center gap-3 animate-fade-in">
-          <Smartphone className="w-5 h-5 text-amber-400 animate-bounce" />
-          <div className="text-center md:text-right">
-            <span className="text-[10px] uppercase tracking-wider text-amber-400/90 font-semibold block">
-              الوضعية الحالية:
-            </span>
-            <span className="text-xs md:text-sm font-bold text-amber-200">
-              {currentPose.title}
-            </span>
-          </div>
-        </div>
+      <main>
+        <div style={{ display: activeTab === "simulator" ? "block" : "none" }}>
+          <section className="relative h-[60vh] min-h-[360px] overflow-hidden border-b border-slate-800 bg-slate-950">
+            <div
+              ref={mountRef}
+              className="absolute inset-0 h-full w-full cursor-grab active:cursor-grabbing"
+            />
 
-        {/* Quick Action Buttons */}
-        <div className="pointer-events-auto flex items-center gap-2">
-          <button
-            onClick={resetToDefault}
-            className="p-2.5 bg-slate-900/80 hover:bg-slate-800 backdrop-blur-md border border-slate-700/80 rounded-xl text-slate-200 hover:text-amber-400 transition-all shadow-lg active:scale-95"
-            title="إعادة الوضعية الافتراضية"
-          >
-            <RotateCcw className="w-4 h-4" />
-          </button>
-
-          <button
-            onClick={() => setIsPanelVisible(!isPanelVisible)}
-            className="p-2.5 bg-slate-900/80 hover:bg-slate-800 backdrop-blur-md border border-slate-700/80 rounded-xl text-slate-200 hover:text-amber-400 transition-all shadow-lg active:scale-95 flex items-center gap-1.5 text-xs font-medium"
-            title="إظهار/إخفاء لوحة التحكم"
-          >
-            {isPanelVisible ? (
-              <EyeOff className="w-4 h-4 text-rose-400" />
-            ) : (
-              <Eye className="w-4 h-4 text-emerald-400" />
+            {isLoading && (
+              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-slate-950/90 backdrop-blur-md">
+                <div className="relative mb-3 flex items-center justify-center">
+                  <div className="h-14 w-14 animate-spin rounded-full border-4 border-amber-500/30 border-t-amber-500" />
+                  <Sparkles className="absolute h-5 w-5 animate-pulse text-amber-400" />
+                </div>
+                <p className="text-sm font-bold text-amber-300">
+                  جاري تحميل الغرفة ثلاثية الأبعاد...
+                </p>
+              </div>
             )}
-            <span className="hidden sm:inline">
-              {isPanelVisible ? "إخفاء التحكم" : "إظهار التحكم"}
-            </span>
-          </button>
-        </div>
-      </div>
 
-      {/* CONTROLS PANEL (RESPONSIVE: SIDEBAR ON DESKTOP, BOTTOM DRAWER ON MOBILE) */}
-      {isPanelVisible && (
-        <div className="absolute bottom-0 inset-x-0 md:inset-x-auto md:top-20 md:left-4 md:bottom-6 w-full md:w-96 max-h-[60vh] md:max-h-[calc(100vh-7rem)] bg-slate-900/90 backdrop-blur-xl border-t md:border border-slate-800/90 rounded-t-3xl md:rounded-3xl shadow-2xl z-30 flex flex-col transition-all duration-300">
-          {/* Panel Header */}
-          <div className="p-4 border-b border-slate-800/80 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Sliders className="w-4 h-4 text-amber-400" />
-              <h2 className="font-bold text-sm text-slate-100">
-                اختيار وضعية السيلفي
-              </h2>
+            <div className="pointer-events-none absolute inset-x-3 top-3 z-10 flex justify-end">
+              <div className="flex max-w-[85%] items-center gap-2 rounded-xl border border-amber-500/30 bg-slate-900/85 px-3 py-2 shadow-lg backdrop-blur">
+                <Smartphone className="h-4 w-4 shrink-0 text-amber-400" />
+                <div className="min-w-0">
+                  <span className="block text-[9px] font-semibold uppercase tracking-wider text-amber-400/80">
+                    الوضعية الحالية
+                  </span>
+                  <span className="block truncate text-xs font-bold text-amber-100">
+                    {currentPose.shortTitle}
+                  </span>
+                </div>
+              </div>
             </div>
-            <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 font-medium">
-              8 وضعيات
-            </span>
-          </div>
+          </section>
 
-          {/* LIGHTING CONTROLS */}
-          <div className="px-4 py-3 bg-slate-950/40 border-b border-slate-800/60">
-            <label className="text-[11px] font-semibold text-slate-400 flex items-center gap-1.5 mb-2">
-              <Palette className="w-3.5 h-3.5 text-amber-400" />
-              نمط الإضاءة:
-            </label>
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                onClick={() => changeLightingMode("warm")}
-                className={`py-1.5 px-2 rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 border transition-all ${
-                  activeLighting === "warm"
-                    ? "bg-amber-500/20 border-amber-500/50 text-amber-300 shadow-sm"
-                    : "bg-slate-800/50 border-slate-700/50 text-slate-400 hover:bg-slate-800"
-                }`}
-              >
-                <Sun className="w-3.5 h-3.5 text-amber-400" />
-                <span>دافئة</span>
-              </button>
+          <section className="space-y-5 px-3 py-4">
+            <div>
+              <div className="mb-2 flex items-center justify-between">
+                <h2 className="text-sm font-bold text-slate-200">
+                  وضعيات السيلفي
+                </h2>
+                <span className="text-[10px] text-slate-500">8 وضعيات</span>
+              </div>
+              <div className="max-h-64 space-y-2 overflow-y-auto rounded-2xl border border-slate-800 bg-slate-900/50 p-2">
+                {SELFIE_POSES.map((pose) => {
+                  const isActive = pose.id === activePoseId;
+                  const IconComponent =
+                    pose.category === "bed" ? Bed : Armchair;
 
-              <button
-                onClick={() => changeLightingMode("white")}
-                className={`py-1.5 px-2 rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 border transition-all ${
-                  activeLighting === "white"
-                    ? "bg-sky-500/20 border-sky-500/50 text-sky-300 shadow-sm"
-                    : "bg-slate-800/50 border-slate-700/50 text-slate-400 hover:bg-slate-800"
-                }`}
-              >
-                <Lightbulb className="w-3.5 h-3.5 text-sky-400" />
-                <span>بيضاء</span>
-              </button>
-
-              <button
-                onClick={() => changeLightingMode("night")}
-                className={`py-1.5 px-2 rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 border transition-all ${
-                  activeLighting === "night"
-                    ? "bg-indigo-500/20 border-indigo-500/50 text-indigo-300 shadow-sm"
-                    : "bg-slate-800/50 border-slate-700/50 text-slate-400 hover:bg-slate-800"
-                }`}
-              >
-                <Moon className="w-3.5 h-3.5 text-indigo-400" />
-                <span>ليلية</span>
-              </button>
+                  return (
+                    <button
+                      key={pose.id}
+                      type="button"
+                      onClick={() => selectPose(pose)}
+                      className={`flex w-full items-start gap-3 rounded-xl border p-3 text-right transition ${
+                        isActive
+                          ? "border-amber-500/60 bg-gradient-to-l from-amber-500/20 to-rose-500/10"
+                          : "border-slate-800 bg-slate-900/70 text-slate-300 hover:border-slate-700"
+                      }`}
+                    >
+                      <div
+                        className={`mt-0.5 shrink-0 rounded-lg p-2 ${
+                          isActive
+                            ? "bg-amber-500 text-slate-950"
+                            : "bg-slate-800 text-slate-400"
+                        }`}
+                      >
+                        <IconComponent className="h-4 w-4" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-2">
+                          <span
+                            className={`truncate text-xs font-bold ${
+                              isActive ? "text-amber-200" : "text-slate-200"
+                            }`}
+                          >
+                            {pose.title}
+                          </span>
+                          {isActive && (
+                            <Check className="h-4 w-4 shrink-0 text-amber-400" />
+                          )}
+                        </div>
+                        <p className="mt-0.5 line-clamp-2 text-[10px] leading-relaxed text-slate-500">
+                          {pose.description}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
 
-          {/* POSES LIST (SCROLLABLE) */}
-          <div className="p-3 overflow-y-auto space-y-2 flex-1 scrollbar-thin scrollbar-thumb-slate-700">
-            {SELFIE_POSES.map((pose, idx) => {
-              const isActive = pose.id === activePoseId;
-              const IconComponent = pose.category === "bed" ? Bed : Armchair;
-
-              return (
+            <div>
+              <div className="mb-2 flex items-center gap-1.5 text-xs font-semibold text-slate-400">
+                <Palette className="h-3.5 w-3.5 text-amber-400" />
+                نمط الإضاءة
+              </div>
+              <div className="grid grid-cols-3 gap-2">
                 <button
-                  key={pose.id}
-                  onClick={() => selectPose(pose)}
-                  className={`w-full text-right p-3 rounded-2xl border transition-all duration-200 flex items-start gap-3 group relative overflow-hidden ${
-                    isActive
-                      ? "bg-gradient-to-l from-amber-500/20 to-rose-500/10 border-amber-500/60 shadow-lg shadow-amber-500/5"
-                      : "bg-slate-800/40 hover:bg-slate-800/80 border-slate-700/50 text-slate-300"
+                  type="button"
+                  onClick={() => changeLightingMode("warm")}
+                  className={`flex items-center justify-center gap-1.5 rounded-xl border px-2 py-2 text-xs font-medium transition ${
+                    activeLighting === "warm"
+                      ? "border-amber-500/50 bg-amber-500/20 text-amber-300"
+                      : "border-slate-800 bg-slate-900 text-slate-400"
                   }`}
                 >
-                  {/* Category Badge Icon */}
-                  <div
-                    className={`p-2.5 rounded-xl shrink-0 mt-0.5 transition-colors ${
-                      isActive
-                        ? "bg-amber-500 text-slate-950 font-bold shadow-md"
-                        : "bg-slate-700/50 text-slate-400 group-hover:text-slate-200"
-                    }`}
-                  >
-                    <IconComponent className="w-4 h-4" />
-                  </div>
-
-                  {/* Pose Details */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-0.5">
-                      <h3
-                        className={`text-xs md:text-sm font-bold truncate ${isActive ? "text-amber-200" : "text-slate-200"}`}
-                      >
-                        {pose.title}
-                      </h3>
-                      {isActive && (
-                        <Check className="w-4 h-4 text-amber-400 shrink-0" />
-                      )}
-                    </div>
-                    <p className="text-[11px] text-slate-400 leading-relaxed line-clamp-2">
-                      {pose.description}
-                    </p>
-                  </div>
+                  <Sun className="h-3.5 w-3.5 text-amber-400" />
+                  دافئة
                 </button>
-              );
-            })}
-          </div>
-
-          <section className="p-4 border-t border-slate-800 bg-slate-900/95">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold text-slate-200">
-                Prompt (English)
-              </h3>
-              <button
-                type="button"
-                onClick={copyPrompt}
-                className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1 text-xs font-semibold text-slate-200 transition hover:border-amber-500/60 hover:text-amber-300"
-              >
-                {copiedTarget === "prompt" ? "تم النسخ" : "نسخ"}
-              </button>
+                <button
+                  type="button"
+                  onClick={() => changeLightingMode("white")}
+                  className={`flex items-center justify-center gap-1.5 rounded-xl border px-2 py-2 text-xs font-medium transition ${
+                    activeLighting === "white"
+                      ? "border-sky-500/50 bg-sky-500/20 text-sky-300"
+                      : "border-slate-800 bg-slate-900 text-slate-400"
+                  }`}
+                >
+                  <Lightbulb className="h-3.5 w-3.5 text-sky-400" />
+                  بيضاء
+                </button>
+                <button
+                  type="button"
+                  onClick={() => changeLightingMode("night")}
+                  className={`flex items-center justify-center gap-1.5 rounded-xl border px-2 py-2 text-xs font-medium transition ${
+                    activeLighting === "night"
+                      ? "border-indigo-500/50 bg-indigo-500/20 text-indigo-300"
+                      : "border-slate-800 bg-slate-900 text-slate-400"
+                  }`}
+                >
+                  <Moon className="h-3.5 w-3.5 text-indigo-400" />
+                  ليلية
+                </button>
+              </div>
             </div>
-            <pre
-              dir="ltr"
-              className="max-h-28 overflow-y-auto whitespace-pre-wrap break-words rounded-xl bg-slate-950/70 p-3 text-left text-[10px] leading-relaxed text-slate-300"
-            >
-              {englishPrompt}
-            </pre>
 
-            <div className="flex items-center justify-between mt-4 mb-3">
-              <h3 className="text-sm font-bold text-slate-200">
-                Negative Prompt
-              </h3>
-              <button
-                type="button"
-                onClick={copyNegative}
-                className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1 text-xs font-semibold text-slate-200 transition hover:border-amber-500/60 hover:text-amber-300"
-              >
-                {copiedTarget === "negative" ? "تم النسخ" : "نسخ"}
-              </button>
+            <div className="flex items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-2 text-[10px] text-slate-500">
+              <Info className="h-3.5 w-3.5 shrink-0 text-amber-400" />
+              يمكنك تدوير المشهد بالسحب بالماوس أو اللمس
             </div>
-            <pre
-              dir="ltr"
-              className="max-h-24 overflow-y-auto whitespace-pre-wrap break-words rounded-xl bg-slate-950/70 p-3 text-left text-[10px] leading-relaxed text-slate-300"
-            >
-              {negativePrompt}
-            </pre>
+          </section>
+        </div>
+
+        <div style={{ display: activeTab === "prompt" ? "block" : "none" }}>
+          <section className="mx-auto min-h-[calc(100vh-8.5rem)] max-w-3xl space-y-6 px-4 py-5">
+            <div>
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <h2 className="text-sm font-bold text-slate-200">
+                  Prompt (English)
+                </h2>
+                <button
+                  type="button"
+                  onClick={copyPrompt}
+                  className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-semibold text-slate-200 transition hover:border-amber-500/60 hover:text-amber-300"
+                >
+                  {copiedTarget === "prompt" ? "تم النسخ" : "نسخ"}
+                </button>
+              </div>
+              <pre
+                dir="ltr"
+                className="max-h-[36vh] overflow-y-auto whitespace-pre-wrap break-words rounded-2xl border border-slate-800 bg-slate-900/80 p-4 text-left text-xs leading-relaxed text-slate-300"
+              >
+                {englishPrompt}
+              </pre>
+            </div>
+
+            <div>
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <h2 className="text-sm font-bold text-slate-200">
+                  Negative Prompt
+                </h2>
+                <button
+                  type="button"
+                  onClick={copyNegative}
+                  className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-semibold text-slate-200 transition hover:border-amber-500/60 hover:text-amber-300"
+                >
+                  {copiedTarget === "negative" ? "تم النسخ" : "نسخ"}
+                </button>
+              </div>
+              <pre
+                dir="ltr"
+                className="max-h-[28vh] overflow-y-auto whitespace-pre-wrap break-words rounded-2xl border border-slate-800 bg-slate-900/80 p-4 text-left text-xs leading-relaxed text-slate-300"
+              >
+                {negativePrompt}
+              </pre>
+            </div>
 
             <Link
               href="/"
-              className="mt-4 block w-full rounded-xl bg-amber-500 py-2.5 text-center font-bold text-slate-950 transition hover:bg-amber-600"
+              className="block w-full rounded-xl bg-amber-500 py-3 text-center text-sm font-bold text-slate-950 transition hover:bg-amber-600"
             >
               افتح في Ton الرئيسي
             </Link>
           </section>
-
-          {/* FOOTER INSTRUCTIONS */}
-          <div className="p-3 border-t border-slate-800/80 bg-slate-950/60 rounded-b-3xl flex items-center justify-between text-[10px] text-slate-400">
-            <span className="flex items-center gap-1">
-              <Info className="w-3 h-3 text-amber-400" />
-              يمكنك تدوير المشهد بالسحب بالماوس أو اللمس
-            </span>
-            <span className="text-slate-500">Three.js + React</span>
-          </div>
         </div>
-      )}
+      </main>
+
+      <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-slate-800 bg-slate-950/95 backdrop-blur">
+        <button
+          type="button"
+          onClick={() => setActiveTab("simulator")}
+          className={`flex-1 border-t-2 py-3 text-sm font-bold transition ${
+            activeTab === "simulator"
+              ? "border-amber-400 text-amber-400"
+              : "border-transparent text-slate-400"
+          }`}
+        >
+          🎮 المحاكي
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab("prompt")}
+          className={`flex-1 border-t-2 py-3 text-sm font-bold transition ${
+            activeTab === "prompt"
+              ? "border-amber-400 text-amber-400"
+              : "border-transparent text-slate-400"
+          }`}
+        >
+          📝 Prompt
+        </button>
+      </nav>
     </div>
   );
 }
