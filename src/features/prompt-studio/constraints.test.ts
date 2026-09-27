@@ -166,9 +166,9 @@ describe("conflicts", () => {
   });
 
   it("accepts extended distance for a front selfie", () => {
-    expect(
-      getConflicts({ ...baseState, cameraDistance: "extended" }),
-    ).toEqual([]);
+    expect(getConflicts({ ...baseState, cameraDistance: "extended" })).toEqual(
+      [],
+    );
   });
 
   it("reports a stale mirror selfie distance", () => {
