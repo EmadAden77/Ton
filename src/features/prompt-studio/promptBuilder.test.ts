@@ -179,47 +179,59 @@ describe("camera descriptions", () => {
   });
 });
 
-describe("phone and arm geometry", () => {
-  it("describes the front-selfie phone arm as extended forward", () => {
-    expect(buildPromptEnglish(baseState)).toContain("extended forward");
+describe("selfie capture geometry", () => {
+  it("treats a front selfie as the camera viewpoint, not a visible phone prop", () => {
+    const prompt = buildPromptEnglish(baseState);
+    expect(prompt).toContain(
+      "front-camera viewpoint is directly in front of the face",
+    );
+    expect(prompt).toContain(
+      "phone body itself remains outside the captured frame",
+    );
+    expect(prompt).not.toContain("The phone is held directly in front");
   });
 
-  it("describes a side-held selfie arm without pretending it is centered", () => {
-    expect(
-      buildPromptEnglish({ ...baseState, phonePosition: "side-soft" }),
-    ).toContain("extended forward and slightly to the side");
+  it("describes a side-held front camera without making the phone visible", () => {
+    const prompt = buildPromptEnglish({
+      ...baseState,
+      phonePosition: "side-soft",
+    });
+    expect(prompt).toContain("front-camera viewpoint is offset slightly to the side");
+    expect(prompt).toContain("phone body itself remains outside the captured frame");
+    expect(prompt).toContain("extends forward and slightly sideways");
   });
 
-  it("describes the mirror-selfie phone arm at chest height", () => {
-    expect(
-      buildPromptEnglish({
-        ...baseState,
-        shotType: "mirror-selfie",
-        phonePosition: "chest-level",
-      }),
-    ).toContain("phone at chest height");
+  it("keeps the phone visible for a mirror selfie", () => {
+    const prompt = buildPromptEnglish({
+      ...baseState,
+      shotType: "mirror-selfie",
+      phonePosition: "chest-level",
+    });
+    expect(prompt).toContain("held at chest level");
+    expect(prompt).toContain("naturally visible in the mirror reflection");
+    expect(prompt).not.toContain("phone body itself remains outside");
   });
 
-  it("uses raised-torso mechanics while lying on the bed", () => {
+  it("uses physically reachable raised-arm mechanics while lying", () => {
     const prompt = buildPromptEnglish({
       ...baseState,
       poseType: "lying-bed",
       phonePosition: "above-chest",
     });
-    expect(prompt).toContain("raised above the torso");
-    expect(prompt).toContain("reachable selfie distance");
+    expect(prompt).toContain("held above the torso");
+    expect(prompt).toContain("phone body itself remains outside the captured frame");
+    expect(prompt).toContain("physically connected and reachable");
   });
 
-  it("describes above-chest phone position in English", () => {
-    expect(
-      buildPromptEnglish({ ...baseState, phonePosition: "above-chest" }),
-    ).toContain("above the chest");
-  });
-
-  it("describes above-chest phone position in Arabic", () => {
-    expect(
-      buildPromptArabic({ ...baseState, phonePosition: "above-chest" }),
-    ).toContain("فوق الصدر");
+  it("describes the same lying selfie geometry in Arabic", () => {
+    const prompt = buildPromptArabic({
+      ...baseState,
+      poseType: "lying-bed",
+      phonePosition: "above-chest",
+    });
+    expect(prompt).toContain("مرفوع فوق الجذع");
+    expect(prompt).toContain("جسم الهاتف نفسه خارج الإطار الملتقط");
+    expect(prompt).toContain("ضمن مدى وصول واقعي");
   });
 });
 
@@ -397,6 +409,8 @@ describe("negative prompt", () => {
     const prompt = buildNegativePrompt(baseState);
     expect(prompt).toContain("no waxy skin");
     expect(prompt).toContain("no warped furniture");
+    expect(prompt).toContain("no portrait-mode bokeh");
+    expect(prompt).toContain("no ring light");
   });
 
   it("adds full hand constraints when visible", () => {
@@ -414,13 +428,22 @@ describe("negative prompt", () => {
     expect(prompt).not.toContain("no extra fingers");
   });
 
-  it("adds mirror constraints only for mirror selfie", () => {
-    expect(
-      buildNegativePrompt({ ...baseState, shotType: "mirror-selfie" }),
-    ).toContain("no incorrect reflections");
-    expect(buildNegativePrompt(baseState)).not.toContain(
-      "no incorrect reflections",
-    );
+  it("prevents third-person and visible-phone artifacts for front selfies", () => {
+    const prompt = buildNegativePrompt(baseState);
+    expect(prompt).toContain("no visible selfie phone body");
+    expect(prompt).toContain("no third-person camera viewpoint");
+    expect(prompt).toContain("no floating camera");
+    expect(prompt).not.toContain("no incorrect reflections");
+  });
+
+  it("uses reflection-specific constraints for mirror selfies", () => {
+    const prompt = buildNegativePrompt({
+      ...baseState,
+      shotType: "mirror-selfie",
+    });
+    expect(prompt).toContain("no incorrect reflections");
+    expect(prompt).toContain("no duplicated phone");
+    expect(prompt).not.toContain("no visible selfie phone body");
   });
 
   it("adds arm and shoulder constraints for lying on the bed", () => {
@@ -439,16 +462,25 @@ describe("negative prompt", () => {
   });
 });
 
-describe("quality tail", () => {
-  it("adds the smartphone realism tail in English", () => {
-    expect(buildPromptEnglish(baseState)).toContain(
-      "Realistic smartphone photography, natural skin texture, balanced dynamic range.",
-    );
+describe("capture realism tail", () => {
+  it("adds front-camera smartphone behavior in English", () => {
+    const prompt = buildPromptEnglish(baseState);
+    expect(prompt).toContain("Authentic front-camera smartphone photography");
+    expect(prompt).toContain("mild wide-angle proximity");
+    expect(prompt).toContain("natural deep depth of field");
+    expect(prompt).toContain("restrained HDR");
+    expect(prompt).toContain("realistic shadow noise");
+  });
+
+  it("adds mirror-specific smartphone behavior in English", () => {
+    expect(
+      buildPromptEnglish({ ...baseState, shotType: "mirror-selfie" }),
+    ).toContain("Authentic handheld smartphone mirror photography");
   });
 
   it("adds the equivalent realism tail in Arabic", () => {
     expect(buildPromptArabic(baseState)).toContain(
-      "تصوير هاتف ذكي واقعي، ملمس بشرة طبيعي، ونطاق ديناميكي متوازن",
+      "تصوير واقعي بالكاميرا الأمامية لهاتف ذكي",
     );
   });
 });
