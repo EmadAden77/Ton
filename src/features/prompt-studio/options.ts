@@ -51,7 +51,10 @@ export const identityPriorityOptions: SelectOption[] = [
 
 export const clothingTopOptions: SelectOption[] = [
   { value: "t-shirt", label: "تي شيرت (T-shirt)" },
-  { value: "long-sleeve-tshirt", label: "تي شيرت طويل الأكمام (Long-sleeve T-shirt)" },
+  {
+    value: "long-sleeve-tshirt",
+    label: "تي شيرت طويل الأكمام (Long-sleeve T-shirt)",
+  },
   { value: "polo-shirt", label: "بولو (Polo shirt)" },
   { value: "henley", label: "هنلي (Henley)" },
   { value: "shirt", label: "قميص (Shirt)" },
@@ -116,11 +119,20 @@ export const hairTextureOptions: SelectOption[] = [
 export const poseTypeOptions: SelectOption[] = [
   { value: "standing", label: "وقوف (Standing)" },
   { value: "standing-window", label: "وقوف قرب النافذة (Standing by window)" },
-  { value: "standing-wardrobe", label: "وقوف أمام الخزانة (Standing by wardrobe)" },
-  { value: "leaning-dresser", label: "اتكاء خفيف على خزانة الأدراج (Leaning on dresser)" },
+  {
+    value: "standing-wardrobe",
+    label: "وقوف أمام الخزانة (Standing by wardrobe)",
+  },
+  {
+    value: "leaning-dresser",
+    label: "اتكاء خفيف على خزانة الأدراج (Leaning on dresser)",
+  },
   { value: "sitting-chair", label: "جلوس على كرسي (Sitting on chair)" },
   { value: "sitting-bed", label: "جلوس على السرير (Sitting on bed)" },
-  { value: "sitting-bed-edge", label: "جلوس على حافة السرير (Sitting on bed edge)" },
+  {
+    value: "sitting-bed-edge",
+    label: "جلوس على حافة السرير (Sitting on bed edge)",
+  },
   {
     value: "sitting-bed-cross-legged",
     label: "جلوس متربع على السرير (Cross-legged on bed)",

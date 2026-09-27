@@ -25,45 +25,56 @@ export const lightingModeLabels: Record<SceneState["lightingMode"], string> = {
     "broad overcast daylight enters through the open curtains, giving soft low-directionality illumination, gentle facial modelling, restrained highlights, and indoor practical lights off",
 };
 
-export const lightingModeLabelsAr: Record<SceneState["lightingMode"], string> = {
-  "as-in-photo":
-    "سبوتات سقف غائرة وخافتة مع مصباح سرير دافئ، بتناقص ضوئي طبيعي وظلال ناتجة عن مصادر الإضاءة العملية المختلطة",
-  "phone-screen":
-    "شاشة الهاتف هي مصدر الضوء النشط الوحيد على الوجه؛ سبوتات السقف ومصباح السرير مطفأة، والغرفة شديدة العتمة مع تناقص سريع للضوء وضجيج طبيعي في الظلال",
-  "bedside-lamp-only":
-    "مصباح السرير هو مصدر الإضاءة العملي الوحيد، فيصنع حوضاً ضوئياً دافئاً جانبياً مع تناقص واقعي للشدة وانعكاس محلي خفيف وظل أعمق طبيعياً على الجهة المقابلة من الوجه",
-  "ceiling-only":
-    "سبوتات السقف الغائرة وحدها مضاءة، فتنتج بقع إضاءة علوية واقعية وظلالاً خفيفة حول محاجر العين وارتداداً محدوداً من الأرض من دون ضوء تعبئة أمامي مصطنع",
-  "blue-hour-closed":
-    "ضوء الساعة الزرقاء البارد يتسرب بخفة عبر الستائر الداكنة المغلقة مع إطفاء الإضاءة الداخلية، فينتج تعريضاً منخفضاً وجواً بارداً وضجيجاً طبيعياً في الظلال",
-  "daylight-closed":
-    "ضوء نهار ناعم ومنتشر يمر عبر الستائر الداكنة المغلقة، مع إطفاء الإضاءة الداخلية العملية",
-  "daylight-open":
-    "ضوء نهار طبيعي يدخل عبر ستائر النافذة الخلفية المفتوحة، مع إطفاء الإضاءة الداخلية والحفاظ على تباين واقعي بين النافذة والغرفة",
-  "overcast-open":
-    "ضوء نهار غائم واسع يدخل عبر الستائر المفتوحة، بإضاءة ناعمة قليلة الاتجاه ونحت لطيف للوجه ولمعان محدود، مع إطفاء الإضاءة الداخلية",
-};
+export const lightingModeLabelsAr: Record<SceneState["lightingMode"], string> =
+  {
+    "as-in-photo":
+      "سبوتات سقف غائرة وخافتة مع مصباح سرير دافئ، بتناقص ضوئي طبيعي وظلال ناتجة عن مصادر الإضاءة العملية المختلطة",
+    "phone-screen":
+      "شاشة الهاتف هي مصدر الضوء النشط الوحيد على الوجه؛ سبوتات السقف ومصباح السرير مطفأة، والغرفة شديدة العتمة مع تناقص سريع للضوء وضجيج طبيعي في الظلال",
+    "bedside-lamp-only":
+      "مصباح السرير هو مصدر الإضاءة العملي الوحيد، فيصنع حوضاً ضوئياً دافئاً جانبياً مع تناقص واقعي للشدة وانعكاس محلي خفيف وظل أعمق طبيعياً على الجهة المقابلة من الوجه",
+    "ceiling-only":
+      "سبوتات السقف الغائرة وحدها مضاءة، فتنتج بقع إضاءة علوية واقعية وظلالاً خفيفة حول محاجر العين وارتداداً محدوداً من الأرض من دون ضوء تعبئة أمامي مصطنع",
+    "blue-hour-closed":
+      "ضوء الساعة الزرقاء البارد يتسرب بخفة عبر الستائر الداكنة المغلقة مع إطفاء الإضاءة الداخلية، فينتج تعريضاً منخفضاً وجواً بارداً وضجيجاً طبيعياً في الظلال",
+    "daylight-closed":
+      "ضوء نهار ناعم ومنتشر يمر عبر الستائر الداكنة المغلقة، مع إطفاء الإضاءة الداخلية العملية",
+    "daylight-open":
+      "ضوء نهار طبيعي يدخل عبر ستائر النافذة الخلفية المفتوحة، مع إطفاء الإضاءة الداخلية والحفاظ على تباين واقعي بين النافذة والغرفة",
+    "overcast-open":
+      "ضوء نهار غائم واسع يدخل عبر الستائر المفتوحة، بإضاءة ناعمة قليلة الاتجاه ونحت لطيف للوجه ولمعان محدود، مع إطفاء الإضاءة الداخلية",
+  };
 
-export const identityPriorityLabels: Record<SceneState["identityPriority"], string> = {
+export const identityPriorityLabels: Record<
+  SceneState["identityPriority"],
+  string
+> = {
   strict: "strict",
   balanced: "balanced",
   flexible: "flexible",
 };
 
-export const identityPriorityLabelsAr: Record<SceneState["identityPriority"], string> = {
+export const identityPriorityLabelsAr: Record<
+  SceneState["identityPriority"],
+  string
+> = {
   strict: "قصوى",
   balanced: "متوازنة",
   flexible: "مرنة",
 };
 
-export const phonePositionLabels: Record<SceneState["phonePosition"], string> = {
-  "front-of-face": "held directly in front of the face",
-  "chest-level": "held at chest level",
-  "above-chest": "raised above the chest",
-  "side-soft": "held slightly to the side",
-};
+export const phonePositionLabels: Record<SceneState["phonePosition"], string> =
+  {
+    "front-of-face": "held directly in front of the face",
+    "chest-level": "held at chest level",
+    "above-chest": "raised above the chest",
+    "side-soft": "held slightly to the side",
+  };
 
-export const phonePositionLabelsAr: Record<SceneState["phonePosition"], string> = {
+export const phonePositionLabelsAr: Record<
+  SceneState["phonePosition"],
+  string
+> = {
   "front-of-face": "أمام الوجه",
   "chest-level": "على مستوى الصدر",
   "above-chest": "فوق الصدر",
@@ -86,7 +97,10 @@ export const cameraDistances: Record<SceneState["cameraDistance"], string> = {
   extended: "عند امتداد الذراع",
 };
 
-export const englishCameraDistances: Record<SceneState["cameraDistance"], string> = {
+export const englishCameraDistances: Record<
+  SceneState["cameraDistance"],
+  string
+> = {
   close: "Close to the face",
   "arm-length": "At arm's length",
   extended: "With an extended arm",
@@ -130,7 +144,10 @@ export const englishClothingTops: Record<SceneState["clothingTop"], string> = {
   "tank-top": "tank top",
 };
 
-export const clothingBottomLabels: Record<SceneState["clothingBottom"], string> = {
+export const clothingBottomLabels: Record<
+  SceneState["clothingBottom"],
+  string
+> = {
   jeans: "بنطال جينز",
   chinos: "بنطال تشينو",
   "linen-trousers": "بنطال كتان",
@@ -142,7 +159,10 @@ export const clothingBottomLabels: Record<SceneState["clothingBottom"], string> 
   "none-visible": "القطعة السفلية خارج الإطار",
 };
 
-export const englishClothingBottoms: Record<SceneState["clothingBottom"], string> = {
+export const englishClothingBottoms: Record<
+  SceneState["clothingBottom"],
+  string
+> = {
   jeans: "jeans",
   chinos: "chinos",
   "linen-trousers": "linen trousers",
@@ -154,7 +174,10 @@ export const englishClothingBottoms: Record<SceneState["clothingBottom"], string
   "none-visible": "the lower garment outside the frame",
 };
 
-export const clothingMaterialLabels: Record<SceneState["clothingMaterial"], string> = {
+export const clothingMaterialLabels: Record<
+  SceneState["clothingMaterial"],
+  string
+> = {
   cotton: "قطن",
   jersey: "جيرسي",
   poplin: "بوبلين",
@@ -165,7 +188,10 @@ export const clothingMaterialLabels: Record<SceneState["clothingMaterial"], stri
   polyester: "بوليستر",
 };
 
-export const englishClothingMaterials: Record<SceneState["clothingMaterial"], string> = {
+export const englishClothingMaterials: Record<
+  SceneState["clothingMaterial"],
+  string
+> = {
   cotton: "cotton",
   jersey: "jersey",
   poplin: "poplin",
@@ -176,37 +202,60 @@ export const englishClothingMaterials: Record<SceneState["clothingMaterial"], st
   polyester: "polyester",
 };
 
-export const englishClothingMaterialPhysics: Record<SceneState["clothingMaterial"], string> = {
-  cotton: "The cotton has soft body, small natural folds, mild compression creases, and a matte surface response.",
-  jersey: "The jersey drapes softly, stretches slightly around joints, and forms smooth gravity-led folds without looking rubbery.",
-  poplin: "The poplin keeps a cleaner light structure with crisp small creases and restrained sheen.",
-  linen: "The linen hangs with airy structure, visible irregular creasing, and a dry matte texture.",
-  denim: "The denim stays comparatively structured with thicker fold ridges, limited stretch, and believable tension at bends.",
-  fleece: "The fleece has soft volume, rounded folds, low sheen, and gentle compression where it contacts the body.",
+export const englishClothingMaterialPhysics: Record<
+  SceneState["clothingMaterial"],
+  string
+> = {
+  cotton:
+    "The cotton has soft body, small natural folds, mild compression creases, and a matte surface response.",
+  jersey:
+    "The jersey drapes softly, stretches slightly around joints, and forms smooth gravity-led folds without looking rubbery.",
+  poplin:
+    "The poplin keeps a cleaner light structure with crisp small creases and restrained sheen.",
+  linen:
+    "The linen hangs with airy structure, visible irregular creasing, and a dry matte texture.",
+  denim:
+    "The denim stays comparatively structured with thicker fold ridges, limited stretch, and believable tension at bends.",
+  fleece:
+    "The fleece has soft volume, rounded folds, low sheen, and gentle compression where it contacts the body.",
   wool: "The wool has soft thickness, muted highlights, heavier drape, and broad folds rather than sharp synthetic creases.",
-  polyester: "The polyester has light synthetic drape with modest sheen, fine folds, and controlled wrinkle recovery.",
+  polyester:
+    "The polyester has light synthetic drape with modest sheen, fine folds, and controlled wrinkle recovery.",
 };
 
-export const arabicClothingMaterialPhysics: Record<SceneState["clothingMaterial"], string> = {
-  cotton: "يظهر القطن بجسم ناعم وثنيات صغيرة طبيعية وتجعدات ضغط خفيفة واستجابة سطحية مطفأة.",
-  jersey: "ينسدل الجيرسي بنعومة ويتمدد قليلاً حول المفاصل مع ثنيات تقودها الجاذبية من دون مظهر مطاطي.",
-  poplin: "يحافظ البوبلين على بنية خفيفة أنظف وتجعدات صغيرة محددة ولمعان محدود.",
+export const arabicClothingMaterialPhysics: Record<
+  SceneState["clothingMaterial"],
+  string
+> = {
+  cotton:
+    "يظهر القطن بجسم ناعم وثنيات صغيرة طبيعية وتجعدات ضغط خفيفة واستجابة سطحية مطفأة.",
+  jersey:
+    "ينسدل الجيرسي بنعومة ويتمدد قليلاً حول المفاصل مع ثنيات تقودها الجاذبية من دون مظهر مطاطي.",
+  poplin:
+    "يحافظ البوبلين على بنية خفيفة أنظف وتجعدات صغيرة محددة ولمعان محدود.",
   linen: "ينسدل الكتان ببنية هوائية مع تجعدات غير منتظمة واضحة وملمس جاف مطفأ.",
-  denim: "يبقى الدنيم أكثر تماسكاً بثنيات أكثر سماكة وتمدد محدود وشد واقعي عند الانحناءات.",
-  fleece: "يظهر الفليس بحجم ناعم وثنيات مستديرة ولمعان منخفض وانضغاط لطيف عند ملامسة الجسم.",
+  denim:
+    "يبقى الدنيم أكثر تماسكاً بثنيات أكثر سماكة وتمدد محدود وشد واقعي عند الانحناءات.",
+  fleece:
+    "يظهر الفليس بحجم ناعم وثنيات مستديرة ولمعان منخفض وانضغاط لطيف عند ملامسة الجسم.",
   wool: "يظهر الصوف بسماكة ناعمة ولمعان خافت وانسدال أثقل وثنيات عريضة بدلاً من التجعدات الصناعية الحادة.",
-  polyester: "ينسدل البوليستر بخفة صناعية مع لمعان معتدل وثنيات دقيقة وارتداد متزن للتجعد.",
+  polyester:
+    "ينسدل البوليستر بخفة صناعية مع لمعان معتدل وثنيات دقيقة وارتداد متزن للتجعد.",
 };
 
-export const clothingColorLabels: Record<SceneState["clothingColor"], string> = {
-  neutral: "محايدة",
-  dark: "داكنة",
-  light: "فاتحة",
-  "earth-tone": "ترابية",
-  pastel: "باستيل",
-};
+export const clothingColorLabels: Record<SceneState["clothingColor"], string> =
+  {
+    neutral: "محايدة",
+    dark: "داكنة",
+    light: "فاتحة",
+    "earth-tone": "ترابية",
+    pastel: "باستيل",
+  };
 
-export const englishClothingColors: Record<SceneState["clothingColor"], string> = {
+export const englishClothingColors: Record<
+  SceneState["clothingColor"],
+  string
+> = {
   neutral: "neutral",
   dark: "dark",
   light: "light",
@@ -281,40 +330,64 @@ export const englishPoseTypes: Record<SceneState["poseType"], string> = {
 };
 
 export const englishPoseMechanics: Record<SceneState["poseType"], string> = {
-  standing: "Body weight is balanced naturally through both feet with relaxed knees and no mannequin-stiff posture.",
-  "standing-window": "The stance stays stable near the window with a small natural weight shift and enough clearance from the curtains.",
-  "standing-wardrobe": "The subject stands within realistic reach of the wardrobe, with a mild weight shift and shoulders free of the doors.",
-  "leaning-dresser": "The pelvis or hip makes light supported contact with the dresser while the feet remain load-bearing and the torso keeps believable counterbalance.",
-  "sitting-chair": "The pelvis is supported by the chair, thighs angle naturally from the hips, and the feet remain plausibly grounded.",
-  "sitting-bed": "The mattress compresses under the pelvis and thighs while the torso remains supported by the seated base.",
-  "sitting-bed-edge": "The pelvis sits near the mattress edge with visible cushion compression, thighs descending naturally and feet plausibly reaching the floor.",
-  "sitting-bed-cross-legged": "Both legs fold naturally on the mattress with asymmetric hip rotation, supported knees, and localized mattress compression.",
-  "reclining-headboard": "The back and shoulders are supported by the headboard and pillows, with the pelvis settled into the mattress and the spine gently reclined rather than floating.",
-  "lying-bed": "The body is supported by the mattress with realistic shoulder, hip, and pillow compression and no hovering limbs.",
+  standing:
+    "Body weight is balanced naturally through both feet with relaxed knees and no mannequin-stiff posture.",
+  "standing-window":
+    "The stance stays stable near the window with a small natural weight shift and enough clearance from the curtains.",
+  "standing-wardrobe":
+    "The subject stands within realistic reach of the wardrobe, with a mild weight shift and shoulders free of the doors.",
+  "leaning-dresser":
+    "The pelvis or hip makes light supported contact with the dresser while the feet remain load-bearing and the torso keeps believable counterbalance.",
+  "sitting-chair":
+    "The pelvis is supported by the chair, thighs angle naturally from the hips, and the feet remain plausibly grounded.",
+  "sitting-bed":
+    "The mattress compresses under the pelvis and thighs while the torso remains supported by the seated base.",
+  "sitting-bed-edge":
+    "The pelvis sits near the mattress edge with visible cushion compression, thighs descending naturally and feet plausibly reaching the floor.",
+  "sitting-bed-cross-legged":
+    "Both legs fold naturally on the mattress with asymmetric hip rotation, supported knees, and localized mattress compression.",
+  "reclining-headboard":
+    "The back and shoulders are supported by the headboard and pillows, with the pelvis settled into the mattress and the spine gently reclined rather than floating.",
+  "lying-bed":
+    "The body is supported by the mattress with realistic shoulder, hip, and pillow compression and no hovering limbs.",
 };
 
 export const arabicPoseMechanics: Record<SceneState["poseType"], string> = {
-  standing: "يتوزع وزن الجسم طبيعياً على القدمين مع ارتخاء الركبتين وتجنب الوقفة الجامدة.",
-  "standing-window": "تبقى الوقفة ثابتة قرب النافذة مع انتقال وزن طبيعي بسيط وترك مسافة واقعية عن الستائر.",
-  "standing-wardrobe": "يقف الشخص ضمن مدى وصول واقعي إلى الخزانة مع انتقال وزن خفيف وابتعاد الكتفين عن مسار الأبواب.",
-  "leaning-dresser": "يلامس الحوض أو الورك خزانة الأدراج باتكاء خفيف مدعوم، بينما تبقى القدمان حاملتين للوزن ويوازن الجذع نفسه بشكل واقعي.",
-  "sitting-chair": "يرتكز الحوض على الكرسي وتخرج الفخذان بزاوية طبيعية من الوركين مع بقاء القدمين في موضع أرضي منطقي.",
-  "sitting-bed": "تنضغط المرتبة تحت الحوض والفخذين بينما يبقى الجذع مدعوماً بقاعدة الجلوس.",
-  "sitting-bed-edge": "يجلس الحوض قرب حافة المرتبة مع انضغاط واضح للوسادة، وتنزل الفخذان طبيعياً وتصل القدمان إلى الأرض بصورة منطقية.",
-  "sitting-bed-cross-legged": "تنثني الساقان طبيعياً فوق المرتبة مع دوران غير متماثل للوركين ودعم الركبتين وانضغاط موضعي للمرتبة.",
-  "reclining-headboard": "يدعم لوح السرير والوسائد الظهر والكتفين بينما يستقر الحوض في المرتبة ويميل العمود الفقري برفق من دون أي إحساس بالطفو.",
-  "lying-bed": "يدعم السرير الجسم مع انضغاط واقعي عند الكتفين والحوض والوسادة ومن دون أطراف عائمة.",
+  standing:
+    "يتوزع وزن الجسم طبيعياً على القدمين مع ارتخاء الركبتين وتجنب الوقفة الجامدة.",
+  "standing-window":
+    "تبقى الوقفة ثابتة قرب النافذة مع انتقال وزن طبيعي بسيط وترك مسافة واقعية عن الستائر.",
+  "standing-wardrobe":
+    "يقف الشخص ضمن مدى وصول واقعي إلى الخزانة مع انتقال وزن خفيف وابتعاد الكتفين عن مسار الأبواب.",
+  "leaning-dresser":
+    "يلامس الحوض أو الورك خزانة الأدراج باتكاء خفيف مدعوم، بينما تبقى القدمان حاملتين للوزن ويوازن الجذع نفسه بشكل واقعي.",
+  "sitting-chair":
+    "يرتكز الحوض على الكرسي وتخرج الفخذان بزاوية طبيعية من الوركين مع بقاء القدمين في موضع أرضي منطقي.",
+  "sitting-bed":
+    "تنضغط المرتبة تحت الحوض والفخذين بينما يبقى الجذع مدعوماً بقاعدة الجلوس.",
+  "sitting-bed-edge":
+    "يجلس الحوض قرب حافة المرتبة مع انضغاط واضح للوسادة، وتنزل الفخذان طبيعياً وتصل القدمان إلى الأرض بصورة منطقية.",
+  "sitting-bed-cross-legged":
+    "تنثني الساقان طبيعياً فوق المرتبة مع دوران غير متماثل للوركين ودعم الركبتين وانضغاط موضعي للمرتبة.",
+  "reclining-headboard":
+    "يدعم لوح السرير والوسائد الظهر والكتفين بينما يستقر الحوض في المرتبة ويميل العمود الفقري برفق من دون أي إحساس بالطفو.",
+  "lying-bed":
+    "يدعم السرير الجسم مع انضغاط واقعي عند الكتفين والحوض والوسادة ومن دون أطراف عائمة.",
 };
 
-export const headDirectionLabels: Record<SceneState["headDirection"], string> = {
-  forward: "للأمام",
-  "slightly-left": "لليسار قليلاً",
-  "slightly-right": "لليمين قليلاً",
-  down: "للأسفل",
-  "up-soft": "للأعلى قليلاً",
-};
+export const headDirectionLabels: Record<SceneState["headDirection"], string> =
+  {
+    forward: "للأمام",
+    "slightly-left": "لليسار قليلاً",
+    "slightly-right": "لليمين قليلاً",
+    down: "للأسفل",
+    "up-soft": "للأعلى قليلاً",
+  };
 
-export const englishHeadDirections: Record<SceneState["headDirection"], string> = {
+export const englishHeadDirections: Record<
+  SceneState["headDirection"],
+  string
+> = {
   forward: "facing forward",
   "slightly-left": "turned slightly left",
   "slightly-right": "turned slightly right",
@@ -322,13 +395,19 @@ export const englishHeadDirections: Record<SceneState["headDirection"], string> 
   "up-soft": "angled gently upward",
 };
 
-export const shoulderPositionLabels: Record<SceneState["shoulderPosition"], string> = {
+export const shoulderPositionLabels: Record<
+  SceneState["shoulderPosition"],
+  string
+> = {
   relaxed: "مسترخيان",
   "one-raised": "أحدهما مرتفع قليلاً",
   "both-back": "للخلف",
 };
 
-export const englishShoulderPositions: Record<SceneState["shoulderPosition"], string> = {
+export const englishShoulderPositions: Record<
+  SceneState["shoulderPosition"],
+  string
+> = {
   relaxed: "relaxed",
   "one-raised": "one slightly raised",
   "both-back": "drawn back",
@@ -346,7 +425,10 @@ export const englishBackPostures: Record<SceneState["backPosture"], string> = {
   "slightly-leaning": "slightly leaning",
 };
 
-export const faceExpressionLabels: Record<SceneState["faceExpression"], string> = {
+export const faceExpressionLabels: Record<
+  SceneState["faceExpression"],
+  string
+> = {
   neutral: "محايد طبيعي",
   "soft-smile": "ابتسامة خفيفة",
   "closed-smile": "ابتسامة مغلقة",
@@ -357,7 +439,10 @@ export const faceExpressionLabels: Record<SceneState["faceExpression"], string> 
   "light-laugh": "ضحكة خفيفة",
 };
 
-export const englishFaceExpressions: Record<SceneState["faceExpression"], string> = {
+export const englishFaceExpressions: Record<
+  SceneState["faceExpression"],
+  string
+> = {
   neutral: "neutral",
   "soft-smile": "a soft smile",
   "closed-smile": "a closed-mouth smile",
@@ -375,12 +460,13 @@ export const eyeDirectionLabels: Record<SceneState["eyeDirection"], string> = {
   "down-soft": "للأسفل بلطف",
 };
 
-export const englishEyeDirections: Record<SceneState["eyeDirection"], string> = {
-  camera: "at the camera",
-  mirror: "at the mirror",
-  "away-soft": "softly away",
-  "down-soft": "softly down",
-};
+export const englishEyeDirections: Record<SceneState["eyeDirection"], string> =
+  {
+    camera: "at the camera",
+    mirror: "at the mirror",
+    "away-soft": "softly away",
+    "down-soft": "softly down",
+  };
 
 export const mouthStateLabels: Record<SceneState["mouthState"], string> = {
   closed: "مغلق",
@@ -396,7 +482,10 @@ export const englishMouthStates: Record<SceneState["mouthState"], string> = {
   "smile-open-light": "in a light open smile",
 };
 
-export const freeHandPositionLabels: Record<SceneState["freeHandPosition"], string> = {
+export const freeHandPositionLabels: Record<
+  SceneState["freeHandPosition"],
+  string
+> = {
   "at-side": "بجانب الجسم",
   "on-hair": "على الشعر",
   "holding-cup": "تحمل كوباً",
@@ -409,7 +498,10 @@ export const freeHandPositionLabels: Record<SceneState["freeHandPosition"], stri
   "holding-phone": "تحمل الهاتف",
 };
 
-export const englishFreeHandPositions: Record<SceneState["freeHandPosition"], string> = {
+export const englishFreeHandPositions: Record<
+  SceneState["freeHandPosition"],
+  string
+> = {
   "at-side": "at the side",
   "on-hair": "on the hair",
   "holding-cup": "holding a cup",
@@ -422,25 +514,37 @@ export const englishFreeHandPositions: Record<SceneState["freeHandPosition"], st
   "holding-phone": "holding a phone",
 };
 
-export const handFingersStateLabels: Record<SceneState["handFingersState"], string> = {
+export const handFingersStateLabels: Record<
+  SceneState["handFingersState"],
+  string
+> = {
   relaxed: "مسترخية",
   "slightly-curled": "ملتفة قليلاً",
   "gripping-soft": "قابضة برفق",
 };
 
-export const englishHandFingersStates: Record<SceneState["handFingersState"], string> = {
+export const englishHandFingersStates: Record<
+  SceneState["handFingersState"],
+  string
+> = {
   relaxed: "relaxed",
   "slightly-curled": "slightly curled",
   "gripping-soft": "gently gripping",
 };
 
-export const handVisibilityLabels: Record<SceneState["handVisibility"], string> = {
+export const handVisibilityLabels: Record<
+  SceneState["handVisibility"],
+  string
+> = {
   "fully-visible": "ظاهرة بالكامل في الإطار",
   "partially-visible": "ظاهرة جزئياً في الإطار",
   "off-frame": "خارج الإطار",
 };
 
-export const englishHandVisibilities: Record<SceneState["handVisibility"], string> = {
+export const englishHandVisibilities: Record<
+  SceneState["handVisibility"],
+  string
+> = {
   "fully-visible": "fully visible in frame",
   "partially-visible": "partially visible in frame",
   "off-frame": "off-frame",

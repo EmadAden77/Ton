@@ -196,9 +196,9 @@ describe("3D SceneState adapter", () => {
   });
 
   it("keeps blue hour dimmer than open daylight", () => {
-    expect(getThreeDLighting("blue-hour-closed").daylightIntensity).toBeLessThan(
-      getThreeDLighting("daylight-open").daylightIntensity,
-    );
+    expect(
+      getThreeDLighting("blue-hour-closed").daylightIntensity,
+    ).toBeLessThan(getThreeDLighting("daylight-open").daylightIntensity);
   });
 
   it("turns practical lights off for daylight-driven modes", () => {

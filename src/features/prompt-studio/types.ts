@@ -19,11 +19,7 @@ export interface SceneState {
     | "overcast-open";
   cameraDistance: "close" | "arm-length" | "extended";
   cameraAngle: "eye-level" | "slightly-above" | "slightly-below";
-  phonePosition:
-    | "front-of-face"
-    | "chest-level"
-    | "above-chest"
-    | "side-soft";
+  phonePosition: "front-of-face" | "chest-level" | "above-chest" | "side-soft";
   clothingTop:
     | "t-shirt"
     | "shirt"
