@@ -893,6 +893,9 @@ export default function App() {
   const [activeLighting, setActiveLighting] = useState<LightingModeKey>("warm");
   const [isPanelVisible, setIsPanelVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [copiedTarget, setCopiedTarget] = useState<
+    "prompt" | "negative" | null
+  >(null);
   const [sceneState, setSceneState] = useState<SceneState>({
     shotType: "front-selfie",
     lightingMode: "as-in-photo",
@@ -1248,6 +1251,18 @@ export default function App() {
     changeLightingMode("warm");
   }, [selectPose, changeLightingMode]);
 
+  const copyPrompt = async () => {
+    await navigator.clipboard.writeText(englishPrompt);
+    setCopiedTarget("prompt");
+    window.setTimeout(() => setCopiedTarget(null), 1200);
+  };
+
+  const copyNegative = async () => {
+    await navigator.clipboard.writeText(negativePrompt);
+    setCopiedTarget("negative");
+    window.setTimeout(() => setCopiedTarget(null), 1200);
+  };
+
   return (
     <div
       className="relative w-full h-screen overflow-hidden bg-slate-950 font-sans text-slate-100 select-none dir-rtl"
@@ -1446,6 +1461,13 @@ export default function App() {
               <h3 className="text-sm font-bold text-slate-200">
                 Prompt (English)
               </h3>
+              <button
+                type="button"
+                onClick={copyPrompt}
+                className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1 text-xs font-semibold text-slate-200 transition hover:border-amber-500/60 hover:text-amber-300"
+              >
+                {copiedTarget === "prompt" ? "تم النسخ" : "نسخ"}
+              </button>
             </div>
             <pre
               dir="ltr"
@@ -1458,6 +1480,13 @@ export default function App() {
               <h3 className="text-sm font-bold text-slate-200">
                 Negative Prompt
               </h3>
+              <button
+                type="button"
+                onClick={copyNegative}
+                className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1 text-xs font-semibold text-slate-200 transition hover:border-amber-500/60 hover:text-amber-300"
+              >
+                {copiedTarget === "negative" ? "تم النسخ" : "نسخ"}
+              </button>
             </div>
             <pre
               dir="ltr"
@@ -1465,6 +1494,13 @@ export default function App() {
             >
               {negativePrompt}
             </pre>
+
+            <a
+              href="/"
+              className="mt-4 block w-full rounded-xl bg-amber-500 py-2.5 text-center font-bold text-slate-950 transition hover:bg-amber-600"
+            >
+              افتح في Ton الرئيسي
+            </a>
           </section>
 
           {/* FOOTER INSTRUCTIONS */}
