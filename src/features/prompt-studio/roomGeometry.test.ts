@@ -73,6 +73,25 @@ describe("strict fixed bedroom geometry", () => {
     }
   });
 
+  it("switches negative curtain guards with the selected lighting mode", () => {
+    const closedGuards = roomNegativeGuards(createDefaultSceneState()).join(
+      ", ",
+    );
+    const openGuards = roomNegativeGuards({
+      ...createDefaultSceneState(),
+      lightingMode: "daylight-open",
+    }).join(", ");
+
+    expect(closedGuards).toContain("no center-seam daylight slit");
+    expect(closedGuards).toContain("no under-curtain light gap");
+    expect(closedGuards).not.toContain(
+      "no contradictory closed-curtain pattern",
+    );
+    expect(openGuards).toContain("no contradictory closed-curtain pattern");
+    expect(openGuards).toContain("no extra exterior opening");
+    expect(openGuards).not.toContain("no center-seam daylight slit");
+  });
+
   it("emits the same room lock in Arabic without transparent wardrobe or duplicated AC semantics", () => {
     const room = arabicFixedRoomDescription(createDefaultSceneState());
 
