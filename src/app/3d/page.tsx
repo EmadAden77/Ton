@@ -10,6 +10,12 @@ import {
 } from "@/features/prompt-studio/components/ThreeDSceneCanvas";
 import { SmartSelect } from "@/features/prompt-studio/components/SmartSelect";
 import {
+  legConfigurationOptions,
+  pelvisOrientationOptions,
+  torsoLeanOptions,
+  weightDistributionOptions,
+} from "@/features/prompt-studio/microPose";
+import {
   cameraAngleOptions,
   cameraDistanceOptions,
 } from "@/features/prompt-studio/options";
@@ -69,6 +75,20 @@ export default function Page() {
         ...previous,
         cameraAngle: value as SceneState["cameraAngle"],
       }),
+    );
+  };
+
+  const selectMicroPose = <K extends
+    | "legConfiguration"
+    | "torsoLean"
+    | "pelvisOrientation"
+    | "weightDistribution"
+  >(
+    field: K,
+    value: SceneState[K],
+  ) => {
+    setSceneState((previous) =>
+      resolveLockedState({ ...previous, [field]: value }),
     );
   };
 
@@ -181,6 +201,76 @@ export default function Page() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            <div>
+              <div className="mb-2 flex items-center justify-between gap-3">
+                <h2 className="text-sm font-bold text-slate-200">
+                  تفاصيل الوضعية الدقيقة
+                </h2>
+                <span className="text-[10px] text-slate-500">
+                  مقيدة حسب الوضعية الأساسية
+                </span>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <SmartSelect
+                  id="three-d-leg-configuration"
+                  field="legConfiguration"
+                  state={sceneState}
+                  label="تكوين الساقين"
+                  options={legConfigurationOptions}
+                  onChange={(value) =>
+                    selectMicroPose(
+                      "legConfiguration",
+                      value as SceneState["legConfiguration"],
+                    )
+                  }
+                />
+                <SmartSelect
+                  id="three-d-torso-lean"
+                  field="torsoLean"
+                  state={sceneState}
+                  label="ميل الجذع"
+                  options={torsoLeanOptions}
+                  onChange={(value) =>
+                    selectMicroPose(
+                      "torsoLean",
+                      value as SceneState["torsoLean"],
+                    )
+                  }
+                />
+                <SmartSelect
+                  id="three-d-pelvis-orientation"
+                  field="pelvisOrientation"
+                  state={sceneState}
+                  label="اتجاه الحوض"
+                  options={pelvisOrientationOptions}
+                  onChange={(value) =>
+                    selectMicroPose(
+                      "pelvisOrientation",
+                      value as SceneState["pelvisOrientation"],
+                    )
+                  }
+                />
+                <SmartSelect
+                  id="three-d-weight-distribution"
+                  field="weightDistribution"
+                  state={sceneState}
+                  label="توزيع الوزن"
+                  options={weightDistributionOptions}
+                  onChange={(value) =>
+                    selectMicroPose(
+                      "weightDistribution",
+                      value as SceneState["weightDistribution"],
+                    )
+                  }
+                />
+              </div>
+              <p className="mt-2 text-[11px] leading-5 text-slate-500">
+                معاينة Xbot تطبق ميل الجذع ودوران الحوض وانحياز الوزن على
+                التحويل العام للجسم. تكوين الساقين يبقى joint hint دلالياً حتى
+                إضافة إعادة تحريك هيكلية كاملة مستقبلاً.
+              </p>
             </div>
 
             <div>

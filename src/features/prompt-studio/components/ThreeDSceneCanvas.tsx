@@ -7,7 +7,7 @@ import * as THREE from "three";
 
 import {
   getThreeDLighting,
-  getThreeDPose,
+  getThreeDPoseForState,
   getThreeDSelfieCamera,
   type ThreeDPoseConfig,
   type ThreeDSelfieCameraConfig,
@@ -346,7 +346,7 @@ function Scene({
   sceneState: SceneState;
   viewMode: ThreeDViewMode;
 }) {
-  const pose = getThreeDPose(sceneState.poseType);
+  const pose = getThreeDPoseForState(sceneState);
   const selfieCamera = getThreeDSelfieCamera(sceneState);
   const light = getThreeDLighting(sceneState.lightingMode);
 

@@ -4,6 +4,7 @@ import { createDefaultSceneState } from "./state";
 import {
   getThreeDLighting,
   getThreeDPose,
+  getThreeDPoseForState,
   getThreeDSelfieCamera,
   selectThreeDLighting,
   selectThreeDPose,
@@ -63,10 +64,28 @@ describe("3D SceneState adapter", () => {
     );
   });
 
-  it("lets domain constraints set the lying phone position", () => {
+  it("applies micro-pose torso, pelvis and weight transforms to the rendered pose", () => {
+    const base = getThreeDPoseForState(createDefaultSceneState());
+    const adjusted = getThreeDPoseForState({
+      ...createDefaultSceneState(),
+      torsoLean: "slight-forward",
+      pelvisOrientation: "slightly-left",
+      weightDistribution: "right-biased",
+    });
+
+    expect(adjusted.modelPosition[0]).toBeGreaterThan(base.modelPosition[0]);
+    expect(adjusted.modelRotation[0]).toBeGreaterThan(base.modelRotation[0]);
+    expect(adjusted.modelRotation[1]).toBeGreaterThan(base.modelRotation[1]);
+    expect(adjusted.selfieTarget[0]).toBeGreaterThan(base.selfieTarget[0]);
+  });
+
+  it("lets domain constraints set the lying phone and micro-pose support", () => {
     const selected = selectThreeDPose(createDefaultSceneState(), "lying-bed");
     expect(selected.poseType).toBe("lying-bed");
     expect(selected.phonePosition).toBe("above-chest");
+    expect(selected.torsoLean).toBe("neutral");
+    expect(selected.pelvisOrientation).toBe("square");
+    expect(selected.weightDistribution).toBe("supported");
   });
 
   it("does not mutate the source state when selecting a pose", () => {
@@ -74,11 +93,12 @@ describe("3D SceneState adapter", () => {
     selectThreeDPose(source, "lying-bed");
     expect(source.poseType).toBe("standing");
     expect(source.phonePosition).toBe("front-of-face");
+    expect(source.weightDistribution).toBe("balanced");
   });
 
   it("keeps the selfie capture camera distinct from the room viewer camera", () => {
     const state = createDefaultSceneState();
-    const pose = getThreeDPose(state.poseType);
+    const pose = getThreeDPoseForState(state);
     const camera = getThreeDSelfieCamera(state);
 
     expect(camera.position).not.toEqual(pose.viewerPosition);

@@ -1,21 +1,13 @@
 export interface SceneState {
   shotType: "front-selfie" | "mirror-selfie";
   lightingMode:
-    // كما في الصورة: سقف خافت + مصباح سرير دافئ.
     | "as-in-photo"
-    // ضوء شاشة الهاتف: الغرفة معتمة، الوجه مضاء بالشاشة.
     | "phone-screen"
-    // ضوء نهار — ستائر مغلقة: منتشر، خفيف.
     | "daylight-closed"
-    // ضوء نهار — ستائر مفتوحة: ساطع، نافذة خلفية.
     | "daylight-open"
-    // مصباح السرير فقط: مصدر دافئ جانبي واحد.
     | "bedside-lamp-only"
-    // سبوتات السقف فقط: إضاءة علوية عملية.
     | "ceiling-only"
-    // الساعة الزرقاء خلف ستائر مغلقة: محيط بارد خافت.
     | "blue-hour-closed"
-    // نهار غائم عبر ستائر مفتوحة: ضوء واسع ومنتشر.
     | "overcast-open";
   cameraDistance: "close" | "arm-length" | "extended";
   cameraAngle: "eye-level" | "slightly-above" | "slightly-below";
@@ -68,6 +60,22 @@ export interface SceneState {
     | "reclining-headboard"
     | "standing-wardrobe"
     | "leaning-dresser";
+  legConfiguration:
+    | "neutral"
+    | "staggered"
+    | "one-knee-bent"
+    | "feet-grounded"
+    | "ankles-crossed"
+    | "legs-extended"
+    | "cross-legged";
+  torsoLean:
+    | "neutral"
+    | "slight-forward"
+    | "slight-back"
+    | "slight-left"
+    | "slight-right";
+  pelvisOrientation: "square" | "slightly-left" | "slightly-right";
+  weightDistribution: "balanced" | "left-biased" | "right-biased" | "supported";
   headDirection:
     "forward" | "slightly-left" | "slightly-right" | "down" | "up-soft";
   shoulderPosition: "relaxed" | "one-raised" | "both-back";
