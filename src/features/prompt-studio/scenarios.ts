@@ -17,6 +17,8 @@ export const SCENARIOS: ScenarioPreset[] = [
     apply: (current) => ({
       ...current,
       scenario: "working-laptop",
+      shotType: "front-selfie",
+      cameraDistance: "arm-length",
       poseType: "sitting-chair",
       handPlacement: "at-side",
       freeHandPosition: "on-keyboard",
@@ -34,6 +36,8 @@ export const SCENARIOS: ScenarioPreset[] = [
     apply: (current) => ({
       ...current,
       scenario: "bed-laptop",
+      shotType: "front-selfie",
+      cameraDistance: "arm-length",
       poseType: "sitting-bed",
       handPlacement: "at-side",
       freeHandPosition: "on-keyboard",
@@ -54,7 +58,9 @@ export const SCENARIOS: ScenarioPreset[] = [
       shotType: "mirror-selfie",
       cameraDistance: "arm-length",
       cameraAngle: "eye-level",
+      poseType: "standing",
       phonePosition: "chest-level",
+      freeHandPosition: "at-side",
       faceExpression: "soft-smile",
       eyeDirection: "mirror",
       mouthState: "smile-closed",
@@ -68,6 +74,8 @@ export const SCENARIOS: ScenarioPreset[] = [
     apply: (current) => ({
       ...current,
       scenario: "getting-ready",
+      shotType: "front-selfie",
+      cameraDistance: "arm-length",
       poseType: "standing",
       handPlacement: "at-side",
       freeHandPosition: "on-hair",
@@ -79,13 +87,15 @@ export const SCENARIOS: ScenarioPreset[] = [
   },
   {
     id: "lying-with-phone",
-    labelAr: "مستلقٍ على السرير أستخدم الهاتف",
-    labelEn: "Lying on bed using phone",
+    labelAr: "مستلقٍ على السرير ألتقط سيلفي",
+    labelEn: "Lying on bed taking a selfie",
     apply: (current) => ({
       ...current,
       scenario: "lying-with-phone",
+      shotType: "front-selfie",
+      cameraDistance: "arm-length",
       poseType: "lying-bed",
-      freeHandPosition: "holding-phone",
+      freeHandPosition: "on-chest",
       phonePosition: "above-chest",
       headDirection: "slightly-right",
       eyeDirection: "down-soft",
@@ -100,6 +110,8 @@ export const SCENARIOS: ScenarioPreset[] = [
     apply: (current) => ({
       ...current,
       scenario: "standing-window",
+      shotType: "front-selfie",
+      cameraDistance: "arm-length",
       poseType: "standing-window",
       handPlacement: "at-side",
       freeHandPosition: "at-side",
@@ -117,6 +129,8 @@ export const SCENARIOS: ScenarioPreset[] = [
     apply: (current) => ({
       ...current,
       scenario: "choosing-clothes",
+      shotType: "front-selfie",
+      cameraDistance: "arm-length",
       poseType: "standing",
       freeHandPosition: "holding-cloth",
       phonePosition: "side-soft",
@@ -133,6 +147,8 @@ export const SCENARIOS: ScenarioPreset[] = [
     apply: (current) => ({
       ...current,
       scenario: "adjusting-clothing",
+      shotType: "front-selfie",
+      cameraDistance: "arm-length",
       poseType: "standing",
       freeHandPosition: "on-hair",
       phonePosition: "side-soft",

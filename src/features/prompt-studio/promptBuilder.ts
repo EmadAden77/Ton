@@ -1,23 +1,31 @@
 import type { SceneState } from "./types";
 
 const FIXED_ROOM_DESCRIPTION_EN =
-  "in a realistic modern bedroom with dim ceiling spotlights and a warm bedside lamp";
+  "in the fixed realistic modern bedroom: a dark tufted-headboard bed on the left, a bedside table with a lamp, a split AC above the bed, dark curtains at the back window, a glass-door wardrobe on the right, a wooden dresser, a beige rug, grey tiled floor, and recessed ceiling spotlights";
 
 const FIXED_ROOM_DESCRIPTION_AR =
-  "في غرفة نوم حديثة واقعية مع إضاءة سقف خافتة ومصباح سرير دافئ";
+  "في غرفة النوم الحديثة الواقعية الثابتة: سرير بلوح رأس داكن مبطن على اليسار، وطاولة جانبية مع مصباح، ومكيف سبليت فوق السرير، وستائر داكنة عند النافذة الخلفية، وخزانة بأبواب زجاجية على اليمين، وخزانة أدراج خشبية، وسجادة بيج، وأرضية بلاط رمادية، وسبوتات سقف غائرة";
 
 const lightingModeLabels: Record<SceneState["lightingMode"], string> = {
-  "as-in-photo": "ceiling spotlights (dim) with a warm bedside lamp",
-  "phone-screen": "only the phone screen glow on the face, room otherwise dark",
-  "daylight-closed": "soft diffused daylight through closed dark curtains",
-  "daylight-open": "bright natural daylight from the back window",
+  "as-in-photo":
+    "dim recessed ceiling spotlights plus a warm bedside lamp, with natural falloff and mixed practical-light shadows",
+  "phone-screen":
+    "the phone screen is the only active light source on the face; the ceiling spotlights and bedside lamp are off, the room stays very dark, and the light falls off quickly into natural shadow noise",
+  "daylight-closed":
+    "soft diffused daylight passing through the closed dark curtains; indoor practical lights are off",
+  "daylight-open":
+    "natural daylight entering through the open back-window curtains; indoor practical lights are off, with realistic window-to-room contrast",
 };
 
 const lightingModeLabelsAr: Record<SceneState["lightingMode"], string> = {
-  "as-in-photo": "إضاءة سقف خافتة مع مصباح سرير دافئ",
-  "phone-screen": "ضوء شاشة الهاتف على الوجه، الغرفة معتمة",
-  "daylight-closed": "ضوء نهار منتشر عبر الستائر الداكنة المغلقة",
-  "daylight-open": "ضوء نهار طبيعي ساطع من النافذة الخلفية",
+  "as-in-photo":
+    "سبوتات سقف غائرة وخافتة مع مصباح سرير دافئ، بتناقص ضوئي طبيعي وظلال ناتجة عن مصادر الإضاءة العملية المختلطة",
+  "phone-screen":
+    "شاشة الهاتف هي مصدر الضوء النشط الوحيد على الوجه؛ سبوتات السقف ومصباح السرير مطفأة، والغرفة شديدة العتمة مع تناقص سريع للضوء وضجيج طبيعي في الظلال",
+  "daylight-closed":
+    "ضوء نهار ناعم ومنتشر يمر عبر الستائر الداكنة المغلقة، مع إطفاء الإضاءة الداخلية العملية",
+  "daylight-open":
+    "ضوء نهار طبيعي يدخل عبر ستائر النافذة الخلفية المفتوحة، مع إطفاء الإضاءة الداخلية والحفاظ على تباين واقعي بين النافذة والغرفة",
 };
 
 const identityPriorityLabels: Record<SceneState["identityPriority"], string> = {
@@ -45,19 +53,6 @@ const phonePositionLabelsAr: Record<SceneState["phonePosition"], string> = {
   "chest-level": "على مستوى الصدر",
   "above-chest": "فوق الصدر",
   "side-soft": "جانبي بلطف",
-};
-
-const phoneHoldingArmLabels: Record<SceneState["shotType"], string> = {
-  "front-selfie":
-    "The arm holding the phone is extended forward with a slightly bent elbow",
-  "mirror-selfie":
-    "The arm holding the phone is bent at the elbow, phone at chest height",
-};
-
-const phoneHoldingArmLabelsAr: Record<SceneState["shotType"], string> = {
-  "front-selfie": "الذراع الممسكة بالهاتف ممتدة للأمام مع انحناء بسيط في الكوع",
-  "mirror-selfie":
-    "الذراع الممسكة بالهاتف منحنية عند الكوع، الهاتف على مستوى الصدر",
 };
 
 const shotTypes: Record<SceneState["shotType"], string> = {
@@ -391,6 +386,24 @@ function englishHairDescription(state: SceneState): string {
   return `${englishHairLengths[state.hairLength]} ${englishHairTextures[state.hairTexture]} ${englishHairStyles[state.hairStyle]} hair`;
 }
 
+function englishIdentityDescription(state: SceneState): string {
+  if (!state.referenceProvided) return "";
+
+  const notes = state.identityNotes.trim();
+  const notesDescription = notes ? ` Additional identity notes: ${notes}.` : "";
+  return `Preserve the subject's identity from the reference image with ${identityPriorityLabels[state.identityPriority]} priority.${notesDescription} `;
+}
+
+function arabicIdentityDescription(state: SceneState): string {
+  if (!state.referenceProvided) return "";
+
+  const notes = state.identityNotes.trim();
+  const notesDescription = notes
+    ? ` ملاحظات إضافية عن الهوية: ${notes}.`
+    : "";
+  return `حافظ على هوية الشخص من الصورة المرجعية بأولوية ${identityPriorityLabelsAr[state.identityPriority]}.${notesDescription} `;
+}
+
 function englishScenarioDescription(state: SceneState): string {
   if (state.scenario === "adjusting-clothing") {
     return " Fully dressed, the subject checks their outfit before going out while smoothing their hair in the mirror.";
@@ -425,28 +438,48 @@ function arabicHandDescription(state: SceneState): string {
   return `اليد الحرة ${freeHandPositionLabels[state.freeHandPosition]}، والأصابع ${handFingersStateLabels[state.handFingersState]}، واليد ${handVisibilityLabels[state.handVisibility]}.`;
 }
 
-export function buildPromptEnglish(state: SceneState): string {
-  const notes = state.identityNotes.trim();
-  const identityNotesDescription = notes
-    ? ` Additional identity notes: ${notes}.`
-    : "";
+function englishPhoneArmDescription(state: SceneState): string {
+  if (state.shotType === "mirror-selfie") {
+    return "The arm holding the phone is bent naturally at the elbow, keeping the phone at chest height.";
+  }
 
-  return `Preserve the subject's identity from the reference image with ${identityPriorityLabels[state.identityPriority]} priority.${identityNotesDescription} ${englishShotTypes[state.shotType]}, the subject is ${englishPoseTypes[state.poseType]}, head ${englishHeadDirections[state.headDirection]}, shoulders ${englishShoulderPositions[state.shoulderPosition]}, back ${englishBackPostures[state.backPosture]}.${englishScenarioDescription(state)} Facial expression: ${englishFaceExpressions[state.faceExpression]}, eyes ${englishEyeDirections[effectiveEyeDirection(state)]}, mouth ${englishMouthStates[effectiveMouthState(state)]}. Hair: ${englishHairDescription(state)}. Wearing: a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]} in ${englishClothingColors[state.clothingColor]} tones, and ${englishClothingBottoms[state.clothingBottom]}. ${englishHandDescription(state)} The phone is ${phonePositionLabels[state.phonePosition]}. ${phoneHoldingArmLabels[state.shotType]}. ${englishCameraDistances[state.cameraDistance]}, camera at ${englishCameraAngles[state.cameraAngle]}. ${FIXED_ROOM_DESCRIPTION_EN}. Lighting: ${lightingModeLabels[state.lightingMode]}. Realistic smartphone photography, natural skin texture, balanced dynamic range.`;
+  if (state.poseType === "lying-bed" || state.phonePosition === "above-chest") {
+    return "The arm holding the phone is raised above the torso with a natural bend at the elbow, keeping the phone within a reachable selfie distance.";
+  }
+
+  if (state.phonePosition === "side-soft") {
+    return "The arm holding the phone is extended forward and slightly to the side with a natural bend at the elbow.";
+  }
+
+  return "The arm holding the phone is extended forward with a slightly bent elbow.";
+}
+
+function arabicPhoneArmDescription(state: SceneState): string {
+  if (state.shotType === "mirror-selfie") {
+    return "الذراع الممسكة بالهاتف منحنية بشكل طبيعي عند الكوع مع إبقاء الهاتف على مستوى الصدر.";
+  }
+
+  if (state.poseType === "lying-bed" || state.phonePosition === "above-chest") {
+    return "الذراع الممسكة بالهاتف مرفوعة فوق الجذع مع انحناء طبيعي عند الكوع، والهاتف ضمن مسافة سيلفي يمكن الوصول إليها فعلياً.";
+  }
+
+  if (state.phonePosition === "side-soft") {
+    return "الذراع الممسكة بالهاتف ممتدة للأمام وإلى الجانب قليلاً مع انحناء طبيعي عند الكوع.";
+  }
+
+  return "الذراع الممسكة بالهاتف ممتدة للأمام مع انحناء بسيط في الكوع.";
+}
+
+export function buildPromptEnglish(state: SceneState): string {
+  return `${englishIdentityDescription(state)}${englishShotTypes[state.shotType]}, the subject is ${englishPoseTypes[state.poseType]}, head ${englishHeadDirections[state.headDirection]}, shoulders ${englishShoulderPositions[state.shoulderPosition]}, back ${englishBackPostures[state.backPosture]}.${englishScenarioDescription(state)} Facial expression: ${englishFaceExpressions[state.faceExpression]}, eyes ${englishEyeDirections[effectiveEyeDirection(state)]}, mouth ${englishMouthStates[effectiveMouthState(state)]}. Hair: ${englishHairDescription(state)}. Wearing: a ${englishClothingMaterials[state.clothingMaterial]} ${englishClothingTops[state.clothingTop]} in ${englishClothingColors[state.clothingColor]} tones, and ${englishClothingBottoms[state.clothingBottom]}. ${englishHandDescription(state)} The phone is ${phonePositionLabels[state.phonePosition]}. ${englishPhoneArmDescription(state)} ${englishCameraDistances[state.cameraDistance]}, camera at ${englishCameraAngles[state.cameraAngle]}. ${FIXED_ROOM_DESCRIPTION_EN}. Lighting: ${lightingModeLabels[state.lightingMode]}. Realistic smartphone photography, natural skin texture, balanced dynamic range.`;
 }
 
 export function buildPromptArabic(state: SceneState): string {
-  const notes = state.identityNotes.trim();
-  const identityNotesDescription = notes
-    ? ` ملاحظات إضافية عن الهوية: ${notes}.`
-    : "";
-
-  return `حافظ على هوية الشخص من الصورة المرجعية بأولوية ${identityPriorityLabelsAr[state.identityPriority]}.${identityNotesDescription} ${shotTypes[state.shotType]}، الشخص ${poseTypeLabels[state.poseType]}، رأسه ${headDirectionLabels[state.headDirection]}، وكتفاه ${shoulderPositionLabels[state.shoulderPosition]}، وظهره ${backPostureLabels[state.backPosture]}.${arabicScenarioDescription(state)} تعبير الوجه: ${faceExpressionLabels[state.faceExpression]}، والعينان ${eyeDirectionLabels[effectiveEyeDirection(state)]}، والفم ${mouthStateLabels[effectiveMouthState(state)]}. الشعر: ${hairLengthLabels[state.hairLength]} ${hairTextureLabels[state.hairTexture]} ${hairStyleLabels[state.hairStyle]}. الملابس: ${clothingTopLabels[state.clothingTop]} من ${clothingMaterialLabels[state.clothingMaterial]} بدرجات ${clothingColorLabels[state.clothingColor]}، و${clothingBottomLabels[state.clothingBottom]}. ${arabicHandDescription(state)} الهاتف ${phonePositionLabelsAr[state.phonePosition]}. ${phoneHoldingArmLabelsAr[state.shotType]}. الكاميرا ${cameraDistances[state.cameraDistance]}، عند ${cameraAngles[state.cameraAngle]}. ${FIXED_ROOM_DESCRIPTION_AR}. الإضاءة: ${lightingModeLabelsAr[state.lightingMode]}. تصوير هاتف ذكي واقعي، ملمس بشرة طبيعي، ونطاق ديناميكي متوازن.`;
+  return `${arabicIdentityDescription(state)}${shotTypes[state.shotType]}، الشخص ${poseTypeLabels[state.poseType]}، رأسه ${headDirectionLabels[state.headDirection]}، وكتفاه ${shoulderPositionLabels[state.shoulderPosition]}، وظهره ${backPostureLabels[state.backPosture]}.${arabicScenarioDescription(state)} تعبير الوجه: ${faceExpressionLabels[state.faceExpression]}، والعينان ${eyeDirectionLabels[effectiveEyeDirection(state)]}، والفم ${mouthStateLabels[effectiveMouthState(state)]}. الشعر: ${hairLengthLabels[state.hairLength]} ${hairTextureLabels[state.hairTexture]} ${hairStyleLabels[state.hairStyle]}. الملابس: ${clothingTopLabels[state.clothingTop]} من ${clothingMaterialLabels[state.clothingMaterial]} بدرجات ${clothingColorLabels[state.clothingColor]}، و${clothingBottomLabels[state.clothingBottom]}. ${arabicHandDescription(state)} الهاتف ${phonePositionLabelsAr[state.phonePosition]}. ${arabicPhoneArmDescription(state)} الكاميرا ${cameraDistances[state.cameraDistance]}، عند ${cameraAngles[state.cameraAngle]}. ${FIXED_ROOM_DESCRIPTION_AR}. الإضاءة: ${lightingModeLabelsAr[state.lightingMode]}. تصوير هاتف ذكي واقعي، ملمس بشرة طبيعي، ونطاق ديناميكي متوازن.`;
 }
 
 export function buildNegativePrompt(state: SceneState): string {
   const constraints = [
-    "no identity change",
-    "no face alteration",
     "no AI-looking artifacts",
     "no watermark",
     "no text artifacts",
@@ -454,6 +487,10 @@ export function buildNegativePrompt(state: SceneState): string {
     "no unrealistic lighting; no excessive HDR",
     "no warped furniture",
   ];
+
+  if (state.referenceProvided) {
+    constraints.unshift("no identity change", "no face alteration");
+  }
 
   if (state.handVisibility === "fully-visible") {
     constraints.push("no extra fingers; no malformed hands; no fused fingers");

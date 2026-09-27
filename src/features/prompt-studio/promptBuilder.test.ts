@@ -17,7 +17,7 @@ const baseState: SceneState = {
   clothingBottom: "shorts",
   clothingMaterial: "cotton",
   clothingColor: "neutral",
-  referenceProvided: false,
+  referenceProvided: true,
   identityPriority: "balanced",
   identityNotes: "",
   hairStyle: "natural",
@@ -38,38 +38,62 @@ const baseState: SceneState = {
 };
 
 describe("person-first prompt structure", () => {
-  it("starts the English prompt with the identity directive", () => {
+  it("starts the English prompt with the identity directive when a reference exists", () => {
     expect(buildPromptEnglish(baseState)).toMatch(
       /^Preserve the subject's identity/,
     );
   });
 
-  it("always includes identity priority even without a reference upload", () => {
-    expect(buildPromptEnglish(baseState)).toContain("with balanced priority");
+  it("omits the identity directive when no reference is provided", () => {
+    const prompt = buildPromptEnglish({
+      ...baseState,
+      referenceProvided: false,
+    });
+    expect(prompt).toMatch(/^Front-camera selfie/);
+    expect(prompt).not.toContain("reference image");
+    expect(prompt).not.toContain("balanced priority");
   });
 
-  it("uses the short realistic bedroom description in English", () => {
+  it("ignores identity notes when no reference is provided", () => {
+    const prompt = buildPromptEnglish({
+      ...baseState,
+      referenceProvided: false,
+      identityNotes: "short hair, thin eyebrows",
+    });
+    expect(prompt).not.toContain("Additional identity notes");
+  });
+
+  it("uses the fixed bedroom geometry without baking in an active light state", () => {
     expect(buildPromptEnglish(baseState)).toContain(
-      "in a realistic modern bedroom with dim ceiling spotlights and a warm bedside lamp",
+      "in the fixed realistic modern bedroom",
+    );
+    expect(buildPromptEnglish(baseState)).toContain(
+      "dark tufted-headboard bed on the left",
     );
   });
 
   it("places the room after the subject description", () => {
     const prompt = buildPromptEnglish(baseState);
     expect(prompt.indexOf("the subject is standing")).toBeGreaterThanOrEqual(0);
-    expect(prompt.indexOf("in a realistic modern bedroom")).toBeGreaterThan(
+    expect(prompt.indexOf("in the fixed realistic modern bedroom")).toBeGreaterThan(
       prompt.indexOf("the subject is standing"),
     );
   });
 
-  it("starts the Arabic prompt with the identity directive", () => {
+  it("starts the Arabic prompt with the identity directive when a reference exists", () => {
     expect(buildPromptArabic(baseState)).toMatch(/^حافظ على هوية الشخص/);
+  });
+
+  it("starts the Arabic prompt with the shot type when no reference exists", () => {
+    expect(
+      buildPromptArabic({ ...baseState, referenceProvided: false }),
+    ).toMatch(/^سيلفي بالكاميرا الأمامية/);
   });
 
   it("places the Arabic room after the subject description", () => {
     const prompt = buildPromptArabic(baseState);
     expect(prompt.indexOf("الشخص واقف")).toBeGreaterThanOrEqual(0);
-    expect(prompt.indexOf("في غرفة نوم حديثة واقعية")).toBeGreaterThan(
+    expect(prompt.indexOf("في غرفة النوم الحديثة الواقعية الثابتة")).toBeGreaterThan(
       prompt.indexOf("الشخص واقف"),
     );
   });
@@ -94,13 +118,24 @@ describe("lighting modes", () => {
   it("describes phone-screen lighting in English", () => {
     expect(
       buildPromptEnglish({ ...baseState, lightingMode: "phone-screen" }),
-    ).toContain("phone screen");
+    ).toContain("phone screen is the only active light source");
+  });
+
+  it("turns practical lights off in phone-screen mode", () => {
+    const prompt = buildPromptEnglish({
+      ...baseState,
+      lightingMode: "phone-screen",
+    });
+    expect(prompt).toContain("ceiling spotlights and bedside lamp are off");
+    expect(prompt).not.toContain(
+      "Lighting: dim recessed ceiling spotlights plus a warm bedside lamp",
+    );
   });
 
   it("describes open-curtain daylight in English", () => {
     expect(
       buildPromptEnglish({ ...baseState, lightingMode: "daylight-open" }),
-    ).toContain("bright natural daylight");
+    ).toContain("natural daylight entering through the open back-window curtains");
   });
 
   it("describes as-in-photo lighting in English", () => {
@@ -110,7 +145,7 @@ describe("lighting modes", () => {
   it("describes phone-screen lighting in Arabic", () => {
     expect(
       buildPromptArabic({ ...baseState, lightingMode: "phone-screen" }),
-    ).toContain("ضوء شاشة الهاتف");
+    ).toContain("شاشة الهاتف هي مصدر الضوء النشط الوحيد");
   });
 
   it("describes closed-curtain daylight in both languages", () => {
@@ -147,6 +182,12 @@ describe("phone and arm geometry", () => {
     expect(buildPromptEnglish(baseState)).toContain("extended forward");
   });
 
+  it("describes a side-held selfie arm without pretending it is centered", () => {
+    expect(
+      buildPromptEnglish({ ...baseState, phonePosition: "side-soft" }),
+    ).toContain("extended forward and slightly to the side");
+  });
+
   it("describes the mirror-selfie phone arm at chest height", () => {
     expect(
       buildPromptEnglish({
@@ -154,7 +195,17 @@ describe("phone and arm geometry", () => {
         shotType: "mirror-selfie",
         phonePosition: "chest-level",
       }),
-    ).toContain("chest height");
+    ).toContain("phone at chest height");
+  });
+
+  it("uses raised-torso mechanics while lying on the bed", () => {
+    const prompt = buildPromptEnglish({
+      ...baseState,
+      poseType: "lying-bed",
+      phonePosition: "above-chest",
+    });
+    expect(prompt).toContain("raised above the torso");
+    expect(prompt).toContain("reachable selfie distance");
   });
 
   it("describes above-chest phone position in English", () => {
@@ -324,14 +375,20 @@ describe("scenario descriptions", () => {
 });
 
 describe("negative prompt", () => {
-  it("starts with identity preservation constraints", () => {
+  it("starts with identity preservation constraints when a reference exists", () => {
     expect(buildNegativePrompt(baseState)).toMatch(
       /^no identity change, no face alteration/,
     );
   });
 
-  it("contains no identity change", () => {
-    expect(buildNegativePrompt(baseState)).toContain("no identity change");
+  it("omits identity constraints without a reference", () => {
+    const prompt = buildNegativePrompt({
+      ...baseState,
+      referenceProvided: false,
+    });
+    expect(prompt).not.toContain("no identity change");
+    expect(prompt).not.toContain("no face alteration");
+    expect(prompt).toMatch(/^no AI-looking artifacts/);
   });
 
   it("keeps baseline realism constraints", () => {

@@ -100,13 +100,6 @@ const rules: Record<ConstrainedField, (state: SceneState) => Rule> = {
   },
 
   phonePosition: (state) => {
-    if (state.poseType === "lying-bed") {
-      return {
-        lockedTo: "above-chest",
-        lockReason: "الاستلقاء يتطلب رفع الهاتف فوق الصدر",
-      };
-    }
-
     if (state.shotType === "mirror-selfie") {
       return {
         lockedTo: "chest-level",
@@ -114,10 +107,16 @@ const rules: Record<ConstrainedField, (state: SceneState) => Rule> = {
       };
     }
 
-    return {
-      lockedTo: "front-of-face",
-      lockReason: "السيلفي الأمامي يتطلب الهاتف أمام الوجه",
-    };
+    if (state.poseType === "lying-bed") {
+      return {
+        lockedTo: "above-chest",
+        lockReason: "الاستلقاء يتطلب رفع الهاتف فوق الصدر",
+      };
+    }
+
+    // Front-camera selfies can be centered or held slightly to one side.
+    // Do not over-constrain the phone here; pose-specific rules are stronger.
+    return {};
   },
 
   eyeDirection: (state) =>
