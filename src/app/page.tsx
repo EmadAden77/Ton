@@ -10,6 +10,10 @@ import {
   buildPromptEnglish,
 } from "@/features/prompt-studio/promptBuilder";
 import { SCENARIOS } from "@/features/prompt-studio/scenarios";
+import {
+  createDefaultSceneState,
+  resolveLockedState,
+} from "@/features/prompt-studio/state";
 import type { SceneState } from "@/features/prompt-studio/types";
 
 type SelectOption = { value: string; label: string };
@@ -30,14 +34,6 @@ interface SmartSelectProps {
   options: SelectOption[];
   className?: string;
 }
-
-const constrainedFields: (keyof SceneState)[] = [
-  "cameraDistance",
-  "freeHandPosition",
-  "phonePosition",
-  "eyeDirection",
-  "faceExpression",
-];
 
 const shotTypeOptions: SelectOption[] = [
   { value: "front-selfie", label: "سيلفي أمامي (Front selfie)" },
@@ -194,31 +190,6 @@ const handVisibilityOptions: SelectOption[] = [
   { value: "off-frame", label: "خارج الإطار (Off-frame)" },
 ];
 
-function resolveLockedState(state: SceneState): SceneState {
-  let resolved = { ...state };
-
-  for (let pass = 0; pass < constrainedFields.length; pass += 1) {
-    let changed = false;
-
-    for (const field of constrainedFields) {
-      const constraints = getFieldConstraints(field, resolved);
-      if (constraints?.lockedTo === undefined) continue;
-
-      if (String(resolved[field]) !== constraints.lockedTo) {
-        resolved = {
-          ...resolved,
-          [field]: constraints.lockedTo,
-        } as SceneState;
-        changed = true;
-      }
-    }
-
-    if (!changed) break;
-  }
-
-  return resolved;
-}
-
 function CollapsibleSection({
   title,
   badge,
@@ -308,35 +279,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<"english" | "arabic" | "negative">(
     "english",
   );
-  const [state, setState] = useState<SceneState>({
-    shotType: "front-selfie",
-    lightingMode: "as-in-photo",
-    cameraDistance: "arm-length",
-    cameraAngle: "eye-level",
-    phonePosition: "front-of-face",
-    clothingTop: "t-shirt",
-    clothingBottom: "shorts",
-    clothingMaterial: "cotton",
-    clothingColor: "neutral",
-    referenceProvided: false,
-    identityPriority: "balanced",
-    identityNotes: "",
-    hairStyle: "natural",
-    hairLength: "medium",
-    hairTexture: "wavy",
-    poseType: "standing",
-    headDirection: "forward",
-    shoulderPosition: "relaxed",
-    handPlacement: "at-side",
-    backPosture: "relaxed",
-    faceExpression: "neutral",
-    eyeDirection: "camera",
-    mouthState: "closed",
-    freeHandPosition: "at-side",
-    handFingersState: "relaxed",
-    handVisibility: "fully-visible",
-    scenario: "none",
-  });
+  const [state, setState] = useState<SceneState>(createDefaultSceneState);
 
   const resolvedState = resolveLockedState(state);
 
