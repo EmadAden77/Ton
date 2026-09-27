@@ -4,12 +4,23 @@ import Link from "next/link";
 import { useState } from "react";
 import { Camera, Copy, RotateCcw } from "lucide-react";
 
-import { ThreeDSceneCanvas } from "@/features/prompt-studio/components/ThreeDSceneCanvas";
+import {
+  ThreeDSceneCanvas,
+  type ThreeDViewMode,
+} from "@/features/prompt-studio/components/ThreeDSceneCanvas";
+import { SmartSelect } from "@/features/prompt-studio/components/SmartSelect";
+import {
+  cameraAngleOptions,
+  cameraDistanceOptions,
+} from "@/features/prompt-studio/options";
 import {
   buildNegativePrompt,
   buildPromptEnglish,
 } from "@/features/prompt-studio/promptBuilder";
-import { createDefaultSceneState } from "@/features/prompt-studio/state";
+import {
+  createDefaultSceneState,
+  resolveLockedState,
+} from "@/features/prompt-studio/state";
 import {
   getThreeDPose,
   selectThreeDLighting,
@@ -23,6 +34,7 @@ export default function Page() {
   const [activeTab, setActiveTab] = useState<"simulator" | "prompt">(
     "simulator",
   );
+  const [viewMode, setViewMode] = useState<ThreeDViewMode>("viewer");
   const [copiedTarget, setCopiedTarget] = useState<
     "prompt" | "negative" | null
   >(null);
@@ -42,7 +54,26 @@ export default function Page() {
     setSceneState((previous) => selectThreeDLighting(previous, lightingMode));
   };
 
+  const selectCameraDistance = (value: string) => {
+    setSceneState((previous) =>
+      resolveLockedState({
+        ...previous,
+        cameraDistance: value as SceneState["cameraDistance"],
+      }),
+    );
+  };
+
+  const selectCameraAngle = (value: string) => {
+    setSceneState((previous) =>
+      resolveLockedState({
+        ...previous,
+        cameraAngle: value as SceneState["cameraAngle"],
+      }),
+    );
+  };
+
   const reset = () => {
+    setViewMode("viewer");
     setSceneState(createDefaultSceneState());
   };
 
@@ -68,7 +99,7 @@ export default function Page() {
           <div>
             <h1 className="text-sm font-bold">محاكي السيلفي 3D</h1>
             <p className="text-[10px] text-slate-500">
-              SceneState واحد للغرفة والـPrompt والمحاكي
+              Viewer مستقل + كاميرا سيلفي مشتقة من SceneState
             </p>
           </div>
         </div>
@@ -85,10 +116,48 @@ export default function Page() {
       <main>
         <div style={{ display: activeTab === "simulator" ? "block" : "none" }}>
           <section className="h-[60vh] min-h-[380px] border-b border-slate-800 bg-black">
-            <ThreeDSceneCanvas sceneState={sceneState} />
+            <ThreeDSceneCanvas sceneState={sceneState} viewMode={viewMode} />
           </section>
 
           <section className="space-y-5 px-3 py-4">
+            <div>
+              <div className="mb-2 flex items-center justify-between gap-3">
+                <h2 className="text-sm font-bold text-slate-200">
+                  طريقة العرض
+                </h2>
+                <span className="text-[10px] text-slate-500">
+                  لا تغيّر SceneState
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {(
+                  [
+                    ["viewer", "مشاهد الغرفة"],
+                    ["selfie", "كاميرا السيلفي"],
+                  ] as const
+                ).map(([mode, label]) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    onClick={() => setViewMode(mode)}
+                    className={`rounded-xl border px-3 py-2 text-xs font-bold transition ${
+                      viewMode === mode
+                        ? "border-cyan-500/70 bg-cyan-500/15 text-cyan-300"
+                        : "border-slate-800 bg-slate-900 text-slate-400"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              {viewMode === "selfie" ? (
+                <p className="mt-2 text-[11px] leading-5 text-slate-500">
+                  هذا منظور تقريبي لاختبار الهندسة والتكوين، وليس معايرة بصرية
+                  دقيقة لعدسة هاتف بعينه.
+                </p>
+              ) : null}
+            </div>
+
             <div>
               <div className="mb-2 flex items-center justify-between">
                 <h2 className="text-sm font-bold text-slate-200">الوضعية</h2>
@@ -111,6 +180,35 @@ export default function Page() {
                     {item.title}
                   </button>
                 ))}
+              </div>
+            </div>
+
+            <div>
+              <div className="mb-2 flex items-center justify-between gap-3">
+                <h2 className="text-sm font-bold text-slate-200">
+                  هندسة الكاميرا
+                </h2>
+                <span className="text-[10px] text-slate-500">
+                  نفس قيود Ton الرئيسية
+                </span>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <SmartSelect
+                  id="three-d-camera-distance"
+                  field="cameraDistance"
+                  state={sceneState}
+                  onChange={selectCameraDistance}
+                  label="مسافة الكاميرا"
+                  options={cameraDistanceOptions}
+                />
+                <SmartSelect
+                  id="three-d-camera-angle"
+                  field="cameraAngle"
+                  state={sceneState}
+                  onChange={selectCameraAngle}
+                  label="زاوية الكاميرا"
+                  options={cameraAngleOptions}
+                />
               </div>
             </div>
 
