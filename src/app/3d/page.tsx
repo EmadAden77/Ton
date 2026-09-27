@@ -208,10 +208,7 @@ export default function Page() {
                   label="ميل الجذع"
                   options={torsoLeanOptions}
                   onChange={(value) =>
-                    selectField(
-                      "torsoLean",
-                      value as SceneState["torsoLean"],
-                    )
+                    selectField("torsoLean", value as SceneState["torsoLean"])
                   }
                 />
                 <SmartSelect
