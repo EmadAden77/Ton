@@ -1,3 +1,4 @@
+import { roomNegativeGuards } from "./roomGeometry";
 import type { SceneState } from "./types";
 
 export function buildNegativePrompt(state: SceneState): string {
@@ -15,6 +16,7 @@ export function buildNegativePrompt(state: SceneState): string {
     "no cinematic grading; no portrait-mode bokeh",
     "no studio lighting; no ring light; no softbox",
     "no warped furniture",
+    ...roomNegativeGuards(state),
   ];
 
   if (state.referenceProvided) {
