@@ -4,6 +4,11 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import {
+  buildNegativePrompt,
+  buildPromptEnglish,
+} from "@/features/prompt-studio/promptBuilder";
+import type { SceneState } from "@/features/prompt-studio/types";
+import {
   Camera,
   Sun,
   Moon,
@@ -94,6 +99,25 @@ interface AnimationTargets {
   camPos: THREE.Vector3;
   camTarget: THREE.Vector3;
 }
+
+const mapPoseToSceneState = (poseId: string): SceneState["poseType"] => {
+  if (poseId.startsWith("lying")) return "lying-bed";
+  if (poseId === "sitting_edge_bed" || poseId === "sitting_middle_bed") {
+    return "sitting-bed";
+  }
+  if (poseId === "sitting_sofa" || poseId === "sitting_side_sofa") {
+    return "sitting-chair";
+  }
+  return "standing";
+};
+
+const mapLightingToSceneState = (
+  modeKey: LightingModeKey,
+): SceneState["lightingMode"] => {
+  if (modeKey === "warm") return "as-in-photo";
+  if (modeKey === "night") return "phone-screen";
+  return "daylight-open";
+};
 
 /**
  * Pose Presets Matrix
@@ -869,6 +893,35 @@ export default function App() {
   const [activeLighting, setActiveLighting] = useState<LightingModeKey>("warm");
   const [isPanelVisible, setIsPanelVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [sceneState, setSceneState] = useState<SceneState>({
+    shotType: "front-selfie",
+    lightingMode: "as-in-photo",
+    cameraDistance: "arm-length",
+    cameraAngle: "eye-level",
+    phonePosition: "front-of-face",
+    clothingTop: "t-shirt",
+    clothingBottom: "shorts",
+    clothingMaterial: "cotton",
+    clothingColor: "neutral",
+    referenceProvided: false,
+    identityPriority: "balanced",
+    identityNotes: "",
+    hairStyle: "natural",
+    hairLength: "medium",
+    hairTexture: "wavy",
+    poseType: "standing",
+    headDirection: "forward",
+    shoulderPosition: "relaxed",
+    handPlacement: "at-side",
+    backPosture: "relaxed",
+    faceExpression: "neutral",
+    eyeDirection: "camera",
+    mouthState: "closed",
+    freeHandPosition: "at-side",
+    handFingersState: "relaxed",
+    handVisibility: "fully-visible",
+    scenario: "none",
+  });
 
   // Scene references
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -901,6 +954,8 @@ export default function App() {
 
   const currentPose =
     SELFIE_POSES.find((p) => p.id === activePoseId) || SELFIE_POSES[0];
+  const englishPrompt = buildPromptEnglish(sceneState);
+  const negativePrompt = buildNegativePrompt(sceneState);
 
   useEffect(() => {
     const container = mountRef.current;
@@ -1127,6 +1182,10 @@ export default function App() {
   // Update animation targets when pose changes
   const selectPose = useCallback((pose: Pose) => {
     setActivePoseId(pose.id);
+    setSceneState((prev) => ({
+      ...prev,
+      poseType: mapPoseToSceneState(pose.id),
+    }));
     animTargetsRef.current = {
       charPos: new THREE.Vector3(
         pose.position.x,
@@ -1155,6 +1214,10 @@ export default function App() {
   // Update light colors/intensities when lighting mode changes
   const changeLightingMode = useCallback((modeKey: LightingModeKey) => {
     setActiveLighting(modeKey);
+    setSceneState((prev) => ({
+      ...prev,
+      lightingMode: mapLightingToSceneState(modeKey),
+    }));
     const config = LIGHTING_MODES[modeKey];
     if (!config || !sceneRef.current) return;
 
@@ -1377,6 +1440,32 @@ export default function App() {
               );
             })}
           </div>
+
+          <section className="p-4 border-t border-slate-800 bg-slate-900/95">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-bold text-slate-200">
+                Prompt (English)
+              </h3>
+            </div>
+            <pre
+              dir="ltr"
+              className="max-h-28 overflow-y-auto whitespace-pre-wrap break-words rounded-xl bg-slate-950/70 p-3 text-left text-[10px] leading-relaxed text-slate-300"
+            >
+              {englishPrompt}
+            </pre>
+
+            <div className="flex items-center justify-between mt-4 mb-3">
+              <h3 className="text-sm font-bold text-slate-200">
+                Negative Prompt
+              </h3>
+            </div>
+            <pre
+              dir="ltr"
+              className="max-h-24 overflow-y-auto whitespace-pre-wrap break-words rounded-xl bg-slate-950/70 p-3 text-left text-[10px] leading-relaxed text-slate-300"
+            >
+              {negativePrompt}
+            </pre>
+          </section>
 
           {/* FOOTER INSTRUCTIONS */}
           <div className="p-3 border-t border-slate-800/80 bg-slate-950/60 rounded-b-3xl flex items-center justify-between text-[10px] text-slate-400">
