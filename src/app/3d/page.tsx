@@ -28,6 +28,7 @@ import {
   resolveLockedState,
 } from "@/features/prompt-studio/state";
 import {
+  canApplyWholeBodyMicroPoseApproximation,
   getThreeDPose,
   selectThreeDLighting,
   selectThreeDPose,
@@ -44,13 +45,16 @@ export default function Page() {
   const [copiedTarget, setCopiedTarget] = useState<
     "prompt" | "negative" | null
   >(null);
-  const [sceneState, setSceneState] = useState<SceneState>(() =>
-    createDefaultSceneState(),
+  const [sceneState, setSceneState] = useState<SceneState>(
+    createDefaultSceneState,
   );
 
   const pose = getThreeDPose(sceneState.poseType);
   const englishPrompt = buildPromptEnglish(sceneState);
   const negativePrompt = buildNegativePrompt(sceneState);
+  const wholeBodyApproximation = canApplyWholeBodyMicroPoseApproximation(
+    sceneState.poseType,
+  );
 
   const selectPose = (poseType: SceneState["poseType"]) => {
     setSceneState((previous) => selectThreeDPose(previous, poseType));
@@ -60,36 +64,12 @@ export default function Page() {
     setSceneState((previous) => selectThreeDLighting(previous, lightingMode));
   };
 
-  const selectCameraDistance = (value: string) => {
-    setSceneState((previous) =>
-      resolveLockedState({
-        ...previous,
-        cameraDistance: value as SceneState["cameraDistance"],
-      }),
-    );
-  };
-
-  const selectCameraAngle = (value: string) => {
-    setSceneState((previous) =>
-      resolveLockedState({
-        ...previous,
-        cameraAngle: value as SceneState["cameraAngle"],
-      }),
-    );
-  };
-
-  const selectMicroPose = <
-    K extends
-      | "legConfiguration"
-      | "torsoLean"
-      | "pelvisOrientation"
-      | "weightDistribution",
-  >(
+  const selectField = <K extends keyof SceneState>(
     field: K,
     value: SceneState[K],
   ) => {
     setSceneState((previous) =>
-      resolveLockedState({ ...previous, [field]: value }),
+      resolveLockedState({ ...previous, [field]: value } as SceneState),
     );
   };
 
@@ -98,15 +78,9 @@ export default function Page() {
     setSceneState(createDefaultSceneState());
   };
 
-  const copyPrompt = async () => {
-    await navigator.clipboard.writeText(englishPrompt);
-    setCopiedTarget("prompt");
-    window.setTimeout(() => setCopiedTarget(null), 1200);
-  };
-
-  const copyNegative = async () => {
-    await navigator.clipboard.writeText(negativePrompt);
-    setCopiedTarget("negative");
+  const copyText = async (target: "prompt" | "negative", text: string) => {
+    await navigator.clipboard.writeText(text);
+    setCopiedTarget(target);
     window.setTimeout(() => setCopiedTarget(null), 1200);
   };
 
@@ -210,7 +184,7 @@ export default function Page() {
                   تفاصيل الوضعية الدقيقة
                 </h2>
                 <span className="text-[10px] text-slate-500">
-                  مقيدة حسب الوضعية الأساسية
+                  مقيدة حسب نقاط الدعم
                 </span>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -221,7 +195,7 @@ export default function Page() {
                   label="تكوين الساقين"
                   options={legConfigurationOptions}
                   onChange={(value) =>
-                    selectMicroPose(
+                    selectField(
                       "legConfiguration",
                       value as SceneState["legConfiguration"],
                     )
@@ -234,7 +208,7 @@ export default function Page() {
                   label="ميل الجذع"
                   options={torsoLeanOptions}
                   onChange={(value) =>
-                    selectMicroPose(
+                    selectField(
                       "torsoLean",
                       value as SceneState["torsoLean"],
                     )
@@ -247,7 +221,7 @@ export default function Page() {
                   label="اتجاه الحوض"
                   options={pelvisOrientationOptions}
                   onChange={(value) =>
-                    selectMicroPose(
+                    selectField(
                       "pelvisOrientation",
                       value as SceneState["pelvisOrientation"],
                     )
@@ -260,17 +234,17 @@ export default function Page() {
                   label="توزيع الوزن"
                   options={weightDistributionOptions}
                   onChange={(value) =>
-                    selectMicroPose(
+                    selectField(
                       "weightDistribution",
                       value as SceneState["weightDistribution"],
                     )
                   }
                 />
               </div>
-              <p className="mt-2 text-[11px] leading-5 text-slate-500">
-                معاينة Xbot تطبق ميل الجذع ودوران الحوض وانحياز الوزن على
-                التحويل العام للجسم. تكوين الساقين يبقى joint hint دلالياً حتى
-                إضافة إعادة تحريك هيكلية كاملة مستقبلاً.
+              <p className="mt-2 rounded-lg border border-slate-800 bg-slate-900/70 p-3 text-[11px] leading-5 text-slate-400">
+                {wholeBodyApproximation
+                  ? "في وضعية الوقوف الحر فقط، يعرض Xbot تقريباً محافظاً لميل الجذع ودوران الحوض وانحياز الوزن عبر التحويل العام للجسم. تكوين الساقين يبقى joint hint حتى إضافة rigging عظمي حقيقي."
+                  : "في الجلوس أو الاتكاء أو الاستلقاء، يحافظ Xbot على نقاط التلامس الأساسية ولا يزيف حركة المفاصل بتحريك الجسم كاملًا. تفاصيل الساقين والجذع والحوض تبقى joint/support hints للـPrompt والقيود إلى أن يتوفر rigging عظمي حقيقي."}
               </p>
             </div>
 
@@ -288,7 +262,12 @@ export default function Page() {
                   id="three-d-camera-distance"
                   field="cameraDistance"
                   state={sceneState}
-                  onChange={selectCameraDistance}
+                  onChange={(value) =>
+                    selectField(
+                      "cameraDistance",
+                      value as SceneState["cameraDistance"],
+                    )
+                  }
                   label="مسافة الكاميرا"
                   options={cameraDistanceOptions}
                 />
@@ -296,7 +275,12 @@ export default function Page() {
                   id="three-d-camera-angle"
                   field="cameraAngle"
                   state={sceneState}
-                  onChange={selectCameraAngle}
+                  onChange={(value) =>
+                    selectField(
+                      "cameraAngle",
+                      value as SceneState["cameraAngle"],
+                    )
+                  }
                   label="زاوية الكاميرا"
                   options={cameraAngleOptions}
                 />
@@ -339,7 +323,7 @@ export default function Page() {
                 </h2>
                 <button
                   type="button"
-                  onClick={copyPrompt}
+                  onClick={() => copyText("prompt", englishPrompt)}
                   className="flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-semibold text-slate-200 transition hover:border-amber-500/60 hover:text-amber-300"
                 >
                   <Copy className="h-3.5 w-3.5" />
@@ -361,7 +345,7 @@ export default function Page() {
                 </h2>
                 <button
                   type="button"
-                  onClick={copyNegative}
+                  onClick={() => copyText("negative", negativePrompt)}
                   className="flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-semibold text-slate-200 transition hover:border-amber-500/60 hover:text-amber-300"
                 >
                   <Copy className="h-3.5 w-3.5" />
