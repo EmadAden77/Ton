@@ -34,6 +34,35 @@ describe("engineered bedroom design", () => {
       left: "bed, headboard, nightstand, and split AC",
       right: "built-in wardrobe mirrors and separate dresser",
     });
+    expect(BEDROOM_DESIGN.reference.matchPriorities).toEqual([
+      "bed scale and left-wall projection",
+      "broad central-front rug placement",
+      "long rear-to-middle right-wall wardrobe run",
+      "separate front-right dresser mass",
+      "single compact chair centered near the back curtains",
+    ]);
+  });
+
+  it("matches the main furniture masses to the canonical entrance-view reference", () => {
+    expect(BEDROOM_DESIGN.bed.center).toEqual([-2, 0.28, -1]);
+    expect(BEDROOM_DESIGN.wardrobe.runLength).toBe(4.45);
+    expect(BEDROOM_DESIGN.wardrobe.height).toBe(2.68);
+    expect(BEDROOM_DESIGN.dresser).toMatchObject({
+      depth: 0.58,
+      widthAlongWall: 1.45,
+      height: 1.05,
+      center: [2.9, 0.525, 2.45],
+    });
+    expect(BEDROOM_DESIGN.chair).toMatchObject({
+      width: 0.68,
+      depth: 0.68,
+      center: [0.25, 0, -2.78],
+    });
+    expect(BEDROOM_DESIGN.rug).toMatchObject({
+      width: 2.4,
+      depth: 3,
+      center: [0.8, 0.02, 1],
+    });
   });
 
   it("keeps a genuinely broad real aisle between the bed and right-wall storage", () => {
