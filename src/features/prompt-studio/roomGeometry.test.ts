@@ -46,9 +46,7 @@ describe("engineered fixed bedroom geometry", () => {
       "three or four shallow horizontal stitched channels",
     );
     expect(room).toContain("exactly two normal sleeping pillows");
-    expect(room).toContain(
-      `approximately ${aisleWidth} m of true clear width`,
-    );
+    expect(room).toContain(`approximately ${aisleWidth} m of true clear width`);
     expect(room).toContain("wide aisle is a primary scale anchor");
     expect(room).toContain("glossy light-beige porcelain tiles");
     expect(room).toContain("Twelve small circular recessed downlights");
