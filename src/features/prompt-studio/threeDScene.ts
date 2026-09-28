@@ -57,6 +57,7 @@ const FREE_STANDING_MICRO_POSE: readonly SceneState["poseType"][] = [
 const bedCenter = BEDROOM_DESIGN.bed.center;
 const chairCenter = BEDROOM_DESIGN.chair.center;
 const dresserCenter = BEDROOM_DESIGN.dresser.center;
+const referenceViewerCamera = BEDROOM_DESIGN.reference.viewerCamera;
 
 export const THREE_D_POSES: readonly ThreeDPoseConfig[] = [
   {
@@ -302,7 +303,8 @@ export function getThreeDPoseForState(state: SceneState): ThreeDPoseConfig {
     ...base,
     modelPosition: add(base.modelPosition, positionOffset),
     modelRotation: add(base.modelRotation, rotationOffset),
-    viewerTarget: add(base.viewerTarget, positionOffset),
+    viewerPosition: [...referenceViewerCamera.position] as Vec3,
+    viewerTarget: [...referenceViewerCamera.target] as Vec3,
     selfieTarget: add(base.selfieTarget, positionOffset),
     phonePosition: add(base.phonePosition, positionOffset),
   };
