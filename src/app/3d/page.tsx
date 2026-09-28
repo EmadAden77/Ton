@@ -23,6 +23,7 @@ import {
   buildNegativePrompt,
   buildPromptEnglish,
 } from "@/features/prompt-studio/promptBuilder";
+import { BEDROOM_DESIGN } from "@/features/prompt-studio/roomDesign";
 import {
   createDefaultSceneState,
   resolveLockedState,
@@ -52,6 +53,7 @@ export default function Page() {
   const pose = getThreeDPose(sceneState.poseType);
   const englishPrompt = buildPromptEnglish(sceneState);
   const negativePrompt = buildNegativePrompt(sceneState);
+  const reference = BEDROOM_DESIGN.reference;
   const wholeBodyApproximation = canApplyWholeBodyMicroPoseApproximation(
     sceneState.poseType,
   );
@@ -110,8 +112,25 @@ export default function Page() {
 
       <main>
         <div style={{ display: activeTab === "simulator" ? "block" : "none" }}>
-          <section className="h-[60vh] min-h-[380px] border-b border-slate-800 bg-black">
-            <ThreeDSceneCanvas sceneState={sceneState} viewMode={viewMode} />
+          <section className="border-b border-slate-800 bg-black px-3 py-3">
+            <div
+              className="mx-auto w-full max-w-[430px] overflow-hidden rounded-2xl border border-slate-800 bg-black shadow-2xl"
+              style={{
+                aspectRatio: `${reference.imageWidth} / ${reference.imageHeight}`,
+              }}
+            >
+              <ThreeDSceneCanvas sceneState={sceneState} viewMode={viewMode} />
+            </div>
+            <div className="mx-auto mt-2 flex max-w-[430px] items-center justify-between gap-3 text-[10px] text-slate-500">
+              <span>
+                إطار المرجع {reference.imageWidth}×{reference.imageHeight}
+              </span>
+              <span>
+                {viewMode === "viewer"
+                  ? `منظور المدخل · ${reference.viewerCamera.fov}°`
+                  : "منظور السيلفي"}
+              </span>
+            </div>
           </section>
 
           <section className="space-y-5 px-3 py-4">
@@ -150,7 +169,13 @@ export default function Page() {
                   هذا منظور تقريبي لاختبار الهندسة والتكوين، وليس معايرة بصرية
                   دقيقة لعدسة هاتف بعينه.
                 </p>
-              ) : null}
+              ) : (
+                <p className="mt-2 text-[11px] leading-5 text-slate-500">
+                  مشاهد الغرفة يستخدم نفس نسبة الصورة المرجعية وزاوية دخول ثابتة
+                  حتى تكون مقارنة السرير والسجادة والخزانة والأرضية والسقف
+                  عادلة.
+                </p>
+              )}
             </div>
 
             <div>

@@ -82,6 +82,7 @@ function ActiveCamera({
 }) {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
   const isSelfie = viewMode === "selfie";
+  const viewerCamera = BEDROOM_DESIGN.reference.viewerCamera;
   const position = isSelfie ? selfieCamera.position : pose.viewerPosition;
   const target = isSelfie ? selfieCamera.target : pose.viewerTarget;
 
@@ -94,9 +95,9 @@ function ActiveCamera({
       ref={cameraRef}
       makeDefault
       position={position}
-      fov={isSelfie ? selfieCamera.fov : 48}
-      near={isSelfie ? selfieCamera.near : 0.1}
-      far={isSelfie ? selfieCamera.far : 30}
+      fov={isSelfie ? selfieCamera.fov : viewerCamera.fov}
+      near={isSelfie ? selfieCamera.near : viewerCamera.near}
+      far={isSelfie ? selfieCamera.far : viewerCamera.far}
     />
   );
 }
@@ -153,6 +154,19 @@ function EngineeredShell() {
   return (
     <group>
       <TileFloor />
+
+      <mesh
+        position={[0, dimensions.height - 0.015, 0]}
+        rotation={[Math.PI / 2, 0, 0]}
+        receiveShadow
+      >
+        <planeGeometry args={[dimensions.width, dimensions.depth]} />
+        <meshStandardMaterial
+          color="#e8e2da"
+          roughness={0.96}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
 
       <mesh position={[0, dimensions.height / 2, bounds.backZ]} receiveShadow>
         <boxGeometry
