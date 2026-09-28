@@ -25,31 +25,40 @@ const lightingModes: SceneState["lightingMode"][] = [
   "overcast-open",
 ];
 
-describe("strict fixed bedroom geometry", () => {
-  it("locks the default room to one bed, one nightstand, one AC, mirrored wardrobe, dresser, rug, tile and recessed spots", () => {
-    const state = createDefaultSceneState();
-    const room = englishFixedRoomDescription(state);
+describe("engineered fixed bedroom geometry", () => {
+  it("locks the redesigned room, bed, storage, furniture, finishes and circulation", () => {
+    const room = englishFixedRoomDescription(createDefaultSceneState());
 
-    expect(room).toContain("Exactly one bed occupies the LEFT side");
-    expect(room).toContain("Exactly one bedside table");
-    expect(room).toContain("exactly one warm bedside lamp");
+    expect(room).toContain("5.2 m LEFT-to-RIGHT by 6.2 m FRONT-to-BACK");
+    expect(room).toContain("2.9 m ceiling");
+    expect(room).toContain("exactly one 90 cm hinged dark-wood door");
+    expect(room).toContain("180 x 200 cm mattress");
+    expect(room).toContain("dark tufted-headboard bed on the left");
     expect(room).toContain(
-      "Exactly one white wall-mounted split-AC indoor unit",
+      "dark-charcoal channel-tufted upholstered headboard",
     );
-    expect(room).toContain("UPPER-LEFT wall near the ceiling");
-    expect(room).toContain("full-height sliding MIRRORED wardrobe");
-    expect(room).toContain("all doors fully closed");
-    expect(room).toContain("not transparent or smoked glass");
-    expect(room).toContain("Exactly one separate dark-wood chest of drawers");
-    expect(room).toContain("grey tile");
-    expect(room).toContain("Exactly one beige rug");
+    expect(room).toContain("broad horizontal padded channels");
+    expect(room).toContain("exactly one compact dark-walnut nightstand");
     expect(room).toContain(
-      "Recessed ceiling spotlights are the only ceiling fixtures",
+      "exactly one white wall-mounted split-AC indoor unit",
     );
-    expect(room).toContain("clear walking aisle between bed and wardrobe");
+    expect(room).toContain("one long dark-walnut built-in storage run");
+    expect(room).toContain("clear reflective mirror panels");
+    expect(room).toContain("one open hanging bay");
+    expect(room).toContain("one separate dark-walnut chest of drawers");
+    expect(room).toContain("exactly one compact upholstered chair");
+    expect(room).toContain("approximately 2.45 m of real clear width");
+    expect(room).toContain("glossy light-beige porcelain tiles");
+    expect(room).toContain(
+      "one broad beige-to-greige low-pile rectangular rug",
+    );
+    expect(room).toContain("Twelve small circular recessed downlights");
+    expect(room).toContain("three naturally scattered footwear pairs");
+    expect(room).not.toContain("full-height sliding MIRRORED wardrobe");
+    expect(room).not.toContain("grey tile");
   });
 
-  it("keeps closed curtains gap-free while allowing only explicit open-curtain lighting modes", () => {
+  it("keeps one rear opening and switches only the curtain state required by lighting", () => {
     for (const lightingMode of lightingModes) {
       const state = { ...createDefaultSceneState(), lightingMode };
       const room = englishFixedRoomDescription(state);
@@ -59,16 +68,23 @@ describe("strict fixed bedroom geometry", () => {
         lightingMode === "overcast-open"
       ) {
         expect(curtainsAreOpen(state)).toBe(true);
-        expect(room).toContain(
-          "selected daylight mode requires the dark blackout curtains to be open",
-        );
+        expect(room).toContain("intentionally pulled to both sides");
+        expect(room).toContain("single wide rear window");
+        expect(room).toContain("do not invent a second window");
       } else {
         expect(curtainsAreOpen(state)).toBe(false);
-        expect(room).toContain(
-          "fully covered by floor-length dark blackout curtains",
-        );
-        expect(room).toContain("no center-seam slit");
-        expect(room).toContain("no bottom gap");
+        expect(room).toContain("black-to-charcoal blackout curtains");
+        expect(room).toContain("center-seam slit");
+        expect(room).toContain("bottom gap");
+
+        if (
+          lightingMode === "daylight-closed" ||
+          lightingMode === "blue-hour-closed"
+        ) {
+          expect(room).toContain("fully covered by heavyweight");
+        } else {
+          expect(room).toContain("fully hidden behind heavyweight");
+        }
       }
     }
   });
@@ -92,49 +108,64 @@ describe("strict fixed bedroom geometry", () => {
     expect(openGuards).not.toContain("no center-seam daylight slit");
   });
 
-  it("emits the same room lock in Arabic without transparent wardrobe or duplicated AC semantics", () => {
+  it("emits the same engineered room contract in Arabic", () => {
     const room = arabicFixedRoomDescription(createDefaultSceneState());
 
-    expect(room).toContain("سرير واحد فقط");
+    expect(room).toContain("بعرض 5.2 م");
+    expect(room).toContain("عمق 6.2 م");
+    expect(room).toContain("مرتبة منخفضة 180 × 200 سم");
+    expect(room).toContain("channel-tufted");
     expect(room).toContain("كومود واحد فقط");
-    expect(room).toContain("مكيف سبليت جداري أبيض واحد فقط");
-    expect(room).toContain("خزانة منزلقة واحدة فقط بارتفاع كامل وواجهات مرايا");
-    expect(room).toContain("ليست زجاجاً شفافاً أو مدخناً");
-    expect(room).toContain("سجادة بيج واحدة فقط");
-    expect(room).toContain("سبوتات السقف الغائرة هي وحدات السقف الوحيدة");
+    expect(room).toContain("وحدة split بيضاء واحدة فقط");
+    expect(room).toContain("منظومة built-in واحدة طويلة");
+    expect(room).toContain("ألواح مرايا عاكسة حقيقية");
+    expect(room).toContain("قسم تعليق مفتوح واحد");
+    expect(room).toContain("chest of drawers منفصلة");
+    expect(room).toContain("كرسي منجد مدمج واحد فقط");
+    expect(room).toContain("بلاط porcelain كبير ولامع بلون بيج فاتح");
+    expect(room).toContain("اثنتا عشرة وحدة downlight");
+    expect(room).not.toContain("خزانة منزلقة واحدة فقط بارتفاع كامل");
   });
 
-  it("adds hard negative guards for the room failures seen in generated images", () => {
+  it("adds hard guards for the redesigned room's structural failure modes", () => {
     const state = createDefaultSceneState();
     const guards = roomNegativeGuards(state).join(", ");
     const negative = buildNegativePrompt(state);
 
+    expect(guards).toContain("no bench-like bed");
+    expect(guards).toContain("no daybed");
     expect(guards).toContain("no duplicated AC units");
     expect(guards).toContain("no stacked air conditioners");
+    expect(guards).toContain("no featureless all-mirror wardrobe");
+    expect(guards).toContain("no black-glass wardrobe");
     expect(guards).toContain("no transparent wardrobe");
-    expect(guards).toContain(
-      "no visible hanging clothes through closed wardrobe doors",
-    );
-    expect(guards).toContain("no wardrobe interior lighting");
-    expect(guards).toContain("no extra plants");
-    expect(guards).toContain("no invented decor");
+    expect(guards).toContain("no fully open wardrobe");
+    expect(guards).toContain("no duplicated chair");
+    expect(guards).toContain("no narrow runner rug");
+    expect(guards).toContain("no narrow corridor room");
+    expect(guards).toContain("no fisheye room expansion");
     expect(guards).toContain("no center-seam daylight slit");
-    expect(guards).toContain("no under-curtain light gap");
-    expect(negative).toContain("no duplicated AC units");
-    expect(negative).toContain("no transparent wardrobe");
-    expect(negative).toContain("no extra plants");
+    expect(negative).toContain("no bench-like bed");
+    expect(negative).toContain("no featureless all-mirror wardrobe");
+    expect(negative).toContain("no fisheye room expansion");
   });
 
-  it("uses the strict room lock end-to-end in both generated prompts", () => {
+  it("uses the engineered room lock end-to-end in both generated prompts", () => {
     const state = createDefaultSceneState();
     const english = buildPromptEnglish(state);
     const arabic = buildPromptArabic(state);
 
     expect(english).toContain("ROOM GEOMETRY LOCK");
-    expect(english).toContain("full-height sliding MIRRORED wardrobe");
+    expect(english).toContain("180 x 200 cm mattress");
+    expect(english).toContain("one open hanging bay");
+    expect(english).toContain("Twelve small circular recessed downlights");
+    expect(english).toContain("approximately 2.45 m of real clear width");
     expect(english).not.toContain("glass-door wardrobe");
+
     expect(arabic).toContain("قفل هندسة الغرفة");
-    expect(arabic).toContain("واجهات مرايا");
+    expect(arabic).toContain("180 × 200 سم");
+    expect(arabic).toContain("قسم تعليق مفتوح واحد");
+    expect(arabic).toContain("اثنتا عشرة وحدة downlight");
     expect(arabic).not.toContain("خزانة بأبواب زجاجية");
   });
 });
