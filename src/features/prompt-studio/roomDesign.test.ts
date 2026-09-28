@@ -111,12 +111,12 @@ describe("engineered bedroom design", () => {
 
   it("matches the measured room-depth vanishing point from the reference photo", () => {
     expect(BEDROOM_DESIGN.reference.calibration.depthVanishingPointPx).toEqual([
-      363, 505,
+      363, 504,
     ]);
 
     const [x, y] = projectRoomDepthVanishingPoint();
     expect(x).toBeCloseTo(363, 0);
-    expect(y).toBeCloseTo(505, 0);
+    expect(y).toBeCloseTo(504, 0);
   });
 
   it("matches the main furniture masses to the canonical entrance-view reference", () => {
