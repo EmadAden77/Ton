@@ -43,6 +43,22 @@ describe("engineered bedroom design", () => {
     ]);
   });
 
+  it("locks a natural entrance-view camera for visual comparison", () => {
+    expect(BEDROOM_DESIGN.reference.viewerCamera).toEqual({
+      position: [0.42, 1.62, 3.22],
+      target: [0.02, 1.08, -1.28],
+      fov: 54,
+      near: 0.1,
+      far: 30,
+    });
+    expect(BEDROOM_DESIGN.reference.viewerCamera.position[2]).toBeLessThan(
+      BEDROOM_DESIGN.bounds.frontZ,
+    );
+    expect(BEDROOM_DESIGN.reference.viewerCamera.position[2]).toBeGreaterThan(
+      BEDROOM_DESIGN.reference.viewerCamera.target[2],
+    );
+  });
+
   it("matches the main furniture masses to the canonical entrance-view reference", () => {
     expect(BEDROOM_DESIGN.bed.center).toEqual([-2, 0.28, -1]);
     expect(BEDROOM_DESIGN.wardrobe.runLength).toBe(4.45);
