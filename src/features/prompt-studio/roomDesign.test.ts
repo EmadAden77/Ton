@@ -8,27 +8,30 @@ import {
 } from "./roomDesign";
 
 describe("engineered bedroom design", () => {
-  it("locks one deliberate master-bedroom envelope", () => {
+  it("locks one deliberate spacious master-bedroom envelope", () => {
     expect(BEDROOM_DESIGN.dimensions).toEqual({
-      width: 5.2,
-      depth: 6.2,
-      height: 2.9,
+      width: 6.4,
+      depth: 7.2,
+      height: 3,
     });
     expect(BEDROOM_DESIGN.door.width).toBe(0.9);
     expect(BEDROOM_DESIGN.bed.mattressWidth).toBe(1.8);
     expect(BEDROOM_DESIGN.bed.mattressLength).toBe(2);
+    expect(BEDROOM_DESIGN.bed.mattressThickness).toBe(0.26);
+    expect(BEDROOM_DESIGN.bed.mattressTopHeight).toBe(0.54);
+    expect(BEDROOM_DESIGN.bed.headboardThickness).toBe(0.1);
   });
 
-  it("keeps a generous real aisle between the bed and right-wall storage", () => {
-    expect(bedToWardrobeClearance()).toBeGreaterThan(2.3);
+  it("keeps a genuinely broad real aisle between the bed and right-wall storage", () => {
+    expect(bedToWardrobeClearance()).toBeGreaterThan(3.4);
   });
 
   it("keeps the area rug physically separate from both bed and right-side furniture", () => {
-    expect(bedToRugClearance()).toBeGreaterThan(0.15);
-    expect(rugToRightStorageClearance()).toBeGreaterThan(0.08);
+    expect(bedToRugClearance()).toBeGreaterThan(0.5);
+    expect(rugToRightStorageClearance()).toBeGreaterThan(0.6);
   });
 
-  it("keeps every recessed spotlight inside the room envelope", () => {
+  it("keeps every recessed spotlight inside the enlarged room envelope", () => {
     expect(BEDROOM_DESIGN.ceilingSpots).toHaveLength(12);
 
     for (const [x, y, z] of BEDROOM_DESIGN.ceilingSpots) {
@@ -46,8 +49,8 @@ describe("engineered bedroom design", () => {
     const dresserFront =
       BEDROOM_DESIGN.bounds.rightX - BEDROOM_DESIGN.dresser.depth;
 
-    expect(wardrobeFront).toBeGreaterThan(1.9);
-    expect(dresserFront).toBeGreaterThan(1.8);
+    expect(wardrobeFront).toBeGreaterThan(2.5);
+    expect(dresserFront).toBeGreaterThan(2.5);
     expect(BEDROOM_DESIGN.wardrobe.center[2]).toBeLessThan(
       BEDROOM_DESIGN.dresser.center[2],
     );
