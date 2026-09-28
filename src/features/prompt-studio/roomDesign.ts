@@ -18,7 +18,7 @@ export const BEDROOM_DESIGN = {
     imageHeight: 1337,
     viewpoint: "front entrance looking toward the BACK curtain wall",
     calibration: {
-      depthVanishingPointPx: [363, 505] as readonly [number, number],
+      depthVanishingPointPx: [363, 504] as readonly [number, number],
       method:
         "measured from converging floor and ceiling depth lines in the canonical reference",
     },
