@@ -5,7 +5,49 @@ import {
   bedToRugClearance,
   bedToWardrobeClearance,
   rugToRightStorageClearance,
+  type RoomVec3,
 } from "./roomDesign";
+
+function subtract(a: RoomVec3, b: RoomVec3): RoomVec3 {
+  return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+}
+
+function dot(a: RoomVec3, b: RoomVec3): number {
+  return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+}
+
+function cross(a: RoomVec3, b: RoomVec3): RoomVec3 {
+  return [
+    a[1] * b[2] - a[2] * b[1],
+    a[2] * b[0] - a[0] * b[2],
+    a[0] * b[1] - a[1] * b[0],
+  ];
+}
+
+function normalize(vector: RoomVec3): RoomVec3 {
+  const length = Math.hypot(vector[0], vector[1], vector[2]);
+  return [vector[0] / length, vector[1] / length, vector[2] / length];
+}
+
+function projectRoomDepthVanishingPoint(): readonly [number, number] {
+  const { imageWidth, imageHeight, viewerCamera } = BEDROOM_DESIGN.reference;
+  const forward = normalize(
+    subtract(viewerCamera.target, viewerCamera.position),
+  );
+  const right = normalize(cross(forward, [0, 1, 0]));
+  const up = normalize(cross(right, forward));
+  const roomDepthDirection: RoomVec3 = [0, 0, -1];
+  const cameraX = dot(roomDepthDirection, right);
+  const cameraY = dot(roomDepthDirection, up);
+  const cameraZ = dot(roomDepthDirection, forward);
+  const focalPx =
+    imageHeight / (2 * Math.tan((viewerCamera.fov * Math.PI) / 360));
+
+  return [
+    imageWidth / 2 + (focalPx * cameraX) / cameraZ,
+    imageHeight / 2 - (focalPx * cameraY) / cameraZ,
+  ];
+}
 
 describe("engineered bedroom design", () => {
   it("locks one deliberate spacious master-bedroom envelope", () => {
@@ -54,7 +96,7 @@ describe("engineered bedroom design", () => {
 
     expect(camera).toEqual({
       position: [0.38, 1.58, 3.34],
-      target: [0.02, 1.2, -1.3],
+      target: [0.445, 0.748, -1.236],
       fov: 73,
       near: 0.08,
       far: 30,
@@ -65,6 +107,16 @@ describe("engineered bedroom design", () => {
     expect(camera.position[1]).toBeGreaterThan(camera.target[1]);
     expect(framedWidthAtCurtains).toBeGreaterThan(curtains.width);
     expect(framedWidthAtCurtains).toBeLessThan(dimensions.width + 0.2);
+  });
+
+  it("matches the measured room-depth vanishing point from the reference photo", () => {
+    expect(BEDROOM_DESIGN.reference.calibration.depthVanishingPointPx).toEqual([
+      363, 504,
+    ]);
+
+    const [x, y] = projectRoomDepthVanishingPoint();
+    expect(x).toBeCloseTo(363, 0);
+    expect(y).toBeCloseTo(504, 0);
   });
 
   it("matches the main furniture masses to the canonical entrance-view reference", () => {
