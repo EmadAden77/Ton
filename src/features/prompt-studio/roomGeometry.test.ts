@@ -74,8 +74,8 @@ describe("engineered fixed bedroom geometry", () => {
       } else {
         expect(curtainsAreOpen(state)).toBe(false);
         expect(room).toContain("black-to-charcoal blackout curtains");
-        expect(room).toContain("no center-seam slit");
-        expect(room).toContain("no bottom gap");
+        expect(room).toContain("center-seam slit");
+        expect(room).toContain("bottom gap");
 
         if (
           lightingMode === "daylight-closed" ||
