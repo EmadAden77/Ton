@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { BEDROOM_DESIGN } from "./roomDesign";
 import { createDefaultSceneState } from "./state";
 import {
   getThreeDLighting,
@@ -64,6 +65,21 @@ describe("3D SceneState adapter", () => {
     );
   });
 
+  it("anchors the room viewer to the canonical entrance reference for every pose", () => {
+    const base = createDefaultSceneState();
+    const expectedPosition = [
+      ...BEDROOM_DESIGN.reference.viewerCamera.position,
+    ];
+    const expectedTarget = [...BEDROOM_DESIGN.reference.viewerCamera.target];
+
+    for (const poseType of poseTypes) {
+      const state = selectThreeDPose(base, poseType);
+      const pose = getThreeDPoseForState(state);
+      expect(pose.viewerPosition).toEqual(expectedPosition);
+      expect(pose.viewerTarget).toEqual(expectedTarget);
+    }
+  });
+
   it("applies micro-pose torso, pelvis and weight transforms to the rendered pose", () => {
     const base = getThreeDPoseForState(createDefaultSceneState());
     const adjusted = getThreeDPoseForState({
@@ -77,6 +93,8 @@ describe("3D SceneState adapter", () => {
     expect(adjusted.modelRotation[0]).toBeGreaterThan(base.modelRotation[0]);
     expect(adjusted.modelRotation[1]).toBeGreaterThan(base.modelRotation[1]);
     expect(adjusted.selfieTarget[0]).toBeGreaterThan(base.selfieTarget[0]);
+    expect(adjusted.viewerPosition).toEqual(base.viewerPosition);
+    expect(adjusted.viewerTarget).toEqual(base.viewerTarget);
   });
 
   it("lets domain constraints set the lying phone and micro-pose support", () => {

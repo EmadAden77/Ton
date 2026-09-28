@@ -17,6 +17,13 @@ export const BEDROOM_DESIGN = {
     imageWidth: 752,
     imageHeight: 1337,
     viewpoint: "front entrance looking toward the BACK curtain wall",
+    viewerCamera: {
+      position: [0.42, 1.62, 3.22] as RoomVec3,
+      target: [0.02, 1.08, -1.28] as RoomVec3,
+      fov: 48,
+      near: 0.1,
+      far: 30,
+    },
     frame: {
       front: "entrance and camera end",
       back: "full blackout-curtain wall",
