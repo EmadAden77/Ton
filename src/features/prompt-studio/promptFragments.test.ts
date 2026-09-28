@@ -67,7 +67,9 @@ describe("prompt fragments", () => {
     };
 
     expect(englishCaptureGeometry(state)).toContain("45-55 cm");
-    expect(englishCaptureGeometry(state)).toContain("never an ultra-close 20-30 cm");
+    expect(englishCaptureGeometry(state)).toContain(
+      "never an ultra-close 20-30 cm",
+    );
     expect(englishCaptureGeometry(state)).toContain(
       "preventing exaggerated foreground enlargement",
     );

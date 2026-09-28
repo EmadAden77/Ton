@@ -39,7 +39,9 @@ describe("engineered fixed bedroom geometry", () => {
     expect(room).toContain("mattress top is about 54 cm above the floor");
     expect(room).toContain("foot edge is a straight readable edge");
     expect(room).toContain("only 10 cm thick");
-    expect(room).toContain("three or four shallow horizontal stitched channels");
+    expect(room).toContain(
+      "three or four shallow horizontal stitched channels",
+    );
     expect(room).toContain("exactly two normal sleeping pillows");
     expect(room).toContain("approximately 3.57 m of true clear width");
     expect(room).toContain("wide aisle is a primary scale anchor");
@@ -56,7 +58,9 @@ describe("engineered fixed bedroom geometry", () => {
 
     expect(room).toContain("BED-SELFIE COMPOSITION");
     expect(room).toContain("pelvis near the true center of the mattress");
-    expect(room).toContain("Do not let the mattress become a giant foreground plane");
+    expect(room).toContain(
+      "Do not let the mattress become a giant foreground plane",
+    );
     expect(room).toContain("substantial exposed floor");
   });
 
@@ -127,7 +131,9 @@ describe("engineered fixed bedroom geometry", () => {
     expect(guards).toContain("no giant foreground mattress plane");
     expect(guards).toContain("no thick stacked-cushion headboard");
     expect(guards).toContain("no collapsed central aisle");
-    expect(guards).toContain("no bed filling most of the lower frame solely from perspective");
+    expect(guards).toContain(
+      "no bed filling most of the lower frame solely from perspective",
+    );
     expect(negative).toContain("no giant foreground mattress plane");
     expect(negative).toContain("no collapsed central aisle");
   });
