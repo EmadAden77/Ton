@@ -47,7 +47,7 @@ describe("engineered bedroom design", () => {
     expect(BEDROOM_DESIGN.reference.viewerCamera).toEqual({
       position: [0.42, 1.62, 3.22],
       target: [0.02, 1.08, -1.28],
-      fov: 54,
+      fov: 48,
       near: 0.1,
       far: 30,
     });
