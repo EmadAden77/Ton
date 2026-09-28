@@ -5,6 +5,7 @@ import {
   buildPromptArabic,
   buildPromptEnglish,
 } from "./promptBuilder";
+import { bedToWardrobeClearance } from "./roomDesign";
 import {
   arabicFixedRoomDescription,
   curtainsAreOpen,
@@ -25,6 +26,8 @@ const lightingModes: SceneState["lightingMode"][] = [
   "overcast-open",
 ];
 
+const aisleWidth = bedToWardrobeClearance().toFixed(2);
+
 describe("engineered fixed bedroom geometry", () => {
   it("locks the spacious room, corrected bed, storage and circulation", () => {
     const room = englishFixedRoomDescription(createDefaultSceneState());
@@ -43,7 +46,9 @@ describe("engineered fixed bedroom geometry", () => {
       "three or four shallow horizontal stitched channels",
     );
     expect(room).toContain("exactly two normal sleeping pillows");
-    expect(room).toContain("approximately 3.57 m of true clear width");
+    expect(room).toContain(
+      `approximately ${aisleWidth} m of true clear width`,
+    );
     expect(room).toContain("wide aisle is a primary scale anchor");
     expect(room).toContain("glossy light-beige porcelain tiles");
     expect(room).toContain("Twelve small circular recessed downlights");
@@ -114,7 +119,7 @@ describe("engineered fixed bedroom geometry", () => {
     expect(room).toContain("54 سم فوق الأرض");
     expect(room).toContain("سماكة 10 سم فقط");
     expect(room).toContain("ثلاث أو أربع خياطات أفقية ضحلة");
-    expect(room).toContain("يقارب 3.57 م");
+    expect(room).toContain(`يقارب ${aisleWidth} م`);
     expect(room).toContain("تكوين سيلفي السرير");
   });
 
