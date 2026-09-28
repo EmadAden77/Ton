@@ -57,7 +57,11 @@ function Phone({ position, target }: { position: Vec3; target: Vec3 }) {
     <group ref={groupRef} position={position}>
       <mesh castShadow>
         <boxGeometry args={[0.12, 0.24, 0.025]} />
-        <meshStandardMaterial color="#111111" metalness={0.75} roughness={0.2} />
+        <meshStandardMaterial
+          color="#111111"
+          metalness={0.75}
+          roughness={0.2}
+        />
       </mesh>
       <mesh position={[0, 0, 0.014]}>
         <planeGeometry args={[0.105, 0.215]} />
@@ -107,7 +111,11 @@ function TileFloor() {
     <group>
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[dimensions.width, dimensions.depth]} />
-        <meshStandardMaterial color="#d2c6b5" roughness={0.24} metalness={0.025} />
+        <meshStandardMaterial
+          color="#d2c6b5"
+          roughness={0.24}
+          metalness={0.025}
+        />
       </mesh>
 
       {Array.from({ length: xLines + 1 }, (_, index) => {
@@ -147,15 +155,21 @@ function EngineeredShell() {
       <TileFloor />
 
       <mesh position={[0, dimensions.height / 2, bounds.backZ]} receiveShadow>
-        <boxGeometry args={[dimensions.width, dimensions.height, wallThickness]} />
+        <boxGeometry
+          args={[dimensions.width, dimensions.height, wallThickness]}
+        />
         <meshStandardMaterial color={wallColor} roughness={0.94} />
       </mesh>
       <mesh position={[bounds.leftX, dimensions.height / 2, 0]} receiveShadow>
-        <boxGeometry args={[wallThickness, dimensions.height, dimensions.depth]} />
+        <boxGeometry
+          args={[wallThickness, dimensions.height, dimensions.depth]}
+        />
         <meshStandardMaterial color={wallColor} roughness={0.94} />
       </mesh>
       <mesh position={[bounds.rightX, dimensions.height / 2, 0]} receiveShadow>
-        <boxGeometry args={[wallThickness, dimensions.height, dimensions.depth]} />
+        <boxGeometry
+          args={[wallThickness, dimensions.height, dimensions.depth]}
+        />
         <meshStandardMaterial color={wallColor} roughness={0.94} />
       </mesh>
 
@@ -167,7 +181,9 @@ function EngineeredShell() {
         ]}
         receiveShadow
       >
-        <boxGeometry args={[leftSegmentWidth, dimensions.height, wallThickness]} />
+        <boxGeometry
+          args={[leftSegmentWidth, dimensions.height, wallThickness]}
+        />
         <meshStandardMaterial color={wallColor} roughness={0.94} />
       </mesh>
       <mesh
@@ -178,7 +194,9 @@ function EngineeredShell() {
         ]}
         receiveShadow
       >
-        <boxGeometry args={[rightSegmentWidth, dimensions.height, wallThickness]} />
+        <boxGeometry
+          args={[rightSegmentWidth, dimensions.height, wallThickness]}
+        />
         <meshStandardMaterial color={wallColor} roughness={0.94} />
       </mesh>
       <mesh
@@ -189,7 +207,9 @@ function EngineeredShell() {
         ]}
         receiveShadow
       >
-        <boxGeometry args={[door.width, dimensions.height - door.height, wallThickness]} />
+        <boxGeometry
+          args={[door.width, dimensions.height - door.height, wallThickness]}
+        />
         <meshStandardMaterial color={wallColor} roughness={0.94} />
       </mesh>
       <mesh position={mutableVec(door.position)} castShadow receiveShadow>
@@ -198,7 +218,11 @@ function EngineeredShell() {
       </mesh>
       <mesh position={[door.position[0] + 0.31, 1.02, bounds.frontZ - 0.05]}>
         <sphereGeometry args={[0.042, 16, 16]} />
-        <meshStandardMaterial color="#9f875f" metalness={0.72} roughness={0.3} />
+        <meshStandardMaterial
+          color="#9f875f"
+          metalness={0.72}
+          roughness={0.3}
+        />
       </mesh>
 
       <group position={[0, dimensions.height - 0.09, 0]}>
@@ -254,7 +278,9 @@ function Bed() {
         castShadow
         receiveShadow
       >
-        <boxGeometry args={[bed.frameLength, bed.frameHeight, bed.frameWidth]} />
+        <boxGeometry
+          args={[bed.frameLength, bed.frameHeight, bed.frameWidth]}
+        />
         <meshStandardMaterial color="#292727" roughness={0.86} />
       </mesh>
 
@@ -267,13 +293,19 @@ function Bed() {
         castShadow
         receiveShadow
       >
-        <boxGeometry args={[bed.mattressLength, bed.mattressThickness, bed.mattressWidth]} />
+        <boxGeometry
+          args={[bed.mattressLength, bed.mattressThickness, bed.mattressWidth]}
+        />
         <meshStandardMaterial color="#d8d5cf" roughness={0.98} />
       </mesh>
 
       <mesh position={mutableVec(bed.headboardCenter)} castShadow receiveShadow>
         <boxGeometry
-          args={[bed.headboardThickness, bed.headboardHeight, bed.headboardWidth]}
+          args={[
+            bed.headboardThickness,
+            bed.headboardHeight,
+            bed.headboardWidth,
+          ]}
         />
         <meshStandardMaterial color="#292b2e" roughness={0.93} />
       </mesh>
@@ -324,12 +356,18 @@ function Nightstand({ lampIntensity }: { lampIntensity: number }) {
   return (
     <group position={mutableVec(nightstand.center)}>
       <mesh castShadow receiveShadow>
-        <boxGeometry args={[nightstand.width, nightstand.height, nightstand.depth]} />
+        <boxGeometry
+          args={[nightstand.width, nightstand.height, nightstand.depth]}
+        />
         <meshStandardMaterial color="#38271f" roughness={0.72} />
       </mesh>
       <mesh position={[0.12, nightstand.height / 2 + 0.17, -0.05]} castShadow>
         <cylinderGeometry args={[0.07, 0.09, 0.26, 18]} />
-        <meshStandardMaterial color="#35302b" metalness={0.35} roughness={0.38} />
+        <meshStandardMaterial
+          color="#35302b"
+          metalness={0.35}
+          roughness={0.38}
+        />
       </mesh>
       <mesh position={[0.12, nightstand.height / 2 + 0.38, -0.05]} castShadow>
         <cylinderGeometry args={[0.16, 0.24, 0.3, 20]} />
@@ -349,7 +387,12 @@ function Nightstand({ lampIntensity }: { lampIntensity: number }) {
       />
       <mesh position={[-0.12, nightstand.height / 2 + 0.11, 0.09]} castShadow>
         <cylinderGeometry args={[0.035, 0.035, 0.2, 14]} />
-        <meshPhysicalMaterial color="#b9d7e8" transparent opacity={0.65} roughness={0.18} />
+        <meshPhysicalMaterial
+          color="#b9d7e8"
+          transparent
+          opacity={0.65}
+          roughness={0.18}
+        />
       </mesh>
       <mesh position={[-0.05, nightstand.height / 2 + 0.03, -0.08]}>
         <boxGeometry args={[0.28, 0.018, 0.12]} />
@@ -399,13 +442,20 @@ function Curtains({ open }: { open: boolean }) {
       </mesh>
       <mesh position={[0, 2.77, curtains.center[2] + 0.03]}>
         <boxGeometry args={[5.7, 0.05, 0.06]} />
-        <meshStandardMaterial color="#252321" metalness={0.42} roughness={0.45} />
+        <meshStandardMaterial
+          color="#252321"
+          metalness={0.42}
+          roughness={0.45}
+        />
       </mesh>
 
       {open ? (
         <>
           {[-2.05, 2.05].map((x) => (
-            <group key={x} position={[x, curtains.center[1], curtains.center[2]]}>
+            <group
+              key={x}
+              position={[x, curtains.center[1], curtains.center[2]]}
+            >
               <mesh castShadow>
                 <boxGeometry args={[0.78, curtains.height, 0.12]} />
                 <meshStandardMaterial color="#1c1c1e" roughness={0.98} />
@@ -447,25 +497,35 @@ function RightWallStorage() {
   return (
     <group>
       <mesh position={mutableVec(wardrobe.center)} castShadow receiveShadow>
-        <boxGeometry args={[wardrobe.depth, wardrobe.height, wardrobe.runLength]} />
+        <boxGeometry
+          args={[wardrobe.depth, wardrobe.height, wardrobe.runLength]}
+        />
         <meshStandardMaterial color="#302219" roughness={0.76} />
       </mesh>
 
       {[centerZ - 1.62, centerZ - 0.58].map((z) => (
         <mesh key={z} position={[roomFaceX, 1.38, z]} castShadow>
           <boxGeometry args={[0.03, 2.38, 0.92]} />
-          <meshPhysicalMaterial color="#9aa4a5" metalness={0.95} roughness={0.055} />
+          <meshPhysicalMaterial
+            color="#9aa4a5"
+            metalness={0.95}
+            roughness={0.055}
+          />
         </mesh>
       ))}
 
-      {[centerZ - 2.13, centerZ - 1.1, centerZ - 0.07, centerZ + 0.94, centerZ + 1.55].map(
-        (z) => (
-          <mesh key={`mullion-${z}`} position={[roomFaceX - 0.018, 1.36, z]}>
-            <boxGeometry args={[0.045, 2.5, 0.045]} />
-            <meshStandardMaterial color="#211711" roughness={0.72} />
-          </mesh>
-        ),
-      )}
+      {[
+        centerZ - 2.13,
+        centerZ - 1.1,
+        centerZ - 0.07,
+        centerZ + 0.94,
+        centerZ + 1.55,
+      ].map((z) => (
+        <mesh key={`mullion-${z}`} position={[roomFaceX - 0.018, 1.36, z]}>
+          <boxGeometry args={[0.045, 2.5, 0.045]} />
+          <meshStandardMaterial color="#211711" roughness={0.72} />
+        </mesh>
+      ))}
 
       <group position={[roomFaceX - 0.03, 0, centerZ + 0.36]}>
         <mesh position={[0, 1.36, 0]}>
@@ -474,7 +534,11 @@ function RightWallStorage() {
         </mesh>
         <mesh position={[-0.04, 2.18, 0]}>
           <boxGeometry args={[0.08, 0.035, 0.72]} />
-          <meshStandardMaterial color="#81756b" metalness={0.55} roughness={0.35} />
+          <meshStandardMaterial
+            color="#81756b"
+            metalness={0.55}
+            roughness={0.35}
+          />
         </mesh>
         {[-0.25, 0, 0.25].map((z, index) => (
           <mesh key={z} position={[-0.08, 1.62, z]} castShadow>
@@ -521,15 +585,23 @@ function Dresser() {
   return (
     <group>
       <mesh position={mutableVec(dresser.center)} castShadow receiveShadow>
-        <boxGeometry args={[dresser.depth, dresser.height, dresser.widthAlongWall]} />
+        <boxGeometry
+          args={[dresser.depth, dresser.height, dresser.widthAlongWall]}
+        />
         <meshStandardMaterial color="#39281f" roughness={0.73} />
       </mesh>
 
       <mesh
-        position={[dresser.center[0] - 0.01, dresser.height + 0.025, dresser.center[2]]}
+        position={[
+          dresser.center[0] - 0.01,
+          dresser.height + 0.025,
+          dresser.center[2],
+        ]}
         castShadow
       >
-        <boxGeometry args={[dresser.depth + 0.04, 0.05, dresser.widthAlongWall + 0.05]} />
+        <boxGeometry
+          args={[dresser.depth + 0.04, 0.05, dresser.widthAlongWall + 0.05]}
+        />
         <meshStandardMaterial color="#2d2019" roughness={0.6} />
       </mesh>
 
@@ -541,7 +613,11 @@ function Dresser() {
           </mesh>
           <mesh position={[roomFaceX - 0.018, y, dresser.center[2]]}>
             <boxGeometry args={[0.02, 0.025, 0.34]} />
-            <meshStandardMaterial color="#81715e" metalness={0.62} roughness={0.28} />
+            <meshStandardMaterial
+              color="#81715e"
+              metalness={0.62}
+              roughness={0.28}
+            />
           </mesh>
         </group>
       ))}
@@ -624,19 +700,43 @@ function Rug() {
         <boxGeometry args={[rug.width, 0.03, rug.depth]} />
         <meshStandardMaterial color="#ad9e8c" roughness={0.99} />
       </mesh>
-      <mesh position={[rug.center[0], y + 0.018, rug.center[2] - rug.depth / 2 + 0.07]}>
+      <mesh
+        position={[
+          rug.center[0],
+          y + 0.018,
+          rug.center[2] - rug.depth / 2 + 0.07,
+        ]}
+      >
         <boxGeometry args={[rug.width - 0.14, 0.008, 0.035]} />
         <meshStandardMaterial color="#8f8172" roughness={1} />
       </mesh>
-      <mesh position={[rug.center[0], y + 0.018, rug.center[2] + rug.depth / 2 - 0.07]}>
+      <mesh
+        position={[
+          rug.center[0],
+          y + 0.018,
+          rug.center[2] + rug.depth / 2 - 0.07,
+        ]}
+      >
         <boxGeometry args={[rug.width - 0.14, 0.008, 0.035]} />
         <meshStandardMaterial color="#8f8172" roughness={1} />
       </mesh>
-      <mesh position={[rug.center[0] - rug.width / 2 + 0.07, y + 0.018, rug.center[2]]}>
+      <mesh
+        position={[
+          rug.center[0] - rug.width / 2 + 0.07,
+          y + 0.018,
+          rug.center[2],
+        ]}
+      >
         <boxGeometry args={[0.035, 0.008, rug.depth - 0.14]} />
         <meshStandardMaterial color="#8f8172" roughness={1} />
       </mesh>
-      <mesh position={[rug.center[0] + rug.width / 2 - 0.07, y + 0.018, rug.center[2]]}>
+      <mesh
+        position={[
+          rug.center[0] + rug.width / 2 - 0.07,
+          y + 0.018,
+          rug.center[2],
+        ]}
+      >
         <boxGeometry args={[0.035, 0.008, rug.depth - 0.14]} />
         <meshStandardMaterial color="#8f8172" roughness={1} />
       </mesh>
