@@ -49,7 +49,10 @@ function arabicCurtainState(state: SceneState): string {
 }
 
 function englishBedSelfieComposition(state: SceneState): string {
-  if (state.shotType !== "front-selfie" || !bedContactPoses.includes(state.poseType)) {
+  if (
+    state.shotType !== "front-selfie" ||
+    !bedContactPoses.includes(state.poseType)
+  ) {
     return "";
   }
 
@@ -62,7 +65,10 @@ function englishBedSelfieComposition(state: SceneState): string {
 }
 
 function arabicBedSelfieComposition(state: SceneState): string {
-  if (state.shotType !== "front-selfie" || !bedContactPoses.includes(state.poseType)) {
+  if (
+    state.shotType !== "front-selfie" ||
+    !bedContactPoses.includes(state.poseType)
+  ) {
     return "";
   }
 
