@@ -22,6 +22,20 @@ describe("engineered bedroom design", () => {
     expect(BEDROOM_DESIGN.bed.headboardThickness).toBe(0.1);
   });
 
+  it("locks the user-provided bedroom photo as the canonical visual reference", () => {
+    expect(BEDROOM_DESIGN.reference.imagePath).toBe(
+      "/references/fixed-bedroom-reference.webp",
+    );
+    expect(BEDROOM_DESIGN.reference.imageWidth).toBe(752);
+    expect(BEDROOM_DESIGN.reference.imageHeight).toBe(1337);
+    expect(BEDROOM_DESIGN.reference.frame).toEqual({
+      front: "entrance and camera end",
+      back: "full blackout-curtain wall",
+      left: "bed, headboard, nightstand, and split AC",
+      right: "built-in wardrobe mirrors and separate dresser",
+    });
+  });
+
   it("keeps a genuinely broad real aisle between the bed and right-wall storage", () => {
     expect(bedToWardrobeClearance()).toBeGreaterThan(3.4);
   });

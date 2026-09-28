@@ -12,6 +12,20 @@ export const BEDROOM_DESIGN = {
     backZ: -3.6,
     frontZ: 3.6,
   },
+  reference: {
+    imagePath: "/references/fixed-bedroom-reference.webp",
+    imageWidth: 752,
+    imageHeight: 1337,
+    viewpoint: "front entrance looking toward the BACK curtain wall",
+    frame: {
+      front: "entrance and camera end",
+      back: "full blackout-curtain wall",
+      left: "bed, headboard, nightstand, and split AC",
+      right: "built-in wardrobe mirrors and separate dresser",
+    },
+    visualIdentity:
+      "A spacious lived-in modern master bedroom with the bed confined to the left zone, dark curtains across the back, dark-walnut storage on the right, a broad open central floor field, glossy light-beige tile, a beige-to-greige rug, restrained daily clutter, and warm cream-to-taupe walls.",
+  },
   door: {
     width: 0.9,
     height: 2.1,

@@ -34,6 +34,26 @@ Ton يبني وصفاً نصياً لصورة سيلفي داخل غرفة نو�
 
 ---
 
+## مرجع الغرفة الثابت
+
+الغرفة الرسمية في Ton مرتبطة الآن بمرجع بصري ثابت داخل المشروع:
+
+`public/references/fixed-bedroom-reference.webp`
+
+هذا المرجع لا يغيّر أبعاد الغرفة المهندسة ولا يحول المشروع إلى image-conditioned generator. وظيفته أن يكون **visual source of truth** عند مراجعة تصميم الغرفة ونسخة الـ3D والـPrompt.
+
+التوزيع المعتمد:
+
+- **FRONT:** جهة المدخل والكاميرا.
+- **BACK:** جدار الستائر السوداء الكاملة.
+- **LEFT:** السرير والـheadboard والـnightstand والـsplit AC.
+- **RIGHT:** الـbuilt-in wardrobe والمرايا مع dresser منفصل.
+- مساحة أرضية مركزية واسعة، بلاط بيج فاتح لامع، سجادة منخفضة الوبر، وفوضى يومية خفيفة ومقيدة.
+
+جميع الأبعاد والإحداثيات الفعلية تبقى في `src/features/prompt-studio/roomDesign.ts` حتى يظل الـPrompt والـ3D على نفس مصدر الحقيقة.
+
+---
+
 ## السيناريوهات الجاهزة
 
 يوجد حالياً 8 سيناريوهات:
@@ -86,6 +106,9 @@ src/
 │   ├── constraints.test.ts
 │   ├── promptBuilder.ts
 │   ├── promptBuilder.test.ts
+│   ├── roomDesign.ts
+│   ├── roomDesign.test.ts
+│   ├── roomGeometry.ts
 │   ├── scenarios.ts
 │   ├── scenarios.test.ts
 │   └── types.ts
