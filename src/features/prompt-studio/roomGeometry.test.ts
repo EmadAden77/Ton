@@ -34,10 +34,14 @@ describe("engineered fixed bedroom geometry", () => {
     expect(room).toContain("exactly one 90 cm hinged dark-wood door");
     expect(room).toContain("180 x 200 cm mattress");
     expect(room).toContain("dark tufted-headboard bed on the left");
-    expect(room).toContain("dark-charcoal channel-tufted upholstered headboard");
+    expect(room).toContain(
+      "dark-charcoal channel-tufted upholstered headboard",
+    );
     expect(room).toContain("broad horizontal padded channels");
     expect(room).toContain("exactly one compact dark-walnut nightstand");
-    expect(room).toContain("exactly one white wall-mounted split-AC indoor unit");
+    expect(room).toContain(
+      "exactly one white wall-mounted split-AC indoor unit",
+    );
     expect(room).toContain("one long dark-walnut built-in storage run");
     expect(room).toContain("clear reflective mirror panels");
     expect(room).toContain("one open hanging bay");
@@ -45,7 +49,9 @@ describe("engineered fixed bedroom geometry", () => {
     expect(room).toContain("exactly one compact upholstered chair");
     expect(room).toContain("approximately 2.45 m of real clear width");
     expect(room).toContain("glossy light-beige porcelain tiles");
-    expect(room).toContain("one broad beige-to-greige low-pile rectangular rug");
+    expect(room).toContain(
+      "one broad beige-to-greige low-pile rectangular rug",
+    );
     expect(room).toContain("Twelve small circular recessed downlights");
     expect(room).toContain("three naturally scattered footwear pairs");
     expect(room).not.toContain("full-height sliding MIRRORED wardrobe");
