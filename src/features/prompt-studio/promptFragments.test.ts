@@ -5,6 +5,7 @@ import {
   effectiveEyeDirection,
   effectiveMouthState,
   englishCaptureGeometry,
+  englishCaptureRealism,
   englishIdentityDescription,
 } from "./promptFragments";
 import { createDefaultSceneState } from "./state";
@@ -47,24 +48,41 @@ describe("prompt fragments", () => {
     );
   });
 
-  it("uses stronger elbow extension for extended front selfies", () => {
+  it("uses bounded near-full extension for extended front selfies", () => {
     const state = {
       ...createDefaultSceneState(),
       cameraDistance: "extended" as const,
     };
 
+    expect(englishCaptureGeometry(state)).toContain("70-85 cm");
     expect(englishCaptureGeometry(state)).toContain("near full extension");
-    expect(englishCaptureGeometry(state)).toContain("minimal elbow flexion");
+    expect(arabicCaptureGeometry(state)).toContain("70–85 سم");
     expect(arabicCaptureGeometry(state)).toContain("قرب الامتداد الكامل");
   });
 
-  it("uses more elbow flexion for close front selfies", () => {
+  it("prevents ultra-close distortion for close front selfies", () => {
     const state = {
       ...createDefaultSceneState(),
       cameraDistance: "close" as const,
     };
 
-    expect(englishCaptureGeometry(state)).toContain("more flexed at the elbow");
+    expect(englishCaptureGeometry(state)).toContain("45-55 cm");
+    expect(englishCaptureGeometry(state)).toContain(
+      "never an ultra-close 20-30 cm",
+    );
+    expect(englishCaptureGeometry(state)).toContain(
+      "preventing exaggerated foreground enlargement",
+    );
+    expect(arabicCaptureGeometry(state)).toContain("45–55 سم");
+  });
+
+  it("uses a restrained phone-lens perspective instead of ultra-wide distortion", () => {
+    const state = createDefaultSceneState();
+    const realism = englishCaptureRealism(state);
+
+    expect(realism).toContain("24 mm-equivalent perspective");
+    expect(realism).toContain("Never use a 0.5x ultra-wide look");
+    expect(realism).toContain("nearby furniture look gigantic");
   });
 
   it("keeps mirror-selfie phone visible in the reflection", () => {

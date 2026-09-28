@@ -102,26 +102,26 @@ export function arabicHandDescription(state: SceneState): string {
 
 function englishDistanceMechanics(state: SceneState): string {
   if (state.cameraDistance === "extended") {
-    return "It reaches near full extension with only minimal elbow flexion, without locking the joint or exceeding natural shoulder reach.";
+    return "Use a real lens-to-face distance of about 70-85 cm. The selfie arm reaches near full extension with minimal elbow flexion, without locking the joint or exceeding natural shoulder reach.";
   }
 
   if (state.cameraDistance === "close") {
-    return "It stays more flexed at the elbow so the camera remains close while the shoulder and wrist stay relaxed and reachable.";
+    return "Use a real lens-to-face distance of about 45-55 cm, never an ultra-close 20-30 cm capture. The elbow stays more flexed while the shoulder and wrist remain relaxed and reachable, preventing exaggerated foreground enlargement of the face, limbs, or bed.";
   }
 
-  return "It keeps a slight natural bend at the elbow within realistic shoulder reach.";
+  return "Use a real lens-to-face distance of about 55-70 cm. The selfie arm keeps a slight natural bend at the elbow within realistic shoulder reach.";
 }
 
 function arabicDistanceMechanics(state: SceneState): string {
   if (state.cameraDistance === "extended") {
-    return "وتصل الذراع إلى قرب الامتداد الكامل مع انثناء طفيف جدًا في الكوع، من دون قفل المفصل أو تجاوز مدى وصول الكتف الطبيعي.";
+    return "تكون المسافة الحقيقية بين العدسة والوجه نحو 70–85 سم، وتصل ذراع السيلفي إلى قرب الامتداد الكامل مع انثناء طفيف جداً في الكوع من دون قفل المفصل أو تجاوز مدى الكتف الطبيعي.";
   }
 
   if (state.cameraDistance === "close") {
-    return "وتبقى الذراع أكثر انثناءً عند الكوع لإبقاء الكاميرا قريبة، مع بقاء الكتف والمعصم في وضع طبيعي وضمن مدى الوصول.";
+    return "تكون المسافة الحقيقية بين العدسة والوجه نحو 45–55 سم، وليست لقطة شديدة القرب بمسافة 20–30 سم. يبقى الكوع أكثر انثناءً والكتف والمعصم مرتاحين، مع منع تضخيم الوجه أو الأطراف أو السرير في المقدمة بسبب المنظور.";
   }
 
-  return "وتحافظ الذراع على انحناء طبيعي بسيط عند الكوع ضمن مدى وصول واقعي للكتف.";
+  return "تكون المسافة الحقيقية بين العدسة والوجه نحو 55–70 سم، وتحافظ ذراع السيلفي على انحناء طبيعي بسيط في الكوع ضمن مدى وصول واقعي للكتف.";
 }
 
 export function englishCaptureGeometry(state: SceneState): string {
@@ -170,12 +170,12 @@ export function arabicCaptureGeometry(state: SceneState): string {
 
 export function englishCaptureRealism(state: SceneState): string {
   return state.shotType === "front-selfie"
-    ? "Authentic front-camera smartphone photography, mild wide-angle proximity, natural deep depth of field, restrained HDR, natural skin texture, slight edge softness, and realistic shadow noise."
-    : "Authentic handheld smartphone mirror photography, natural wide-angle perspective, natural deep depth of field, restrained HDR, natural skin texture, slight edge softness, and realistic shadow noise.";
+    ? "Authentic front-camera smartphone photography, approximately 24 mm-equivalent perspective, mild wide-angle proximity only, straight architectural lines with only subtle edge distortion, natural deep depth of field, restrained HDR, natural skin texture, slight edge softness, and realistic shadow noise. Never use a 0.5x ultra-wide look, fisheye curvature, or perspective that makes nearby furniture look gigantic."
+    : "Authentic handheld smartphone mirror photography, natural wide-angle perspective without fisheye distortion, natural deep depth of field, restrained HDR, natural skin texture, slight edge softness, and realistic shadow noise.";
 }
 
 export function arabicCaptureRealism(state: SceneState): string {
   return state.shotType === "front-selfie"
-    ? "تصوير واقعي بالكاميرا الأمامية لهاتف ذكي، بمنظور قريب واسع قليلاً، وعمق ميدان طبيعي وعميق، وHDR محدود، وملمس بشرة طبيعي، وليونة طفيفة عند الحواف، وضجيج واقعي في الظلال."
-    : "تصوير مرآة واقعي بهاتف محمول باليد، بمنظور واسع طبيعي، وعمق ميدان طبيعي وعميق، وHDR محدود، وملمس بشرة طبيعي، وليونة طفيفة عند الحواف، وضجيج واقعي في الظلال.";
+    ? "تصوير واقعي بالكاميرا الأمامية لهاتف ذكي بمنظور يقارب 24 مم مكافئ، واتساع خفيف فقط، مع خطوط معمارية شبه مستقيمة وتشوه طرفي محدود، وعمق ميدان طبيعي وعميق وHDR محدود وملمس بشرة طبيعي وضجيج واقعي في الظلال. ممنوع مظهر 0.5x ultra-wide أو fisheye أو منظور يضخم الأثاث القريب بشكل هائل."
+    : "تصوير مرآة واقعي بهاتف محمول باليد، بمنظور واسع طبيعي من دون fisheye، وعمق ميدان طبيعي وعميق، وHDR محدود، وملمس بشرة طبيعي، وليونة طفيفة عند الحواف، وضجيج واقعي في الظلال.";
 }
