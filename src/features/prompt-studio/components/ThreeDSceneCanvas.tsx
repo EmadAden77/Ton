@@ -127,15 +127,21 @@ function EngineeredShell() {
       />
 
       <mesh position={[0, dimensions.height / 2, bounds.backZ]} receiveShadow>
-        <boxGeometry args={[dimensions.width, dimensions.height, wallThickness]} />
+        <boxGeometry
+          args={[dimensions.width, dimensions.height, wallThickness]}
+        />
         <meshStandardMaterial color={wallColor} roughness={0.92} />
       </mesh>
       <mesh position={[bounds.leftX, dimensions.height / 2, 0]} receiveShadow>
-        <boxGeometry args={[wallThickness, dimensions.height, dimensions.depth]} />
+        <boxGeometry
+          args={[wallThickness, dimensions.height, dimensions.depth]}
+        />
         <meshStandardMaterial color={wallColor} roughness={0.92} />
       </mesh>
       <mesh position={[bounds.rightX, dimensions.height / 2, 0]} receiveShadow>
-        <boxGeometry args={[wallThickness, dimensions.height, dimensions.depth]} />
+        <boxGeometry
+          args={[wallThickness, dimensions.height, dimensions.depth]}
+        />
         <meshStandardMaterial color={wallColor} roughness={0.92} />
       </mesh>
 
@@ -147,7 +153,9 @@ function EngineeredShell() {
         ]}
         receiveShadow
       >
-        <boxGeometry args={[leftSegmentWidth, dimensions.height, wallThickness]} />
+        <boxGeometry
+          args={[leftSegmentWidth, dimensions.height, wallThickness]}
+        />
         <meshStandardMaterial color={wallColor} roughness={0.92} />
       </mesh>
       <mesh
@@ -158,7 +166,9 @@ function EngineeredShell() {
         ]}
         receiveShadow
       >
-        <boxGeometry args={[rightSegmentWidth, dimensions.height, wallThickness]} />
+        <boxGeometry
+          args={[rightSegmentWidth, dimensions.height, wallThickness]}
+        />
         <meshStandardMaterial color={wallColor} roughness={0.92} />
       </mesh>
       <mesh
@@ -238,7 +248,9 @@ function Bed() {
         castShadow
         receiveShadow
       >
-        <boxGeometry args={[bed.frameLength, bed.frameHeight, bed.frameWidth]} />
+        <boxGeometry
+          args={[bed.frameLength, bed.frameHeight, bed.frameWidth]}
+        />
         <meshStandardMaterial color="#2d2928" roughness={0.78} />
       </mesh>
       <mesh
@@ -389,12 +401,20 @@ function Curtains({ open }: { open: boolean }) {
       </mesh>
       <mesh position={[0, 2.77, -3.0]}>
         <boxGeometry args={[4.55, 0.05, 0.06]} />
-        <meshStandardMaterial color="#252321" metalness={0.45} roughness={0.4} />
+        <meshStandardMaterial
+          color="#252321"
+          metalness={0.45}
+          roughness={0.4}
+        />
       </mesh>
       {open ? (
         <>
           {[-1.85, 1.85].map((x) => (
-            <mesh key={x} position={[x, curtains.center[1], curtains.center[2]]} castShadow>
+            <mesh
+              key={x}
+              position={[x, curtains.center[1], curtains.center[2]]}
+              castShadow
+            >
               <boxGeometry args={[0.68, curtains.height, 0.11]} />
               <meshStandardMaterial color="#1d1d1f" roughness={0.97} />
             </mesh>
@@ -417,7 +437,9 @@ function RightWallStorage() {
   return (
     <group>
       <mesh position={mutableVec(wardrobe.center)} castShadow receiveShadow>
-        <boxGeometry args={[wardrobe.depth, wardrobe.height, wardrobe.runLength]} />
+        <boxGeometry
+          args={[wardrobe.depth, wardrobe.height, wardrobe.runLength]}
+        />
         <meshStandardMaterial color="#31231b" roughness={0.72} />
       </mesh>
 
@@ -439,7 +461,11 @@ function RightWallStorage() {
         </mesh>
         <mesh position={[-0.05, 2.2, 0]}>
           <boxGeometry args={[0.08, 0.035, 0.68]} />
-          <meshStandardMaterial color="#7f746b" metalness={0.55} roughness={0.35} />
+          <meshStandardMaterial
+            color="#7f746b"
+            metalness={0.55}
+            roughness={0.35}
+          />
         </mesh>
         {[-0.24, 0, 0.24].map((z, index) => (
           <mesh key={z} position={[-0.09, 1.63, z]} castShadow>
@@ -477,7 +503,9 @@ function Dresser() {
   return (
     <group>
       <mesh position={mutableVec(dresser.center)} castShadow receiveShadow>
-        <boxGeometry args={[dresser.depth, dresser.height, dresser.widthAlongWall]} />
+        <boxGeometry
+          args={[dresser.depth, dresser.height, dresser.widthAlongWall]}
+        />
         <meshStandardMaterial color="#3a291f" roughness={0.7} />
       </mesh>
       {[0.21, 0.43, 0.65].map((y) => (
@@ -550,7 +578,12 @@ function Chair() {
 }
 
 function DailyClutter() {
-  const shoePairs: Array<{ x: number; z: number; rotation: number; color: string }> = [
+  const shoePairs: Array<{
+    x: number;
+    z: number;
+    rotation: number;
+    color: string;
+  }> = [
     { x: -0.05, z: 2.0, rotation: 0.18, color: "#72523f" },
     { x: 0.82, z: 1.72, rotation: -0.2, color: "#2b2c30" },
     { x: 1.45, z: 1.34, rotation: 0.3, color: "#bbb7ae" },
@@ -621,7 +654,10 @@ function BedroomEnvironment({
       </mesh>
 
       {ceilingSpots.map((position, index) => (
-        <group key={`${index}-${position.join("-")}`} position={mutableVec(position)}>
+        <group
+          key={`${index}-${position.join("-")}`}
+          position={mutableVec(position)}
+        >
           <mesh>
             <cylinderGeometry args={[0.055, 0.055, 0.025, 18]} />
             <meshBasicMaterial

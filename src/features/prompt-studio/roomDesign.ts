@@ -101,14 +101,16 @@ export const BEDROOM_DESIGN = {
 } as const;
 
 export function bedToWardrobeClearance(): number {
-  const bedFoot = BEDROOM_DESIGN.bed.center[0] + BEDROOM_DESIGN.bed.frameLength / 2;
+  const bedFoot =
+    BEDROOM_DESIGN.bed.center[0] + BEDROOM_DESIGN.bed.frameLength / 2;
   const wardrobeFace =
     BEDROOM_DESIGN.bounds.rightX - BEDROOM_DESIGN.wardrobe.depth;
   return wardrobeFace - bedFoot;
 }
 
 export function bedToRugClearance(): number {
-  const bedFoot = BEDROOM_DESIGN.bed.center[0] + BEDROOM_DESIGN.bed.frameLength / 2;
+  const bedFoot =
+    BEDROOM_DESIGN.bed.center[0] + BEDROOM_DESIGN.bed.frameLength / 2;
   const rugLeft = BEDROOM_DESIGN.rug.center[0] - BEDROOM_DESIGN.rug.width / 2;
   return rugLeft - bedFoot;
 }
