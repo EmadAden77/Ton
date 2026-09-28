@@ -43,20 +43,28 @@ describe("engineered bedroom design", () => {
     ]);
   });
 
-  it("locks a natural entrance-view camera for visual comparison", () => {
-    expect(BEDROOM_DESIGN.reference.viewerCamera).toEqual({
-      position: [0.42, 1.62, 3.22],
-      target: [0.02, 1.08, -1.28],
-      fov: 48,
-      near: 0.1,
+  it("locks a portrait entrance-view camera that frames the curtain wall tightly", () => {
+    const { reference, curtains, bounds, dimensions } = BEDROOM_DESIGN;
+    const camera = reference.viewerCamera;
+    const aspect = reference.imageWidth / reference.imageHeight;
+    const curtainDistance = camera.position[2] - curtains.center[2];
+    const verticalHalfAngle = (camera.fov * Math.PI) / 360;
+    const framedWidthAtCurtains =
+      2 * curtainDistance * Math.tan(verticalHalfAngle) * aspect;
+
+    expect(camera).toEqual({
+      position: [0.38, 1.58, 3.34],
+      target: [0.02, 1.2, -1.3],
+      fov: 73,
+      near: 0.08,
       far: 30,
     });
-    expect(BEDROOM_DESIGN.reference.viewerCamera.position[2]).toBeLessThan(
-      BEDROOM_DESIGN.bounds.frontZ,
-    );
-    expect(BEDROOM_DESIGN.reference.viewerCamera.position[2]).toBeGreaterThan(
-      BEDROOM_DESIGN.reference.viewerCamera.target[2],
-    );
+    expect(aspect).toBeCloseTo(9 / 16, 2);
+    expect(camera.position[2]).toBeLessThan(bounds.frontZ);
+    expect(camera.position[2]).toBeGreaterThan(camera.target[2]);
+    expect(camera.position[1]).toBeGreaterThan(camera.target[1]);
+    expect(framedWidthAtCurtains).toBeGreaterThan(curtains.width);
+    expect(framedWidthAtCurtains).toBeLessThan(dimensions.width + 0.2);
   });
 
   it("matches the main furniture masses to the canonical entrance-view reference", () => {
