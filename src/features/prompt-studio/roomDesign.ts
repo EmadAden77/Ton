@@ -20,7 +20,7 @@ export const BEDROOM_DESIGN = {
     viewerCamera: {
       position: [0.42, 1.62, 3.22] as RoomVec3,
       target: [0.02, 1.08, -1.28] as RoomVec3,
-      fov: 54,
+      fov: 48,
       near: 0.1,
       far: 30,
     },
